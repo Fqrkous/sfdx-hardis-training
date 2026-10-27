@@ -2,6 +2,31 @@
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
     <apiVersion>64.0</apiVersion>
     <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
+    <assignments>
+        <description>Keeps the fault message, so that a failed lookup leaves a trace.</description>
+        <name>Log_Fault</name>
+        <label>Log Fault</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>faultMessage</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>$Flow.FaultMessage</elementReference>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <customErrors>
+        <description>Refuses to close the installation while its checklist is incomplete.</description>
+        <name>Checklist_Incomplete</name>
+        <label>Checklist Incomplete</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <customErrorMessages>
+            <errorMessage>Complete the handover checklist before closing this installation.</errorMessage>
+            <isFieldError>false</isFieldError>
+        </customErrorMessages>
+    </customErrors>
     <customErrors>
         <description>Refuses to close an installation that was never given an install date.</description>
         <name>Install_Date_Missing</name>
@@ -14,11 +39,37 @@
         </customErrorMessages>
     </customErrors>
     <decisions>
+        <description>Is any handover item of this installation still not done?</description>
+        <name>Any_Item_Open</name>
+        <label>Any Item Open</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnectorLabel>Checklist complete</defaultConnectorLabel>
+        <rules>
+            <name>Item_Open</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Get_Open_Item</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Checklist_Incomplete</targetReference>
+            </connector>
+            <label>Item open</label>
+        </rules>
+    </decisions>
+    <decisions>
         <description>Was the installation ever given an install date?</description>
         <name>No_Install_Date</name>
         <label>No Install Date</label>
         <locationX>0</locationX>
         <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>Get_Open_Item</targetReference>
+        </defaultConnector>
         <defaultConnectorLabel>Install date set</defaultConnectorLabel>
         <rules>
             <name>Date_Missing</name>
@@ -36,7 +87,7 @@
             <label>Date missing</label>
         </rules>
     </decisions>
-    <description>An installation cannot be closed without an install date.</description>
+    <description>An installation cannot be closed without an install date, or while its handover checklist has an item not done.</description>
     <environments>Default</environments>
     <interviewLabel>Installation Close Check {!$Flow.CurrentDateTime}</interviewLabel>
     <label>Installation Close Check</label>
@@ -53,6 +104,38 @@
         </value>
     </processMetadataValues>
     <processType>AutoLaunchedFlow</processType>
+    <recordLookups>
+        <description>Finds one handover item of this installation that is not done yet.</description>
+        <name>Get_Open_Item</name>
+        <label>Get Open Item</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignNullValuesIfNoRecordsFound>true</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Any_Item_Open</targetReference>
+        </connector>
+        <faultConnector>
+            <targetReference>Log_Fault</targetReference>
+        </faultConnector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Installation__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>Is_Done__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <booleanValue>false</booleanValue>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>Handover_Item__c</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
     <start>
         <locationX>0</locationX>
         <locationY>0</locationY>
@@ -73,4 +156,12 @@
         <triggerType>RecordBeforeSave</triggerType>
     </start>
     <status>Active</status>
+    <variables>
+        <description>The error a failed lookup reported.</description>
+        <name>faultMessage</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
 </Flow>

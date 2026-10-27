@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Installation__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <description>The installation this item belongs to. Empty on the template items.</description>
+    <label>Installation</label>
+    <referenceTo>Installation__c</referenceTo>
+    <relationshipLabel>Handover Items</relationshipLabel>
+    <relationshipName>Handover_Items</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

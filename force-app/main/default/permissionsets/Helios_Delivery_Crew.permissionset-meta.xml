@@ -13,11 +13,6 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>false</editable>
-        <field>Installation__c.Crew_Size__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
         <field>Installation__c.External_Id__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -49,6 +44,11 @@
     <fieldPermissions>
         <editable>false</editable>
         <field>Panel_Batch__c.Arrival_Date__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Panel_Batch__c.Cost__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>

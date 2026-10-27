@@ -14,5 +14,6 @@
     <tabs>standard-Account</tabs>
     <tabs>standard-Contact</tabs>
     <tabs>standard-Opportunity</tabs>
+    <tabs>Crew_Capacity__c</tabs>
     <uiType>Lightning</uiType>
 </CustomApplication>

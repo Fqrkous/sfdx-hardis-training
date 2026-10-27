@@ -15,6 +15,10 @@
                 <field>Status__c</field>
             </layoutItems>
             <layoutItems>
+                <behavior>Required</behavior>
+                <field>Crew_Size__c</field>
+            </layoutItems>
+            <layoutItems>
                 <behavior>Edit</behavior>
                 <field>Install_Date__c</field>
             </layoutItems>
@@ -24,7 +28,7 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Crew_Size__c</field>
+                <field>Crew_Capacity_Cap__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
@@ -41,6 +45,10 @@
             <layoutItems>
                 <behavior>Edit</behavior>
                 <field>Crew_Notes__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>Signed_Off_By__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns/>
