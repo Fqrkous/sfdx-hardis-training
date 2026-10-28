@@ -15,8 +15,55 @@
                 <stringValue>Scheduled</stringValue>
             </value>
         </assignmentItems>
+        <connector>
+            <targetReference>Crew_Over_Cap</targetReference>
+        </connector>
     </assignments>
-    <description>When a planner puts a crew on a planned installation that already has a date, the installation moves to Scheduled on its own.</description>
+    <assignments>
+        <description>US-018: the crew never exceeds the cap the planner set on the installation.</description>
+        <name>Bring_Crew_Back_To_Cap</name>
+        <label>Bring Crew Back To Cap</label>
+        <locationX>50</locationX>
+        <locationY>539</locationY>
+        <assignmentItems>
+            <assignToReference>$Record.Crew_Size__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>$Record.Crew_Capacity_Cap__c</elementReference>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <decisions>
+        <description>Is the crew larger than the cap this installation allows?</description>
+        <name>Crew_Over_Cap</name>
+        <label>Crew Over Cap</label>
+        <locationX>176</locationX>
+        <locationY>431</locationY>
+        <defaultConnectorLabel>Within the cap</defaultConnectorLabel>
+        <rules>
+            <name>Too_Large</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Crew_Capacity_Cap__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Crew_Size__c</leftValueReference>
+                <operator>GreaterThan</operator>
+                <rightValue>
+                    <elementReference>$Record.Crew_Capacity_Cap__c</elementReference>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Bring_Crew_Back_To_Cap</targetReference>
+            </connector>
+            <label>Too large for this installation</label>
+        </rules>
+    </decisions>
+    <description>When a planner puts a crew on a planned installation that already has a date, the installation moves to Scheduled on its own. A crew larger than the installation cap is brought back down to the cap: too many people on a small roof is a safety problem.</description>
     <environments>Default</environments>
     <interviewLabel>Installation Assign Crew {!$Flow.CurrentDateTime}</interviewLabel>
     <label>Installation Assign Crew</label>
