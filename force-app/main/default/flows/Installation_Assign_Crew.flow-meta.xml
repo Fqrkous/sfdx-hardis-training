@@ -3,11 +3,41 @@
     <apiVersion>64.0</apiVersion>
     <areMetricsLoggedToDataCloud>false</areMetricsLoggedToDataCloud>
     <assignments>
+        <description>US-018: the crew never exceeds the cap the planner set on the installation.</description>
+        <name>Bring_Crew_Back_To_Cap</name>
+        <label>Bring Crew Back To Cap</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Record.Crew_Size__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <numberValue>3.0</numberValue>
+            </value>
+        </assignmentItems>
+    </assignments>
+    <assignments>
+        <name>Devoir_Augmenter_l_quipage_trois</name>
+        <label>Devoir Augmenter l&apos;équipage à trois</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <assignmentItems>
+            <assignToReference>$Record.Crew_Size__c</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <numberValue>3.0</numberValue>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Crew_Over_Cap</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
         <description>A planned installation with a crew and a date is scheduled: the status follows the facts rather than waiting for somebody to change it.</description>
         <name>Move_To_Scheduled</name>
         <label>Move To Scheduled</label>
-        <locationX>176</locationX>
-        <locationY>323</locationY>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
         <assignmentItems>
             <assignToReference>$Record.Status__c</assignToReference>
             <operator>Assign</operator>
@@ -16,29 +46,15 @@
             </value>
         </assignmentItems>
         <connector>
-            <targetReference>Crew_Over_Cap</targetReference>
+            <targetReference>Minimum_pour_toiture_plate</targetReference>
         </connector>
-    </assignments>
-    <assignments>
-        <description>US-018: the crew never exceeds the cap the planner set on the installation.</description>
-        <name>Bring_Crew_Back_To_Cap</name>
-        <label>Bring Crew Back To Cap</label>
-        <locationX>50</locationX>
-        <locationY>539</locationY>
-        <assignmentItems>
-            <assignToReference>$Record.Crew_Size__c</assignToReference>
-            <operator>Assign</operator>
-            <value>
-                <elementReference>$Record.Crew_Capacity_Cap__c</elementReference>
-            </value>
-        </assignmentItems>
     </assignments>
     <decisions>
         <description>Is the crew larger than the cap this installation allows?</description>
         <name>Crew_Over_Cap</name>
         <label>Crew Over Cap</label>
-        <locationX>176</locationX>
-        <locationY>431</locationY>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
         <defaultConnectorLabel>Within the cap</defaultConnectorLabel>
         <rules>
             <name>Too_Large</name>
@@ -63,13 +79,57 @@
             <label>Too large for this installation</label>
         </rules>
     </decisions>
+    <decisions>
+        <name>Minimum_pour_toiture_plate</name>
+        <label>Minimum pour toiture plate</label>
+        <locationX>0</locationX>
+        <locationY>0</locationY>
+        <defaultConnector>
+            <targetReference>Crew_Over_Cap</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Crew is enough</defaultConnectorLabel>
+        <rules>
+            <name>Too_small_for_a_flat_roof</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.Crew_Size__c</leftValueReference>
+                <operator>LessThan</operator>
+                <rightValue>
+                    <numberValue>3.0</numberValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>$Record.Roof_Type__c</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Flat</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Devoir_Augmenter_l_quipage_trois</targetReference>
+            </connector>
+            <label>Too small for a flat roof</label>
+        </rules>
+    </decisions>
     <description>When a planner puts a crew on a planned installation that already has a date, the installation moves to Scheduled on its own. A crew larger than the installation cap is brought back down to the cap: too many people on a small roof is a safety problem.</description>
     <environments>Default</environments>
     <interviewLabel>Installation Assign Crew {!$Flow.CurrentDateTime}</interviewLabel>
     <label>Installation Assign Crew</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
     <processType>AutoLaunchedFlow</processType>
     <start>
-        <locationX>50</locationX>
+        <locationX>0</locationX>
         <locationY>0</locationY>
         <connector>
             <targetReference>Move_To_Scheduled</targetReference>
