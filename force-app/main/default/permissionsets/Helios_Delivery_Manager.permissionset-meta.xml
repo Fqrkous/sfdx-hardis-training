@@ -11,12 +11,27 @@
     <description>Planners: everything in the Helios Delivery app, including the scheduler.</description>
     <fieldPermissions>
         <editable>true</editable>
-        <field>Installation__c.Account__c</field>
+        <field>Crew_Capacity__c.Crew_Type__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
-        <field>Installation__c.Crew_Size__c</field>
+        <field>Crew_Capacity__c.External_Id__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Crew_Capacity__c.Panels_Per_Day__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Crew_Capacity__c.Roof_Type__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Installation__c.Account__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -86,6 +101,16 @@
         <allowDelete>true</allowDelete>
         <allowEdit>true</allowEdit>
         <allowRead>true</allowRead>
+        <modifyAllRecords>false</modifyAllRecords>
+        <object>Crew_Capacity__c</object>
+        <viewAllFields>false</viewAllFields>
+        <viewAllRecords>false</viewAllRecords>
+    </objectPermissions>
+    <objectPermissions>
+        <allowCreate>true</allowCreate>
+        <allowDelete>true</allowDelete>
+        <allowEdit>true</allowEdit>
+        <allowRead>true</allowRead>
         <modifyAllRecords>true</modifyAllRecords>
         <object>Installation__c</object>
         <viewAllFields>false</viewAllFields>
@@ -101,6 +126,10 @@
         <viewAllFields>false</viewAllFields>
         <viewAllRecords>true</viewAllRecords>
     </objectPermissions>
+    <tabSettings>
+        <tab>Crew_Capacity__c</tab>
+        <visibility>Visible</visibility>
+    </tabSettings>
     <tabSettings>
         <tab>Installation__c</tab>
         <visibility>Visible</visibility>
