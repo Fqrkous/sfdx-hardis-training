@@ -14,6 +14,7 @@
         <members>Installation__c.Crew_Size__c</members>
         <members>Installation__c.External_Id__c</members>
         <members>Installation__c.Install_Date__c</members>
+        <members>Installation__c.Panels_Required__c</members>
         <members>Installation__c.Roof_Type__c</members>
         <members>Installation__c.Status__c</members>
         <members>Installation__c.Total_Capacity_kW__c</members>
