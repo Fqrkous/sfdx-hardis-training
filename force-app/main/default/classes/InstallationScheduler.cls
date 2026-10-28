@@ -58,20 +58,23 @@ public with sharing class InstallationScheduler {
      * @return the ids that can take a crew that day
      */
     public static List<Id> schedulableOn(List<Id> installationIds, Date wanted) {
-        List<Id> allowed = new List<Id>();
-        for (Id installationId : installationIds) {
+            Map<Id, Date> latestArrival = new Map<Id, Date>();
             for (Panel_Batch__c batch : [
-                SELECT Arrival_Date__c
+                SELECT Installation__c, Arrival_Date__c
                 FROM Panel_Batch__c
-                WHERE Installation__c = :installationId
-                ORDER BY Arrival_Date__c DESC
-                LIMIT 1
+                WHERE Installation__c IN :installationIds
+                AND Arrival_Date__c != null
+                ORDER BY Arrival_Date__c ASC
             ]) {
-                if (batch.Arrival_Date__c != null && wanted >= batch.Arrival_Date__c.addDays(PREPARATION_DAYS)) {
+                latestArrival.put(batch.Installation__c, batch.Arrival_Date__c);
+            }
+            List<Id> allowed = new List<Id>();
+            for (Id installationId : installationIds) {
+                Date arrival = latestArrival.get(installationId);
+                if (arrival != null && wanted >= arrival.addDays(PREPARATION_DAYS)) {
                     allowed.add(installationId);
                 }
             }
+            return allowed;
         }
-        return allowed;
-    }
 }
