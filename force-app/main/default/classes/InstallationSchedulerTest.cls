@@ -79,25 +79,17 @@ private class InstallationSchedulerTest {
         List<Id> tooEarly = InstallationScheduler.schedulableOn(new List<Id>{ inst.Id }, Date.today());
         List<Id> lateEnough = InstallationScheduler.schedulableOn(new List<Id>{ inst.Id }, Date.today().addDays(60));
         Test.stopTest();
-
         System.assert(tooEarly.isEmpty(), 'The crew cannot be sent before the panels arrive');
         System.assertEquals(1, lateEnough.size(), 'A date after the buffer is allowed');
     }
 
     @isTest
     static void schedulableOnIgnoresInstallationsWithNoBatch() {
-        Installation__c lonely = new Installation__c(
-            Status__c = 'Planned',
-            Crew_Size__c = 2,
-            Panels_Required__c = 10,
-            External_Id__c = 'TEST-INST-003'
-        );
+        Installation__c lonely = new Installation__c(Status__c = 'Planned', Crew_Size__c = 2, External_Id__c = 'TEST-INST-003');
         insert lonely;
-
         Test.startTest();
         List<Id> allowed = InstallationScheduler.schedulableOn(new List<Id>{ lonely.Id }, Date.today().addDays(30));
         Test.stopTest();
-
         System.assert(allowed.isEmpty(), 'With no panel batch, nothing can be scheduled');
     }
 }
