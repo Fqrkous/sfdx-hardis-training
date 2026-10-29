@@ -85,7 +85,12 @@ private class InstallationSchedulerTest {
 
     @isTest
     static void schedulableOnIgnoresInstallationsWithNoBatch() {
-        Installation__c lonely = new Installation__c(Status__c = 'Planned', Crew_Size__c = 2, External_Id__c = 'TEST-INST-003');
+        Installation__c lonely = new Installation__c(
+            Status__c = 'Planned',
+            Crew_Size__c = 2,
+            Panels_Required__c = 10,
+            External_Id__c = 'TEST-INST-003'
+        );
         insert lonely;
         Test.startTest();
         List<Id> allowed = InstallationScheduler.schedulableOn(new List<Id>{ lonely.Id }, Date.today().addDays(30));
