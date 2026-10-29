@@ -101,6 +101,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
+        <field>Panel_Batch__c.Quote_Pdf_Url__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
         <field>Panel_Batch__c.Serial_Prefix__c</field>
         <readable>true</readable>
     </fieldPermissions>
