@@ -1,0 +1,9 @@
+commandsPostDeploy:
+  - id: 1eb72196-724b-4e3b-ac02-782a0144d07d
+    label: dataaa
+    type: data
+    command: ""
+    parameters:
+      sfdmuProject: Final Lab2
+    runOnlyOnceByOrg: true
+    context: process-deployment-only

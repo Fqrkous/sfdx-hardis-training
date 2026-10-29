@@ -16,6 +16,12 @@
         <members>Crew_Capacity__c.External_Id__c</members>
         <members>Crew_Capacity__c.Panels_Per_Day__c</members>
         <members>Crew_Capacity__c.Roof_Type__c</members>
+        <members>Handover_Item__c.External_Id__c</members>
+        <members>Handover_Item__c.Installation__c</members>
+        <members>Handover_Item__c.Is_Done__c</members>
+        <members>Handover_Item__c.Is_Template__c</members>
+        <members>Handover_Item__c.Label__c</members>
+        <members>Handover_Item__c.Sequence__c</members>
         <members>Installation__c.Account__c</members>
         <members>Installation__c.Crew_Size__c</members>
         <members>Installation__c.External_Id__c</members>
@@ -33,13 +39,19 @@
         <name>CustomField</name>
     </types>
     <types>
+        <members>Handover_Item__c.External_Id__c</members>
+        <name>CustomIndex</name>
+    </types>
+    <types>
         <members>Crew_Capacity__c</members>
+        <members>Handover_Item__c</members>
         <members>Installation__c</members>
         <members>Panel_Batch__c</members>
         <name>CustomObject</name>
     </types>
     <types>
         <members>Crew_Capacity__c</members>
+        <members>Handover_Item__c</members>
         <members>Installation__c</members>
         <members>Panel_Batch__c</members>
         <name>CustomTab</name>
@@ -56,6 +68,7 @@
     </types>
     <types>
         <members>Crew_Capacity__c-Crew Capacity Layout</members>
+        <members>Handover_Item__c-Handover Item Layout</members>
         <members>Installation__c-Installation Layout</members>
         <members>Panel_Batch__c-Panel Batch Layout</members>
         <name>Layout</name>
@@ -66,6 +79,7 @@
     </types>
     <types>
         <members>Crew_Capacity__c.All</members>
+        <members>Handover_Item__c.All</members>
         <members>Installation__c.All_Installations</members>
         <members>Panel_Batch__c.All_Panel_Batches</members>
         <name>ListView</name>
