@@ -44,6 +44,7 @@
     </types>
     <types>
         <members>Crew_Capacity__c</members>
+        <members>Handover_Item__c</members>
         <members>Installation__c</members>
         <members>Panel_Batch__c</members>
         <name>CustomObject</name>
@@ -78,6 +79,7 @@
     </types>
     <types>
         <members>Crew_Capacity__c.All</members>
+        <members>Handover_Item__c.All</members>
         <members>Installation__c.All_Installations</members>
         <members>Panel_Batch__c.All_Panel_Batches</members>
         <name>ListView</name>
