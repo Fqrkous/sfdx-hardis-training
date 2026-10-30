@@ -1,32 +1,13 @@
-# Helios Energy - sfdx-hardis training project
-# This file is read by sfdx-hardis and by the VS Code extension.
-# Doc: https://sfdx-hardis.cloudity.com/salesforce-devops-config-home/
-
 projectName: HeliosEnergy
-
-# --- Pipeline -------------------------------------------------------------
-# At Levels 1 and 2 the pipeline is integration then uat, both deploying to
-# scratch orgs that Set up my training environment creates. main exists in the
-# fork with no org yet, and preprod does not exist: Lab 3.1 creates it, and gives
-# both their orgs.
 developmentBranch: integration
 productionBranch: main
-# How the CI job gets into an org. Levels 1 and 2 use auth URLs kept in
-# GitHub secrets, which is the shortcut, so there is no certificate to look for
-# and the pipeline is right not to ask for one. Lab 3.1 gives preprod and main a
-# JWT certificate and leaves integration and uat on the shortcut, which a real
-# project would not do, so this setting stays as it is.
 orgAuthenticationMode: secretsOnly
-# One entry on purpose. A contributor at Levels 1 and 2 has exactly one place
-# to send a User Story, and a question with one answer is a question that
-# cannot be got wrong. uat is a major branch all the same: work reaches it by
-# promotion, never by a User Story. Lab 3.1 adds preprod here, for hotfixes.
 availableTargetBranches:
   - integration
+  - preprod
 availableTargetBranchesLabels:
-  - "The shared integration org, where every contributor merges"
-
-# Branch naming for new User Stories
+  - The shared integration org, where every contributor merges
+  - The org where hotfix should start
 branchPrefixChoices:
   - value: features
     title: "Feature: a new capability or an improvement"
@@ -34,72 +15,35 @@ branchPrefixChoices:
     title: "Fix: correct something that is broken"
   - value: retrofit
     title: "Retrofit: merge production back down into the pipeline after a hotfix (release manager)"
-newTaskNameRegex: '^US-\d{3}-[a-z0-9-]+$'
-newTaskNameRegexExample: "US-014-panels-required"
-# The stories live in the backlog of this course, not in a ticketing tool. These
-# keys let the Pull Request comments link every US-nnn they meet to its page, and
-# write its title next to the link, read from the JSON the site publishes per story.
-genericTicketingProviderRegex: "(US-[0-9]{3})"
-genericTicketingProviderUrlBuilder: "https://sfdx-hardis-training.cloudity.com/BACKLOG/{REF}/"
-genericTicketingProviderDetailsUrlBuilder: "https://sfdx-hardis-training.cloudity.com/BACKLOG/{REF}.json"
-# A step somebody has to do by hand around a deployment is declared as a deployment
-# action of type manual (Lab 2.4), not in a spreadsheet kept somewhere else. With
-# this, Save / Publish sends you to the DevOps Pipeline panel instead of asking
-# for the URL of a manual actions file.
+newTaskNameRegex: ^US-\d{3}-[a-z0-9-]+$
+newTaskNameRegexExample: US-014-panels-required
+genericTicketingProviderRegex: (US-[0-9]{3})
+genericTicketingProviderUrlBuilder: https://sfdx-hardis-training.cloudity.com/BACKLOG/{REF}/
+genericTicketingProviderDetailsUrlBuilder: https://sfdx-hardis-training.cloudity.com/BACKLOG/{REF}.json
 manualActionsMode: sfdxHardis
-# A manual step to do before the deployment stops the check of its Pull Request until
-# somebody marks it as done (Labs 2.4 and 3.5). sfdx-hardis only lists it by default.
 failValidationOnPendingManualActions: true
-
-# --- Quality --------------------------------------------------------------
 testLevel: RunLocalTests
-# Salesforce refuses a deployment under 75%. This project asks for 80, like most real ones:
-# Lab 2.5 is where a Pull Request meets it.
 apexTestsMinCoverageOrgWide: 80
 testCoverageNotBlocking: false
-# Lab 2.7 shows what a merge conflict looks like, markers included. Without this,
-# the check of every promotion Pull Request (Lab 3.10) would fail on the lab
-# text itself.
 promotionConflictMarkersIgnoredFiles:
   - labs/*/level-2-contributor-advanced/2-7-resolve-a-git-merge-conflict.md
-
-# --- Automated cleaning ---------------------------------------------------
-# Applied by hardis:work:save before the Pull Request. Lab 1.5 reads the
-# result, Lab 3.4 explains why each one is here.
 autoCleanTypes:
   - destructivechanges
   - localfields
   - productrequest
   - flowPositions
   - minimizeProfiles
-
-# Permissions that must never travel through a Profile on this project.
-# This is what makes the Lab 2.6 failure happen, and it is deliberate.
 autoRemoveUserPermissions:
   - EnableCommunityAppLauncher
   - FieldServiceAccess
   - OmnichannelInventorySync
   - SendExternalEmailAvailable
   - WorkCalibrationUser
-
-# --- Data -----------------------------------------------------------------
 dataPackages:
   - dataPath: scripts/data/HeliosBaseline
     importInScratchOrgs: false
   - dataPath: scripts/data/HeliosCrewRefData
     importInScratchOrgs: false
-
-# --- The Training menu ----------------------------------------------------
-# Rendered by the VS Code extension as cards on the Welcome page and as menus
-# in the Commands panel. This is how a learner runs anything the product does
-# not already own a button for.
-#
-# One menu per level, not one menu for the course. A learner is always inside
-# exactly one level, and the commands that level needs are four or five out of
-# seven. Splitting them means the menu in front of you only holds things you
-# have a reason to click, and the ones that are shared are simply repeated.
-# It also lets each entry carry its own level, so "Check my work" and "Reset
-# this level" stop by asking which level you are on: they already know.
 customCommandsPosition: first
 customCommands:
   - id: training-level-1
@@ -158,7 +102,6 @@ customCommands:
         tooltip: Puts your repository back to the start of Level 1
         command: node scripts/training.mjs reset --level 1
         helpUrl: https://sfdx-hardis-training.cloudity.com/en/level-1-contributor-basics/
-
   - id: training-level-2
     label: "Training: Level 2"
     description: Contributor advanced - the commands the Level 2 labs ask for
@@ -229,7 +172,6 @@ customCommands:
         tooltip: Puts your repository back to the start of Level 2
         command: node scripts/training.mjs reset --level 2
         helpUrl: https://sfdx-hardis-training.cloudity.com/en/level-2-contributor-advanced/
-
   - id: training-level-3
     label: "Training: Level 3"
     description: Release Manager - the commands the Level 3 labs ask for
@@ -307,3 +249,24 @@ customCommands:
         tooltip: Removes the Helios app and its data from an org, once you are done with the course
         command: node scripts/training.mjs teardown
         helpUrl: https://sfdx-hardis-training.cloudity.com/en/level-3-release-manager/
+codingAgentAutoFix: false
+flowDeleteInterviews: false
+flowDeleteMaxAttempts: 3
+flowDeleteRetryDelayMs: 10000
+devHubAlias: ""
+devHubInstanceUrl: https://login.salesforce.com
+devHubUsername: ""
+enableDeltaDeploymentBetweenMajorBranches: false
+enablePromotionBranches: false
+enableDeploymentApexTestClasses: false
+enableDeprecatedDeploymentPlan: false
+installPackagesDuringCheckDeploy: false
+manualActionsFileUrl: ""
+notifTranslateDeploymentMessages: false
+sharedDevSandboxes: false
+serviceNowAddDeploymentTag: false
+serviceNowCommentField: work_notes
+serviceNowPostDeploymentComments: true
+useDeltaDeployment: false
+useDeltaDeploymentWithDependencies: false
+useSmartDeploymentTests: false
