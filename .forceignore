@@ -15,7 +15,7 @@
 **/standardValueSets/*
 
 # My scratch test fields, never versioned (Romain)
-**/objects/Installation__c/fields/Crew_W*.field-meta.xml
+**/objects/Installation__c/fields/Crew_Workload_Test__c.field-meta.xml
 
 # The lines sfdx-hardis expects in every project. Without them, the release manager
 # commands of Level 3 stop to offer an upgrade of this file.
