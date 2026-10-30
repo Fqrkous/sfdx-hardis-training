@@ -67,6 +67,10 @@
         <name>Flow</name>
     </types>
     <types>
+        <members>Helios_Crew_Leads</members>
+        <name>Group</name>
+    </types>
+    <types>
         <members>Crew_Capacity__c-Crew Capacity Layout</members>
         <members>Handover_Item__c-Handover Item Layout</members>
         <members>Installation__c-Installation Layout</members>
