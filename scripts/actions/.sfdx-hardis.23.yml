@@ -1,0 +1,12 @@
+commandsPostDeploy:
+  - id: 7d1e4b90-3c2a-4f5e-8a6b-062000000002
+    label: Recalculate the crew capacity once
+    type: run-batch
+    parameters:
+      className: CrewCapacityBatch
+      runMode: wait
+      waitTimeoutMinutes: 10
+    command: ""
+    context: process-deployment-only
+    runOnlyOnceByOrg: true
+    movedFrom: 22
