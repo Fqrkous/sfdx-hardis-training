@@ -1,0 +1,27 @@
+commandsPostDeploy:
+  - id: 7d1e4b90-3c2a-4f5e-8a6b-062000000001
+    label: Put the delivery managers in the Crew Leads group
+    type: apex
+    parameters:
+      apexScript: scripts/apex/crew-leads-add-delivery-managers.apex
+    command: ""
+    context: process-deployment-only
+    runOnlyOnceByOrg: true
+  - id: 7d1e4b90-3c2a-4f5e-8a6b-062000000002
+    label: Recalculate the crew capacity once
+    type: run-batch
+    parameters:
+      className: CrewCapacityBach
+      runMode: wait
+      waitTimeoutMinutes: 10
+    command: ""
+    context: process-deployment-only
+    runOnlyOnceByOrg: true
+  - id: 7d1e4b90-3c2a-4f5e-8a6b-062000000003
+    label: Add the deployment user to the Crew Leads group
+    type: apex
+    parameters:
+      apexScript: scripts/apex/crew-leads-add-deployment-user.apex
+    command: ""
+    context: process-deployment-only
+    runOnlyOnceByOrg: true
