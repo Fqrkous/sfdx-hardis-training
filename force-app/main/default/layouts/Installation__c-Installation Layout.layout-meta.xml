@@ -21,6 +21,10 @@
                 <field>Crew_Size__c</field>
             </layoutItems>
             <layoutItems>
+                <behavior>Readonly</behavior>
+                <field>Crew_Workload__c</field>
+            </layoutItems>
+            <layoutItems>
                 <behavior>Edit</behavior>
                 <field>Install_Date__c</field>
             </layoutItems>
