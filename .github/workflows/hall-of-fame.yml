@@ -1,42 +1,37 @@
 ---
 # Guinea Run Hall of Fame.
 #
-# SIX RULES. Read them before changing anything in this file.
+# The scores no longer come through this repository: the game sends them to
+# its database (Supabase, scripts/guinea-run/supabase.sql) with the
+# publishable key in core/online-config.js, and the database checks them.
+# This workflow keeps that working:
 #
-#  1. Every issue field is untrusted input. It reaches the scripts through the
-#     environment only, never through an expression inside a run: block.
-#  2. Nothing from the issue is executed. scripts/guinea-run/verify-submission.mjs
-#     reads it as JSON and checks every signature and limit before anything is
-#     written.
-#  3. The limits (GUINEA_RUN_LIMITS) and the keys (GUINEA_RUN_KEYS) are secrets on
-#     purpose. Never echo them, and never tell a player why a submission failed:
-#     the reason code stays in the job log. Two exceptions, which reveal no
-#     limit: an old copy of the game, and a send too soon after the last one.
-#  4. Serialise with a concurrency group, and never cancel: two submissions both
-#     write hall-of-fame/hall-of-fame.json and both push to main.
-#  5. Ask for the site build after the push. A push made with GITHUB_TOKEN starts
-#     no workflow, so the site copy of the board would lag otherwise.
-#  6. The key check runs when the game's key pieces change: a game that signs
-#     with a key the secret does not hold has every submission refused.
+#  - the unit tests of the game's save, sends and boards, on a Pull Request
+#  - the key check: the key the game signs with must be the key the database
+#    holds, or every score is refused (scripts/guinea-run/key-check.mjs)
+#  - every day, one read of the board: a free Supabase project is paused after
+#    a week without a request, and the board would stay down until someone
+#    restores it by hand
+#
+# Nothing here needs a secret: the publishable key is public by design.
 
 name: Guinea Run Hall of Fame
 
 on:
-  issues:
-    # `labeled` re-runs the check when a maintainer adds the label by hand, as in
-    # claim.yml. The guinea-run-score label must exist in the repository.
-    types: [opened, edited, reopened, labeled]
+  schedule:
+    - cron: "17 6 * * *"
   push:
     branches:
       - main
     paths:
       - site-theme/javascripts/guinea-run/core/**
       - site-theme/javascripts/guinea-run/worlds/pinball/**
-  # The tests, and the key check where the secret is readable (not from a fork)
+      - site-theme/javascripts/guinea-run/worlds/orgman/**
   pull_request:
     paths:
       - site-theme/javascripts/guinea-run/core/**
       - site-theme/javascripts/guinea-run/worlds/pinball/**
+      - site-theme/javascripts/guinea-run/worlds/orgman/**
       - scripts/guinea-run/**
       - .github/workflows/hall-of-fame.yml
   workflow_dispatch:
@@ -44,135 +39,14 @@ on:
 permissions: read-all
 
 jobs:
-  submission:
-    name: Verify and record the scores
-    # The form fires `opened` AND `labeled`: the `labeled` sent by the author of
-    # the issue is skipped, a label added by a maintainer still runs.
-    # The GitHub mobile app ignores issue forms, so its issue has no label:
-    # the title the game writes says what it is, and the job adds the label.
-    if: >-
-      github.repository == 'hardisgroupcom/sfdx-hardis-training' &&
-      github.event_name == 'issues' &&
-      (contains(github.event.issue.labels.*.name, 'guinea-run-score') ||
-      startsWith(github.event.issue.title, '[Guinea Run] ')) &&
-      (github.event.action != 'labeled' ||
-      (github.event.label.name == 'guinea-run-score' &&
-      github.event.sender.login != github.event.issue.user.login))
-    # Rule 4. On the job, as in claim.yml.
-    concurrency:
-      group: hall-of-fame
-      cancel-in-progress: false
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    permissions:
-      contents: write
-      issues: write
-      actions: write
-    steps:
-      - name: Checkout the training repository
-        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
-        with:
-          persist-credentials: true
-
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
-        with:
-          node-version: 24
-
-      # A label added with GITHUB_TOKEN starts no workflow: this run goes on
-      - name: Label an issue from the mobile app
-        if: ${{ !contains(github.event.issue.labels.*.name, 'guinea-run-score') }}
-        env:
-          GH_TOKEN: ${{ github.token }}
-          ISSUE: ${{ github.event.issue.number }}
-        run: gh issue edit "$ISSUE" --add-label guinea-run-score || true
-
-      # Rules 1 to 3
-      - name: Verify the submission
-        id: verify
-        env:
-          ISSUE_BODY: ${{ github.event.issue.body }}
-          ISSUE_AUTHOR: ${{ github.event.issue.user.login }}
-          ISSUE_CREATED_AT: ${{ github.event.issue.created_at }}
-          ISSUE_NUMBER: ${{ github.event.issue.number }}
-          GUINEA_RUN_KEYS: ${{ secrets.GUINEA_RUN_KEYS }}
-          GUINEA_RUN_LIMITS: ${{ secrets.GUINEA_RUN_LIMITS }}
-        run: node scripts/guinea-run/verify-submission.mjs >> "$GITHUB_OUTPUT"
-
-      - name: Refuse a submission that does not verify
-        if: steps.verify.outputs.valid != 'true'
-        env:
-          GH_TOKEN: ${{ github.token }}
-          ISSUE: ${{ github.event.issue.number }}
-          REASON: ${{ steps.verify.outputs.reason }}
-        run: |
-          # Rule 3: the reason stays in the log, except an old copy of the game
-          # and a send too soon after the last one, which the player fixes alone.
-          # Neither message says what a limit is.
-          if [ "$REASON" = "old-game" ]; then
-            echo "Your page is running an older version of the game, and its scores cannot be verified any more. Close the tab of the course, open the course again, and send your scores again from the Hall of Fame of the game." > /tmp/comment.md
-          elif [ "$REASON" = "rate-limited" ]; then
-            echo "You sent your scores a few minutes ago, and the Hall of Fame takes one send every few minutes. Nothing is lost: your scores stay in your browser. Wait a little, then send them again from the Hall of Fame of the game." > /tmp/comment.md
-          else
-            echo "This submission could not be verified. Play again and send your scores from the game, without editing the issue." > /tmp/comment.md
-          fi
-          gh issue comment "$ISSUE" --body-file /tmp/comment.md
-          gh issue close "$ISSUE" --reason "not planned"
-
-      - name: Record the scores
-        if: steps.verify.outputs.valid == 'true'
-        env:
-          GH_TOKEN: ${{ github.token }}
-          ISSUE: ${{ github.event.issue.number }}
-          AUTHOR: ${{ github.event.issue.user.login }}
-          CREATED_AT: ${{ github.event.issue.created_at }}
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          apply() {
-            node scripts/guinea-run/hall-of-fame.mjs apply /tmp/submission.json \
-              --issue "$ISSUE" --author "$AUTHOR" --at "$CREATED_AT"
-            git add hall-of-fame
-          }
-          apply
-          if git diff --cached --quiet; then
-            echo "Nothing changed in hall-of-fame/"
-          else
-            git commit -m "hall-of-fame: $AUTHOR"
-            # Rule 4: another submission or a badge may have committed meanwhile.
-            # Start again from main and apply this submission to its board.
-            pushed=false
-            for attempt in 1 2 3 4 5; do
-              if git pull --rebase origin "${GITHUB_REF_NAME}" && git push origin "HEAD:${GITHUB_REF_NAME}"; then
-                pushed=true
-                break
-              fi
-              git rebase --abort 2>/dev/null || true
-              git fetch origin "${GITHUB_REF_NAME}"
-              git reset --hard "origin/${GITHUB_REF_NAME}"
-              apply
-              git commit -m "hall-of-fame: $AUTHOR" || true
-              sleep $((attempt * 5))
-            done
-            if [ "$pushed" != "true" ]; then
-              echo "The board could not be pushed after 5 attempts: the issue stays open."
-              exit 1
-            fi
-            # Rule 5
-            if ! gh workflow run pages.yml --ref "${GITHUB_REF_NAME}"; then
-              echo "The site build could not be started: the board is committed, so the page follows on the next build."
-            fi
-          fi
-          gh issue comment "$ISSUE" --body-file /tmp/ranks.md
-          gh issue close "$ISSUE" --reason completed
-
   tests:
-    name: The checks and the merge, as the game sends scores
+    name: The save, the sends and the boards
     # Not on a learner's fork, which runs every workflow of the course
     if: >-
       github.repository == 'hardisgroupcom/sfdx-hardis-training' &&
       (github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch')
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     permissions:
       contents: read
     steps:
@@ -188,10 +62,9 @@ jobs:
       - name: Unit tests
         run: node --test scripts/guinea-run/*.test.mjs
 
-  key-check:
-    name: The game and the secret agree on the key
-    # Rule 6. Not on a learner's fork, which runs every workflow of the course
-    if: github.repository == 'hardisgroupcom/sfdx-hardis-training' && github.event_name != 'issues'
+  database:
+    name: The database answers and agrees on the key
+    if: github.repository == 'hardisgroupcom/sfdx-hardis-training'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
@@ -206,8 +79,15 @@ jobs:
         with:
           node-version: 24
 
-      # An empty secret passes: the script says so and exits 0
-      - name: Compare the key of the game with GUINEA_RUN_KEYS
-        env:
-          GUINEA_RUN_KEYS: ${{ secrets.GUINEA_RUN_KEYS }}
+      # The request that keeps a free project awake, and a check that the board reads
+      - name: Read the board
+        run: |
+          node --input-type=module -e '
+            import { ONLINE_URL, ONLINE_KEY } from "./site-theme/javascripts/guinea-run/core/online-config.js";
+            const response = await fetch(ONLINE_URL + "/rest/v1/guinea_totals?select=name&limit=1", { headers: { apikey: ONLINE_KEY } });
+            console.log("The board answered " + response.status + ".");
+            if (!response.ok) process.exit(1);
+          '
+
+      - name: Compare the key of the game with the database
         run: node scripts/guinea-run/key-check.mjs

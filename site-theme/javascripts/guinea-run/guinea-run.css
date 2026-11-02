@@ -1762,7 +1762,7 @@ html.guinea-run-open body {
   margin-top: 4px;
 }
 
-/* A top 5 score to send: the box on the end card, the dot on the map button */
+/* The Hall of Fame box of an end card: the join box once, then a line when a score is sent */
 .guinea-run .gr-hof-invite {
   display: flex;
   flex-direction: column;
@@ -1791,22 +1791,6 @@ html.guinea-run-open body {
 
 .guinea-run .gr-hof-invite .gr-hof-message {
   margin: 0;
-}
-
-.guinea-run .gr-hof-open.is-marked {
-  position: relative;
-}
-
-.guinea-run .gr-hof-open.is-marked::after {
-  content: "";
-  position: absolute;
-  top: -4px;
-  right: -4px;
-  width: 12px;
-  height: 12px;
-  border: 2px solid #ffffff;
-  border-radius: 50%;
-  background: #f2a900;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1864,12 +1848,12 @@ html.guinea-run-open body {
   font-variant-numeric: tabular-nums;
 }
 
-.guinea-run .gr-hof-avatar {
-  width: 24px;
+.guinea-run .gr-coat {
+  width: 28px;
   height: 24px;
-  border-radius: 50%;
-  background: var(--gr-light);
   flex: 0 0 auto;
+  /* The picture of the cards, tinted per coat by an inline filter (core/online.js COAT_FILTERS) */
+  background: url("../../images/guinea-pig-small.webp") center / contain no-repeat;
 }
 
 .guinea-run .gr-hof-handle {
@@ -1879,15 +1863,6 @@ html.guinea-run-open body {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-.guinea-run .gr-hof-badge {
-  padding: 1px 6px;
-  border-radius: 10px;
-  background: var(--gr-purple);
-  color: #ffffff;
-  font-size: 11px;
-  font-weight: 700;
 }
 
 .guinea-run .gr-hof-stars,
@@ -1933,9 +1908,75 @@ html.guinea-run-open body {
   font-size: 16px;
 }
 
-.guinea-run .gr-hof-link[aria-disabled="true"] {
-  opacity: 0.45;
-  pointer-events: none;
+.guinea-run .gr-coats {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.guinea-run .gr-coats-title {
+  margin-right: 4px;
+}
+
+.guinea-run .gr-coat-choice {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 40px;
+  padding: 0;
+  border: 2px solid var(--gr-border);
+  border-radius: 6px;
+  background: #ffffff;
+  cursor: pointer;
+}
+
+.guinea-run .gr-coat-choice .gr-coat {
+  width: 36px;
+  height: 30px;
+}
+
+.guinea-run .gr-coat-choice.is-active {
+  border-color: var(--gr-brand);
+  background: #eef4ff;
+}
+
+.guinea-run .gr-coat-choice:focus-visible {
+  outline: 2px solid var(--gr-brand);
+  outline-offset: 2px;
+}
+
+.guinea-run .gr-hof-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.guinea-run .gr-hof-forget {
+  margin-top: 4px;
+  font-size: 13px;
+}
+
+.guinea-run .gr-hof-confirm {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+  font-size: 14px;
+}
+
+.guinea-run .gr-hof-confirm p {
+  flex: 1 1 100%;
+  margin: 0;
+}
+
+.guinea-run .gr-hof-status {
+  font-weight: 700;
 }
 
 .guinea-run .gr-hof-message:empty {

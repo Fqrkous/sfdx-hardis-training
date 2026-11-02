@@ -24,7 +24,6 @@ const THREE_URL = "";
 const PREFIX = "guinea-run-";
 const CACHE = PREFIX + VERSION;
 const THREE_ROOT = THREE_URL.slice(0, THREE_URL.lastIndexOf("/") + 1);
-const NETWORK_ONLY = /\/hall-of-fame\/hall-of-fame\.json$/;
 
 self.addEventListener("install", (event) => {
   event.waitUntil(saveGame());
@@ -40,7 +39,8 @@ self.addEventListener("fetch", (event) => {
     return;
   }
   const url = new URL(request.url);
-  const served = url.origin === self.location.origin ? !NETWORK_ONLY.test(url.pathname) : Boolean(THREE_ROOT) && request.url.startsWith(THREE_ROOT);
+  // The Hall of Fame database is on another origin: it always goes to the network
+  const served = url.origin === self.location.origin || (Boolean(THREE_ROOT) && request.url.startsWith(THREE_ROOT));
   if (served) {
     event.respondWith(fromCopy(request));
   }

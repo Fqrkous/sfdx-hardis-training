@@ -16,7 +16,8 @@
  */
 import { WORLDS, MODES, BONUSES } from "./core/story.js";
 import { SPECIAL_THANKS, CONTACT_URLS } from "./credits.js";
-import { avatarUrl, rankBonus, rankGeneral, rankOf, rankWorld } from "./core/hof.js";
+import { GAME_ROWS } from "./core/hof.js";
+import { COATS, COAT_FILTERS, NAME_MAX, cleanName, nameProblem } from "./core/online.js";
 
 /**
  * The guinea pig of the cards: a picture of the 3D model
@@ -93,9 +94,6 @@ const CAST = {
   victor: { name: "Victor Squeeker", initials: "VS", color: "#DD7A01" },
   you: { name: "You", initials: "US", color: "#0176D3" }
 };
-
-// The rows of a board in the game; the site page shows more
-const HOF_ROWS = 10;
 
 const CELEBRATION_MS = 3800;
 const FLY_MS = 650;
@@ -388,28 +386,18 @@ export function createHud(t, options) {
   function hofList(body, view) {
     const general = view.tab === "all";
     const bonus = view.tab === "pinball" || view.tab === "orgman";
-    const list = general ? rankGeneral(view.board) : bonus ? rankBonus(view.board, view.tab) : rankWorld(view.board, view.tab);
+    const list = view.list || [];
     if (!list.length) {
       element("p", "gr-muted", body, view.ok ? t("hofEmpty") : t("hofOffline"));
       return;
     }
     const rows = element("ol", "gr-hof-list", body);
-    const mine = String(view.handle || "").toLowerCase();
-    list.slice(0, HOF_ROWS).forEach((p, i) => {
-      const row = element("li", "gr-hof-row" + (mine && p.handle.toLowerCase() === mine ? " is-you" : ""), rows);
+    const mine = view.rank ? view.rank.rank : 0;
+    list.slice(0, GAME_ROWS).forEach((p, i) => {
+      const row = element("li", "gr-hof-row" + (mine === i + 1 ? " is-you" : ""), rows);
       element("span", "gr-hof-rank", row, String(i + 1));
-      const face = image(row, "gr-hof-avatar", avatarUrl(p.handle, 48), "");
-      face.loading = "lazy";
-      face.referrerPolicy = "no-referrer";
-      face.width = 24;
-      face.height = 24;
-      face.addEventListener("error", () => (face.style.visibility = "hidden"));
-      element("span", "gr-hof-handle", row, p.handle);
-      if (p.badge > 0) {
-        const pill = element("span", "gr-hof-badge", row, "L" + p.badge);
-        pill.title = BADGE_NAMES[p.badge];
-        pill.setAttribute("aria-label", BADGE_NAMES[p.badge]);
-      }
+      coatPicture(row, p.coat);
+      element("span", "gr-hof-handle", row, p.name);
       if (bonus) {
         element("span", "gr-hof-stars", row, t(view.tab === "orgman" ? "hofMaze" : "hofLevel", { n: p.level }));
         element("span", "gr-hof-score", row, number(p.score));
@@ -427,10 +415,18 @@ export function createHud(t, options) {
       }
       element("span", "gr-hof-score", row, String(general ? p.total : p.score));
     });
-    const rank = mine ? rankOf(list, mine) : 0;
-    if (rank > HOF_ROWS) {
-      element("p", "gr-muted", body, t("hofYou", { rank, total: list.length }));
+    if (mine > GAME_ROWS) {
+      element("p", "gr-muted", body, t("hofYou", { rank: mine, total: view.rank.players }));
     }
+  }
+
+  /** A guinea pig of a coat, the picture of a board row and of the coat picker. */
+  function coatPicture(parent, coat) {
+    const code = COATS.includes(coat) ? coat : COATS[0];
+    const pic = element("span", "gr-coat gr-coat--" + code, parent);
+    pic.style.filter = COAT_FILTERS[code];
+    pic.setAttribute("aria-hidden", "true");
+    return pic;
   }
 
   function number(n) {
@@ -457,86 +453,151 @@ export function createHud(t, options) {
     return play;
   }
 
-  /** The handle box and the link that opens the GitHub issue with the scores. */
-  function hofSend(body, view) {
-    const box = element("div", "gr-hof-send", body);
-    element("p", "gr-small-title", box, t("hofSendTitle"));
-    if (!view.canSend) {
-      element("p", "gr-muted", box, t("hofTestMode"));
-      return;
+  /**
+   * The nickname and the guinea pig of the player: the profile box of the Hall
+   * of Fame card, and the join box of an end card (compact). view: { profile,
+   * online (the database answers), testLink (a test link: nothing is ever
+   * sent), onSave(name, coat) -> Promise<"saved"|"later"|"refused">, onSkip?,
+   * onForget? -> Promise<boolean> }.
+   */
+  function profileForm(box, view, compact) {
+    const joined = Boolean(view.profile && view.profile.id);
+    const draft = hofDraft || { name: joined ? view.profile.name : "", coat: (view.profile && view.profile.coat) || COATS[0] };
+    hofDraft = draft;
+    element("p", compact ? "gr-hof-invite-title" : "gr-small-title", box, joined ? t("hofProfileTitle") : t("hofJoinTitle"));
+    if (!joined) {
+      element("p", "", box, t("hofJoinText"));
     }
     const label = element("label", "gr-hof-field", box);
-    element("span", "", label, t("hofHandle"));
+    element("span", "", label, t("hofName"));
     const input = element("input", "", label);
     input.type = "text";
     // What was typed survives a change of tab, which draws the card again
-    input.value = hofDraft !== null ? hofDraft : view.handle || "";
-    input.maxLength = 39;
-    input.autocomplete = "username";
+    input.value = draft.name;
+    input.maxLength = NAME_MAX;
+    input.autocomplete = "nickname";
     input.spellcheck = false;
     input.setAttribute("autocapitalize", "none");
     input.setAttribute("autocorrect", "off");
-    input.placeholder = "octocat";
-    // A real link: a new tab opened after a wait is blocked by some browsers
-    const link = element("a", "gr-button gr-primary gr-small gr-hof-link", box, t("hofSubmit"));
-    link.target = "_blank";
-    link.rel = "noopener";
-    link.setAttribute("aria-disabled", "true");
+    const coats = element("div", "gr-coats", box);
+    coats.setAttribute("role", "radiogroup");
+    coats.setAttribute("aria-label", t("hofCoat"));
+    element("span", "gr-coats-title", coats, t("hofCoat"));
+    const choices = [];
+    for (const coat of COATS) {
+      const choice = element("button", "gr-coat-choice" + (coat === draft.coat ? " is-active" : ""), coats);
+      choice.type = "button";
+      choice.setAttribute("role", "radio");
+      choice.setAttribute("aria-checked", String(coat === draft.coat));
+      choice.setAttribute("aria-label", t("coat_" + coat));
+      choice.title = t("coat_" + coat);
+      choice.setAttribute("data-coat", coat);
+      coatPicture(choice, coat);
+      choices.push(choice);
+      choice.addEventListener("click", () => {
+        draft.coat = coat;
+        for (const other of choices) {
+          const on = other.getAttribute("data-coat") === coat;
+          other.classList.toggle("is-active", on);
+          other.setAttribute("aria-checked", String(on));
+        }
+      });
+    }
+    const actions = element("div", "gr-hof-actions", box);
+    const save = element("button", "gr-button gr-primary gr-small gr-hof-save", actions, joined ? t("hofSave") : t("hofJoin"));
+    save.type = "button";
+    if (!joined && view.onSkip) {
+      const skip = element("button", "gr-button gr-small gr-hof-skip", actions, t("hofNoThanks"));
+      skip.type = "button";
+      skip.addEventListener("click", () => {
+        hofDraft = null;
+        view.onSkip();
+        box.hidden = true;
+      });
+    }
     const message = element("p", "gr-muted gr-hof-message", box);
     message.setAttribute("aria-live", "polite");
     element("p", "gr-muted gr-hof-privacy", box, t("hofPrivacy"));
-    let ready = null;
-    let asked = 0;
-    async function refresh() {
-      const handle = input.value.trim();
-      const mine = ++asked;
-      ready = null;
-      link.setAttribute("aria-disabled", "true");
-      link.removeAttribute("href");
-      if (!handle) {
-        message.textContent = "";
-        return;
-      }
-      const answer = await view.prepare(handle);
-      if (mine !== asked) {
-        return;
-      }
-      if (answer.error) {
-        message.textContent = t(answer.error, answer.params);
-        return;
-      }
-      ready = { handle, count: answer.count };
-      link.href = answer.url;
-      link.removeAttribute("aria-disabled");
-      message.textContent = t("hofReady", { n: answer.count });
-    }
-    let timer = 0;
     input.addEventListener("input", () => {
-      hofDraft = input.value;
-      window.clearTimeout(timer);
-      timer = window.setTimeout(refresh, 250);
+      draft.name = input.value;
+      message.textContent = "";
     });
-    link.addEventListener("click", (event) => {
-      if (!ready) {
-        event.preventDefault();
+    let busy = false;
+    save.addEventListener("click", async () => {
+      const name = cleanName(input.value);
+      const problem = nameProblem(name);
+      if (problem) {
+        message.textContent = t(problem);
         input.focus();
         return;
       }
-      view.onSent(ready.handle, ready.count);
-      message.textContent = t("hofSent");
+      if (busy) {
+        return;
+      }
+      busy = true;
+      message.textContent = "";
+      const outcome = await view.onSave(name, draft.coat);
+      busy = false;
+      hofDraft = null;
+      if (!box.isConnected) {
+        return;
+      }
+      message.textContent = outcome === "refused" ? t("hofNameRefused") : outcome === "later" ? t("hofLaterLine") : t(joined ? "hofSaved" : "hofJoined");
     });
-    refresh();
+    if (joined && view.onForget) {
+      forgetLink(box, view);
+    }
   }
 
-  // The invitation box of the end card on screen, and whether the map marks the Hall of Fame button
-  let inviteBox = null;
-  let hofMarked = false;
+  /** "Remove me from the Hall of Fame", then a confirmation. */
+  function forgetLink(box, view) {
+    const link = element("button", "gr-link gr-hof-forget", box, t("hofForget"));
+    link.type = "button";
+    link.addEventListener("click", () => {
+      link.remove();
+      const confirm = element("div", "gr-hof-confirm", box);
+      element("p", "", confirm, t("hofForgetConfirm"));
+      const yes = element("button", "gr-button gr-small", confirm, t("hofForgetYes"));
+      yes.type = "button";
+      const no = element("button", "gr-button gr-small", confirm, t("hofForgetNo"));
+      no.type = "button";
+      no.addEventListener("click", () => {
+        confirm.remove();
+        forgetLink(box, view);
+      });
+      yes.addEventListener("click", async () => {
+        yes.disabled = true;
+        const done = await view.onForget();
+        if (confirm.isConnected) {
+          confirm.textContent = "";
+          element("p", "gr-muted", confirm, done ? t("hofForgotten") : t("hofOffline"));
+        }
+      });
+    });
+  }
 
-  /** An empty invitation box on an end card, filled by invite() once the board is read. */
-  function invitePlace(body) {
-    inviteBox = element("div", "gr-hof-invite", body);
-    inviteBox.hidden = true;
-    inviteBox.setAttribute("aria-live", "polite");
+  /** The profile box under the boards of the Hall of Fame card. */
+  function hofProfile(body, view) {
+    const box = element("div", "gr-hof-send", body);
+    if (view.testLink) {
+      element("p", "gr-muted", box, t("hofTestMode"));
+      return;
+    }
+    if (!view.online) {
+      element("p", "gr-muted", box, t("hofOff"));
+      return;
+    }
+    profileForm(box, view, false);
+  }
+
+  // The Hall of Fame box of the end card on screen: the join box, or a line once a score is sent
+  let hofBox = null;
+
+  /** An empty Hall of Fame box on an end card, filled by joinOffer() or hofStatus(). */
+  function hofPlace(body) {
+    hofBox = element("div", "gr-hof-invite", body);
+    hofBox.hidden = true;
+    hofBox.setAttribute("aria-live", "polite");
   }
 
   /**
@@ -566,20 +627,6 @@ export function createHud(t, options) {
     } else if (install.kind === "prompt") {
       button(box, "install", t("installButton"), "gr-small gr-install-link");
     }
-  }
-
-  /** Where the scores would rank: "#3 in Commit, #2 overall". */
-  function inviteList(invites) {
-    const parts = invites.map((i) =>
-      i.board === "all"
-        ? t("hofInviteAll", { rank: i.rank })
-        : i.board === "pinball"
-          ? t("hofInvitePinball", { rank: i.rank })
-          : i.board === "orgman"
-            ? t("hofInviteOrgman", { rank: i.rank })
-            : t("hofInviteWorld", { rank: i.rank, world: t("w" + i.board + "_name") })
-    );
-    return parts.length > 1 ? parts.slice(0, -1).join(", ") + " " + t("hofAnd") + " " + parts[parts.length - 1] : parts[0];
   }
 
   /* ---------- The end credits ---------- */
@@ -859,11 +906,7 @@ export function createHud(t, options) {
           }
           const meta = element("div", "gr-map-meta", body);
           badgesRow(meta, progress.badges);
-          const hof = button(meta, "hof", t("hofButton"), "gr-small gr-hof-open");
-          hof.classList.toggle("is-marked", hofMarked);
-          if (hofMarked) {
-            hof.title = t("hofMarkTitle");
-          }
+          button(meta, "hof", t("hofButton"), "gr-small gr-hof-open");
           element("p", "gr-muted", meta, t("notesFound", { n: progress.notesFound(), total: WORLDS.length }));
           const reset = element("button", "gr-link", meta, t("resetProgress"));
           reset.type = "button";
@@ -966,7 +1009,7 @@ export function createHud(t, options) {
         if (result.notes > 0) {
           element("li", "", list, t("bonusNotesLine", { n: result.notes }));
         }
-        invitePlace(body);
+        hofPlace(body);
         const rule = element("div", "gr-rule", body);
         element("strong", "", rule, t("theRule"));
         element("span", "", rule, t(words.rule));
@@ -1017,36 +1060,27 @@ export function createHud(t, options) {
     },
 
     /**
-     * The invitation to send a top 5 score, on the end card on screen.
-     * view: { invites: [{ board, rank }], canSend, handle, url, count, onSent }:
-     * with a url, a link straight to the issue; otherwise the Hall of Fame card.
+     * The join box on the end card on screen, once: a nickname and a guinea
+     * pig, Join or No thanks. view: as profileForm.
      */
-    invite(view) {
-      if (!inviteBox || !inviteBox.isConnected) {
+    joinOffer(view) {
+      if (!hofBox || !hofBox.isConnected) {
         return;
       }
-      const box = inviteBox;
-      box.textContent = "";
-      box.hidden = false;
-      element("strong", "gr-hof-invite-title", box, t("hofInviteTitle"));
-      element("span", "", box, t("hofInviteLine", { list: inviteList(view.invites) }));
-      const first = view.invites[0].board;
-      if (view.url) {
-        const link = element("a", "gr-button gr-primary gr-small gr-hof-link", box, t("hofSubmit"));
-        link.href = view.url;
-        link.target = "_blank";
-        link.rel = "noopener";
-        const message = element("p", "gr-muted gr-hof-message", box, t("hofInviteAs", { handle: view.handle }));
-        link.addEventListener("click", () => {
-          view.onSent(view.handle, view.count);
-          message.textContent = t("hofSent");
-        });
-      } else {
-        const open = button(box, "hof", t("hofSendTitle"), "gr-primary gr-small gr-hof-open");
-        if (first !== "all") {
-          open.setAttribute("data-world", String(first));
-        }
+      hofBox.textContent = "";
+      hofBox.hidden = false;
+      hofBox.classList.add("gr-hof-join");
+      profileForm(hofBox, view, true);
+    },
+
+    /** One line on the end card on screen: "sent" (the score is on the board) or "later" (it waits for the network). */
+    hofStatus(kind) {
+      if (!hofBox || !hofBox.isConnected || hofBox.classList.contains("gr-hof-join")) {
+        return;
       }
+      hofBox.textContent = "";
+      hofBox.hidden = false;
+      element("span", "gr-hof-status", hofBox, t(kind === "sent" ? "hofSentLine" : "hofLaterLine"));
     },
 
     /** True while the map or an end card shows the install box. */
@@ -1059,16 +1093,6 @@ export function createHud(t, options) {
       const box = panel.querySelector(".gr-install");
       if (box) {
         fillInstall(box, install);
-      }
-    },
-
-    /** The mark on the Hall of Fame button of the map: a top 5 score waits to be sent. */
-    markHof(on) {
-      hofMarked = Boolean(on);
-      const node = overlay.querySelector(".gr-map-meta .gr-hof-open");
-      if (node) {
-        node.classList.toggle("is-marked", hofMarked);
-        node.title = hofMarked ? t("hofMarkTitle") : "";
       }
     },
 
@@ -1092,7 +1116,8 @@ export function createHud(t, options) {
             element("strong", "", missed, t("goodToKnow"));
             element("span", "", missed, result.missed);
           }
-          invitePlace(body);
+          hofPlace(body);
+          button(body, "hof", t("hofSeeWorld"), "gr-small gr-hof-open").setAttribute("data-world", String(world.id));
           if (result.install) {
             installBox(body, result.install);
           }
@@ -1116,9 +1141,10 @@ export function createHud(t, options) {
     },
 
     /**
-     * The Hall of Fame. view: { tab ("all" or a world id), from (the world
-     * whose card opened it, or null), loading, board, ok, handle, canSend,
-     * prepare(handle) -> Promise<{ url, count } | { error }>, onSent(handle, count) }.
+     * The Hall of Fame. view: { tab ("all", a world id, "pinball" or "orgman"),
+     * from (the world whose card opened it, or null), loading, list (the
+     * board, best first), ok, rank ({ rank, players } of the player on it, or
+     * null), online, testLink, profile, onSave, onForget (see profileForm) }.
      */
     hallOfFame(view) {
       screen(
@@ -1142,7 +1168,7 @@ export function createHud(t, options) {
           } else {
             hofList(body, view);
           }
-          hofSend(body, view);
+          hofProfile(body, view);
           if (view.from === null || view.from === undefined) {
             button(footer, "map", t("backToMap"), "gr-primary");
           } else {

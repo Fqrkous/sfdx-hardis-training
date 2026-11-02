@@ -129,10 +129,12 @@
     "intro": [
       "Guinea Run is a game hidden in this site. Find the guinea pig at the end of the footer of any page, and play.",
       "",
-      "Each world keeps the best score a player sent. Send yours from the Hall of Fame of the game: it opens a GitHub issue with your scores filled in, and a job adds them here within a few minutes."
+      "Each world keeps the best score of each player. Pick a nickname and a guinea pig once in the game, after your first world: from then on your best scores come here on their own."
     ],
-    "updated": "Last update: {date}.",
-    "empty": "Nobody here yet. Send your scores from the game and be the first.",
+    "privacy": "Shown to everyone: the nickname, the guinea pig and the scores of each player. Nothing else is stored: no account, no email. A player can remove themselves from the Hall of Fame of the game.",
+    "loading": "Reading the Hall of Fame...",
+    "offline": "The Hall of Fame cannot be read just now. Try again in a moment.",
+    "empty": "Nobody here yet. Play, pick a nickname, and be the first.",
     "general": {
       "heading": "All worlds",
       "intro": "The best score of each world, added up. The top {count} players."
@@ -146,17 +148,16 @@
     "generalColumns": ["#", "Player", "Total", "Stars"],
     "worldColumns": ["#", "Player", "Score", "Mode", "Stars", "Boss time"],
     "seconds": "{value} s",
-    "badgeAlt": "Level {level} badge",
     "pinball": {
       "heading": "Pipeline Pinball",
       "intro": "The bonus table, open to whoever finished the ten worlds. The best game of each player, on its own: it is not added to the total. The top {count} players.",
-      "empty": "Nobody sent a game of the bonus table yet.",
+      "empty": "Nobody has a game of the bonus table here yet.",
       "columns": ["#", "Player", "Score", "Level", "Missions", "Minutes"]
     },
     "orgman": {
       "heading": "Org-Man",
       "intro": "The maze, open to whoever finished the ten worlds. The best game of each player, on its own: it is not added to the total. The top {count} players.",
-      "empty": "Nobody sent a game of Org-Man yet.",
+      "empty": "Nobody has a game of Org-Man here yet.",
       "columns": ["#", "Player", "Score", "Maze", "Admins caught", "Minutes"]
     }
   },

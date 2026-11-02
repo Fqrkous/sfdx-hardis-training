@@ -144,6 +144,9 @@ extra_javascript:
   # Something small and furry. It only listens for its two triggers; the rest,
   # Three.js included, loads the first time one fires. See easter-egg.js.
   - theme/javascripts/easter-egg.js
+  # The Hall of Fame page only: its boards are read from the game's database
+  # in the browser. See hall-of-fame-page.js.
+  - theme/javascripts/hall-of-fame-page.js
 
 extra:
   # Google Analytics, on the course's own data stream inside the sfdx-hardis

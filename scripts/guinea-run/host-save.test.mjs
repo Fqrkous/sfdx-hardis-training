@@ -100,15 +100,15 @@ test("no answer from the extension: the game plays on this project's storage and
   );
 });
 
-test("the shared save and this project's are merged, the shared handle wins", async () => {
+test("the shared save and this project's are merged, the shared Hall of Fame profile wins", async () => {
   const shared = {
-    progress: progressText({ 0: { best: 1200, stars: 3 }, 1: { best: 500, stars: 1 } }, { handle: "shared-handle", mode: "hard" }),
+    progress: progressText({ 0: { best: 1200, stars: 3 }, 1: { best: 500, stars: 1 } }, { online: { id: "0b4f3c1e-1111-4a2b-8c3d-000000000001", name: "Shared", coat: "golden", asked: true, sent: { w0: 1200 } }, mode: "hard" }),
     pinball: '{"v":1,"k":1,"text":"{}","sg":"x"}',
     muted: "1",
     admins: '{"0":[7]}'
   };
   const frame = fakeFrame(await buildSave(shared), {
-    [SAVE_KEYS.progress]: progressText({ 0: { best: 800, stars: 2 }, 2: { best: 300, stars: 1 } }, { handle: "old-handle", badges: [1] }),
+    [SAVE_KEYS.progress]: progressText({ 0: { best: 800, stars: 2 }, 2: { best: 300, stars: 1 } }, { online: { id: "0b4f3c1e-2222-4a2b-8c3d-000000000002", name: "Other", coat: "snow", sent: {} }, badges: [1] }),
     [SAVE_KEYS.muted]: "0"
   });
   const result = await restoreFromHost({ timeoutMs: 1000 });
@@ -117,7 +117,9 @@ test("the shared save and this project's are merged, the shared handle wins", as
   assert.equal(merged.worlds[0].best, 1200);
   assert.equal(merged.worlds[1].best, 500);
   assert.equal(merged.worlds[2].best, 300);
-  assert.equal(merged.handle, "shared-handle");
+  assert.equal(merged.online.id, "0b4f3c1e-1111-4a2b-8c3d-000000000001");
+  assert.equal(merged.online.name, "Shared");
+  assert.equal(merged.online.sent.w0, 1200);
   assert.equal(merged.mode, "hard");
   assert.deepEqual(merged.badges, [1]);
   assert.equal(frame.items.get(SAVE_KEYS.muted), "1");
@@ -145,7 +147,7 @@ test("a save edited by hand: everything is cleared and the extension deletes it"
   const saved = JSON.parse(await buildSave({ progress: progressText({ 0: { best: 100, stars: 1 } }), pinball: null, muted: null, admins: null }));
   const edited = JSON.stringify(Object.assign({}, saved, { text: saved.text.replace("100", "199") }));
   const frame = fakeFrame(edited, {
-    [SAVE_KEYS.progress]: progressText({ 0: { best: 100, stars: 1 } }, { handle: "me" }),
+    [SAVE_KEYS.progress]: progressText({ 0: { best: 100, stars: 1 } }, { online: { id: "0b4f3c1e-1111-4a2b-8c3d-000000000001", name: "me", coat: "agouti" } }),
     [SAVE_KEYS.pinball]: "game",
     [SAVE_KEYS.muted]: "1",
     [SAVE_KEYS.admins]: "{}",
@@ -159,10 +161,10 @@ test("a save edited by hand: everything is cleared and the extension deletes it"
   assert.equal(frame.items.get("guinea-run-installed"), "1");
   assert.ok(frame.heard.some((m) => m.type === "clearSave"));
   assert.ok(!frame.heard.some((m) => m.type === "storeSave"));
-  // The game starts from zero, handle included
+  // The game starts from zero, Hall of Fame profile included
   const progress = createProgress();
   assert.equal(progress.unlocked, 0);
-  assert.ok(!progress.handle);
+  assert.ok(!progress.online.id);
 });
 
 test("several changes in a row travel as one signed save", async () => {

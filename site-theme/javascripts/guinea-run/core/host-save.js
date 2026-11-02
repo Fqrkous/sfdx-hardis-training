@@ -189,7 +189,7 @@ function askHost(timeoutMs) {
   });
 }
 
-/** The shared save first; the progress of this project is merged in (the best of both, the handle and mode of the shared save). */
+/** The shared save first; the progress of this project is merged in (the best of both, the Hall of Fame profile and mode of the shared save). */
 function applyValues(values) {
   const storage = storageOrNull();
   if (!storage) {

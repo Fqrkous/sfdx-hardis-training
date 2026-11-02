@@ -3,6 +3,10 @@
 What changed in the course, for learners and trainers. The course has no versions: each section is
 a day, newest first, and a change goes under the date of the day it is made.
 
+## 2026-11-02
+
+- Guinea Run: pick a nickname and a guinea pig once, after your first world, and every new best score goes to the Hall of Fame on its own, with no GitHub account and nothing else about you stored.
+
 ## 2026-11-01
 
 - Lab 3.8: the first question of **Install Org Monitoring** says to answer Yes, and the warning about the `workflow` permission comes before you click the button.
