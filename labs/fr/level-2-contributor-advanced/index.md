@@ -4,12 +4,12 @@ description: "Affrontez ce que les vraies livraisons Salesforce vous envoient : 
 id: l2-home
 level: 2
 lang: fr
-source_rev: "8fb8d8aa35a02d14b0daa8ec3415e504755b45d6"
+source_rev: "471d3eed7472821a299ad7cbeb66993d71cb408c"
 ---
 
 # Niveau 2 - Contributeur Salesforce DevOps avancé
 
-**Durée** : environ 6 h.<!-- observed --> Observé sur les Labs 2.1 à 2.9 : médiane 6 h 58, 25 participants, le plus rapide 1 h 54.<!-- /observed -->
+**Durée** : environ 5 h 45.<!-- observed --> Observé sur les Labs 2.1 à 2.9 : médiane 6 h 44, 26 participants, le plus rapide 1 h 54.<!-- /observed -->
 
 **Prérequis** : le [Niveau 1](../level-1-contributor-basics/index.md). Pas facultatif : chaque lab
 d'ici suppose que la boucle est automatique pour vous.
@@ -36,12 +36,12 @@ jours.
 | [2.1](2-1-backpromote-your-teammates-work.md)                         | Backpromote : remettre votre org de dev au niveau de l'équipe           | 30 min |
 | [2.2](2-2-fix-a-missing-dependency-deployment-error.md)               | Corriger une erreur de déploiement due à une dépendance manquante       | 35 min |
 | [2.3](2-3-fix-broken-records-with-an-apex-deployment-action.md)       | Réparer des enregistrements cassés avec une deployment action Apex      | 40 min |
-| [2.4](2-4-ship-reference-data-and-a-batch-with-deployment-actions.md) | Livrer des données de référence et un batch avec des deployment actions | 1 h    |
-| [2.5](2-5-pass-code-quality-and-apex-test-coverage.md)                | Passer la barrière de qualité de code et la couverture de tests Apex    | 30 min |
+| [2.4](2-4-ship-reference-data-and-a-batch-with-deployment-actions.md) | Livrer des données de référence et un batch avec des deployment actions | 1 h 05 |
+| [2.5](2-5-pass-code-quality-and-apex-test-coverage.md)                | Passer la barrière de qualité de code et la couverture de tests Apex    | 25 min |
 | [2.6](2-6-permission-sets-and-profiles.md)                            | Permission sets, profils, et pourquoi une autorisation disparaît        | 30 min |
-| [2.7](2-7-resolve-a-git-merge-conflict.md)                            | Résoudre un conflit de merge Git avec un collègue                       | 45 min |
+| [2.7](2-7-resolve-a-git-merge-conflict.md)                            | Résoudre un conflit de merge Git avec un collègue                       | 40 min |
 | [2.8](2-8-recover-from-committing-the-wrong-metadata.md)              | Se remettre d'avoir commité la mauvaise métadonnée                      | 25 min |
-| [2.9](2-9-capstone-deliver-a-user-story-that-has-it-all.md)           | Épreuve finale : livrer une User Story qui a tout                       | 50 min |
+| [2.9](2-9-capstone-deliver-a-user-story-that-has-it-all.md)           | Épreuve finale : livrer une User Story qui a tout                       | 45 min |
 
 ## Le menu Training
 

@@ -22,7 +22,7 @@ depends_on:
 
 **Level**: 2 Contributor advanced
 
-**Time**: ~30 min<!-- observed --> (observed: median 33 min, 14 learners, fastest 10 min)<!-- /observed -->
+**Time**: ~30 min<!-- observed --> (observed: median 32 min, 15 learners, fastest 10 min)<!-- /observed -->
 
 **You will**: chase a permission that vanishes between a green deployment and the target org, and
 find out it was removed on purpose.
