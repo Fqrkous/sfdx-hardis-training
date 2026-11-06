@@ -8,7 +8,7 @@ lang: en
 
 # Level 2 - Salesforce DevOps contributor advanced
 
-**Time**: about 5 h 45.<!-- observed --> Observed on Labs 2.1 to 2.9: median 6 h 44, 26 learners, fastest 1 h 54.<!-- /observed -->
+**Time**: about 5 h 45.<!-- observed --> Observed on Labs 2.1 to 2.9: median 6 h 58, 27 learners, fastest 1 h 54.<!-- /observed -->
 
 **Before you start**: [Level 1](../level-1-contributor-basics/index.md). Not optional: every lab here assumes the loop
 is automatic for you.
@@ -30,7 +30,7 @@ something breaks, you know where to look and what to do, and you lose minutes in
 
 | Lab                                                                   | Title                                                   | Time   |
 |-----------------------------------------------------------------------|---------------------------------------------------------|--------|
-| [2.1](2-1-backpromote-your-teammates-work.md)                         | Backpromote: catch your dev org up with the team        | 30 min |
+| [2.1](2-1-backpromote-your-teammates-work.md)                         | Backpromote: catch your dev org up with the team        | 35 min |
 | [2.2](2-2-fix-a-missing-dependency-deployment-error.md)               | Fix a deployment error caused by a missing dependency   | 35 min |
 | [2.3](2-3-fix-broken-records-with-an-apex-deployment-action.md)       | Fix broken records with an Apex deployment action       | 40 min |
 | [2.4](2-4-ship-reference-data-and-a-batch-with-deployment-actions.md) | Ship reference data and a batch with deployment actions | 1 h 05 |

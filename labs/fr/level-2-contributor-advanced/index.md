@@ -4,12 +4,12 @@ description: "Affrontez ce que les vraies livraisons Salesforce vous envoient : 
 id: l2-home
 level: 2
 lang: fr
-source_rev: "471d3eed7472821a299ad7cbeb66993d71cb408c"
+source_rev: "fbe5a327541333ada9b20c5f6685cf8061a3639a"
 ---
 
 # Niveau 2 - Contributeur Salesforce DevOps avancé
 
-**Durée** : environ 5 h 45.<!-- observed --> Observé sur les Labs 2.1 à 2.9 : médiane 6 h 44, 26 participants, le plus rapide 1 h 54.<!-- /observed -->
+**Durée** : environ 5 h 45.<!-- observed --> Observé sur les Labs 2.1 à 2.9 : médiane 6 h 58, 27 participants, le plus rapide 1 h 54.<!-- /observed -->
 
 **Prérequis** : le [Niveau 1](../level-1-contributor-basics/index.md). Pas facultatif : chaque lab
 d'ici suppose que la boucle est automatique pour vous.
@@ -33,7 +33,7 @@ jours.
 
 | Lab                                                                   | Titre                                                                   | Durée  |
 |-----------------------------------------------------------------------|-------------------------------------------------------------------------|--------|
-| [2.1](2-1-backpromote-your-teammates-work.md)                         | Backpromote : remettre votre org de dev au niveau de l'équipe           | 30 min |
+| [2.1](2-1-backpromote-your-teammates-work.md)                         | Backpromote : remettre votre org de dev au niveau de l'équipe           | 35 min |
 | [2.2](2-2-fix-a-missing-dependency-deployment-error.md)               | Corriger une erreur de déploiement due à une dépendance manquante       | 35 min |
 | [2.3](2-3-fix-broken-records-with-an-apex-deployment-action.md)       | Réparer des enregistrements cassés avec une deployment action Apex      | 40 min |
 | [2.4](2-4-ship-reference-data-and-a-batch-with-deployment-actions.md) | Livrer des données de référence et un batch avec des deployment actions | 1 h 05 |
