@@ -4,12 +4,12 @@ description: "Affrontez ce que les vraies livraisons Salesforce vous envoient : 
 id: l2-home
 level: 2
 lang: fr
-source_rev: "bdda1e7e264731339a8c67b42790fd8f0f6e52c2"
+source_rev: "4382cfe9500d4e6c9f0ed199a629717e98096a1d"
 ---
 
 # Niveau 2 - Contributeur Salesforce DevOps avancé
 
-**Durée** : environ 5 h 45.<!-- observed --> Observé sur les Labs 2.1 à 2.9 : médiane 6 h 29, 29 participants, le plus rapide 1 h 54.<!-- /observed -->
+**Durée** : environ 5 h 45.<!-- observed --> Observé sur les Labs 2.1 à 2.9 : médiane 6 h 39, 30 participants, le plus rapide 1 h 54.<!-- /observed -->
 
 **Prérequis** : le [Niveau 1](../level-1-contributor-basics/index.md). Pas facultatif : chaque lab
 d'ici suppose que la boucle est automatique pour vous.
