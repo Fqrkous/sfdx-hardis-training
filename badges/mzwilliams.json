@@ -12,7 +12,7 @@
         "course": "https://sfdx-hardis-training.cloudity.com"
       },
       "issuedOn": "2026-11-07",
-      "issuedAt": "2026-11-07T03:12:44Z",
+      "issuedAt": "2026-11-07T03:22:51Z",
       "evidence": [
         {
           "type": "Repository",
@@ -20,17 +20,17 @@
         },
         {
           "type": "ClaimIssue",
-          "url": "https://github.com/hardisgroupcom/sfdx-hardis-training/issues/371"
+          "url": "https://github.com/hardisgroupcom/sfdx-hardis-training/issues/372"
         }
       ],
-      "image": "https://sfdx-hardis-training.cloudity.com/badges/img/mwilliams-level-1.svg",
+      "image": "https://sfdx-hardis-training.cloudity.com/badges/img/mzwilliams-level-1.svg",
       "bannerImage": "https://sfdx-hardis-training.cloudity.com/badges/img/banner-level-1.svg",
       "superbadge": false,
       "checksPassed": 6,
       "checksTotal": 6
     }
   ],
-  "trailblazer": "mwilliams",
-  "name": "Michelle Williams",
-  "trailblazerName": "Michelle Williams"
+  "trailblazer": "mzwilliams",
+  "name": "Marella Kathrina Williams",
+  "trailblazerName": "Marella Kathrina Williams"
 }
