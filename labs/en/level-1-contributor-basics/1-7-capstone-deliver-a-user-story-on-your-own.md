@@ -20,7 +20,7 @@ depends_on:
 
 **Level**: 1 Contributor basics
 
-**Time**: ~25 min<!-- observed --> (observed: median 27 min, 40 learners, fastest 7 min)<!-- /observed -->
+**Time**: ~25 min<!-- observed --> (observed: median 26 min, 41 learners, fastest 7 min)<!-- /observed -->
 
 **You will**: do the whole loop again with no step-by-step, which is the only way to find out
 whether you learned it.
