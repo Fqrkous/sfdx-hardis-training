@@ -388,7 +388,8 @@
         "runOnlyOnceByOrg"
       ],
       "docs": [
-        "salesforce-devops-work-on-user-story-deployment-actions"
+        "salesforce-devops-work-on-user-story-deployment-actions",
+        "salesforce-devops-work-on-user-story-deployment-actions-apex"
       ],
       "panels": [
         "pipeline",
@@ -427,7 +428,10 @@
       ],
       "docs": [
         "salesforce-devops-agent-data-workspaces",
-        "salesforce-devops-work-on-user-story-deployment-actions"
+        "salesforce-devops-work-on-user-story-deployment-actions",
+        "salesforce-devops-work-on-user-story-deployment-actions-data",
+        "salesforce-devops-work-on-user-story-deployment-actions-schedule-batch",
+        "salesforce-devops-work-on-user-story-deployment-actions-manual"
       ],
       "panels": [
         "dataWorkbench",
@@ -626,7 +630,8 @@
         "autoCleanTypes"
       ],
       "docs": [
-        "salesforce-devops-work-on-user-story-deployment-actions"
+        "salesforce-devops-work-on-user-story-deployment-actions",
+        "salesforce-devops-work-on-user-story-deployment-actions-data"
       ],
       "panels": [
         "pipeline",
@@ -1204,7 +1209,20 @@
         "lab-2-9",
         "lab-3-3"
       ],
+      "salesforce-devops-work-on-user-story-deployment-actions-apex": [
+        "lab-2-3"
+      ],
       "salesforce-devops-agent-data-workspaces": [
+        "lab-2-4"
+      ],
+      "salesforce-devops-work-on-user-story-deployment-actions-data": [
+        "lab-2-4",
+        "lab-2-9"
+      ],
+      "salesforce-devops-work-on-user-story-deployment-actions-schedule-batch": [
+        "lab-2-4"
+      ],
+      "salesforce-devops-work-on-user-story-deployment-actions-manual": [
         "lab-2-4"
       ],
       "salesforce-devops-work-on-user-story-development": [

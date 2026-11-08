@@ -348,6 +348,7 @@ wired to them, all built by one command.
 
    1 of 8  Your own copy of the repository
    OK  origin is now your-handle/sfdx-hardis-training, and the shared repository is upstream.
+   OK  Issues switched on in your-handle/sfdx-hardis-training: sfdx-hardis keeps the list of your development orgs in one.
 
    2 of 8  Actions turned on
    OK  Actions are on.
@@ -519,7 +520,9 @@ Eight things, each of them real work on a real project, and none of them yours t
 - Your own copy of the repository, its *fork*, under your GitHub account. Your clone pushes
   there now, and still pulls from the team's repository. The fork carries the two branches the
   pipeline uses today, `integration` and `uat`, and `main`. You add `preprod` yourself in
-  [Lab 3.1](../level-3-release-manager/3-1-configure-the-pipeline-up-to-production.md)
+  [Lab 3.1](../level-3-release-manager/3-1-configure-the-pipeline-up-to-production.md). GitHub
+  leaves issues off on a new fork, and the setup switches them on: sfdx-hardis keeps the list of
+  your development orgs in one, which [Lab 1.3](1-3-start-a-user-story-on-a-git-branch.md) fills
 - Actions turned on. GitHub disables workflows on every new fork until the owner says
   otherwise, and a fork with them off looks exactly like a broken course
 - `helios-prod` became a Dev Hub, which is one switch in Setup, and cannot be switched back
@@ -604,8 +607,9 @@ VS Code offers two answers:
 #### You should now see
 
 - The icon turned from grey to colour, and its tooltip **Connected to GitHub**
-- What the panel could not show before: the Pull Requests on your branches, and the **Show feature
-  branches** toggle
+- What the panel could not show before: the Pull Requests on your branches
+- Still in the top left corner of the diagram, as before you connected: the switch between
+  **Major branches**, **Feature branches** and **Dev orgs**
 
 ### 8. Look at the pipeline before touching anything
 

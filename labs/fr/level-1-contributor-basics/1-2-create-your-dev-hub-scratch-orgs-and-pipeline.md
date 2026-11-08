@@ -5,7 +5,7 @@ description: "Inscrivez-vous à une org Salesforce Developer Edition gratuite, p
 level: 1
 lab: 2
 lang: fr
-source_rev: "47ebc265cc7dc1192cd82702aa22d2e7d0610914"
+source_rev: "cdc7d3dd4a6229b1613b19dc281b5c3a09afef49"
 screenshots:
   - annotated/web/sf-signup
   - annotated/web/gh-cli-download
@@ -371,6 +371,7 @@ Helios, et une pipeline câblée dessus, le tout construit par une seule command
 
    1 of 8  Your own copy of the repository
    OK  origin is now your-handle/sfdx-hardis-training, and the shared repository is upstream.
+   OK  Issues switched on in your-handle/sfdx-hardis-training: sfdx-hardis keeps the list of your development orgs in one.
 
    2 of 8  Actions turned on
    OK  Actions are on.
@@ -553,7 +554,10 @@ Huit choses, chacune du vrai travail sur un vrai projet, et aucune à refaire vo
 - Votre propre copie du repository, son *fork*, sous votre compte GitHub. Votre clone pousse là-bas
   désormais, et continue de tirer depuis le repository de l'équipe. Le fork porte les deux branches
   qu'utilise la pipeline aujourd'hui, `integration` et `uat`, plus `main`. Vous ajouterez `preprod`
-  vous-même au [Lab 3.1](../level-3-release-manager/3-1-configure-the-pipeline-up-to-production.md)
+  vous-même au [Lab 3.1](../level-3-release-manager/3-1-configure-the-pipeline-up-to-production.md).
+  GitHub laisse les issues désactivées sur un nouveau fork, et la mise en place les active :
+  sfdx-hardis tient la liste de vos orgs de développement dans l'une d'elles, que le
+  [Lab 1.3](1-3-start-a-user-story-on-a-git-branch.md) remplit
 - Actions activées. GitHub désactive les workflows sur chaque nouveau fork jusqu'à ce que le
   propriétaire dise le contraire, et un fork où ils sont éteints ressemble exactement à une formation
   cassée
@@ -645,8 +649,9 @@ VS Code propose deux réponses :
 #### Vous devriez voir
 
 - L'icône passée du gris à la couleur, et son infobulle **Connected to GitHub**
-- Ce que le panneau ne pouvait pas montrer avant : les Pull Requests sur vos branches, et le
-  commutateur **Show feature branches**
+- Ce que le panneau ne pouvait pas montrer avant : les Pull Requests sur vos branches
+- Toujours dans le coin en haut à gauche du diagramme, comme avant la connexion : le sélecteur
+  entre **Major branches**, **Feature branches** et **Dev orgs**
 
 ### 8. Regarder la pipeline avant de toucher à quoi que ce soit
 

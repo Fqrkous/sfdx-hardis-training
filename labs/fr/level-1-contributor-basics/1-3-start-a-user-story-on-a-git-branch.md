@@ -5,7 +5,7 @@ description: "Prenez votre premier ticket du backlog et créez sa branche Git et
 level: 1
 lab: 3
 lang: fr
-source_rev: "9139d246b2d47e13f84c028c4890933bd627b798"
+source_rev: "2aeeb3823944002c44462daf48d66d6c8b758558"
 screenshots:
   - annotated/vscode/pipeline-cards-level1--new-user-story
   - annotated/vscode/work-new-story-type
@@ -237,7 +237,7 @@ Le panneau a lancé :
 
     sf hardis:work:new
 
-qui a fait six choses, dans cet ordre :
+qui a fait sept choses, dans cet ordre :
 
 1. **Choisi la branche cible**. Avec une seule entrée dans `availableTargetBranches` elle prend
    celle-là sans demander ; avec plusieurs elle demande, et elle retient la réponse pour cette
@@ -253,6 +253,10 @@ qui a fait six choses, dans cet ordre :
    git : il est à vous, personne d'autre n'en a besoin
 5. **Sélectionné l'org** comme cible par défaut des commandes suivantes
 6. **Ouvert l'org** dans votre navigateur, puisque vous êtes sur le point d'y travailler
+7. **Enregistré l'org** dans la liste des orgs de développement de votre repository, une issue
+   nommée **Development Orgs Dashboard** : `helios-dev` cible `integration`, et vous en êtes le
+   propriétaire. La vue **Dev orgs** du DevOps Pipeline l'affiche, avec le nombre de Pull Requests
+   mergées dans `integration` qu'elle n'a pas encore
 
 La liste des scratch orgs est celle des orgs créées par votre Dev Hub par défaut, que le [Lab 1.2](1-2-create-your-dev-hub-scratch-orgs-and-pipeline.md) a
 réglé sur `helios-prod`, moins celles nommées dans `config/branches/`. Rien ici n'amène ce qui est
@@ -334,6 +338,14 @@ le reste en l'état.
 **Elle échoue avec un message sur la limite de scratch orgs.**
 Vous avez pris **Create new scratch org**. Rien n'a été créé et rien n'est cassé : redémarrez la User
 Story et prenez **Reuse scratch org helios-dev**.
+
+**Elle avertit que `helios-dev` n'est pas enregistrée dans la liste des orgs de développement, car les issues sont désactivées.**
+Votre fork a été mis en place avant que la mise en place sache activer les issues, et GitHub les
+désactive sur chaque nouveau fork. sfdx-hardis tient la liste des orgs de développement dans une
+issue, donc la dernière chose que fait la commande, enregistrer l'org (étape 6, Sous le capot), n'a
+pas eu lieu. Rien d'autre n'est touché : votre branche et votre org sont prêtes. Recliquez sur
+**Training: Level 1 > Set up my training environment**, qui active les issues et laisse tout le
+reste en l'état. Le prochain **New User Story** enregistre `helios-dev`.
 
 ## Vérifiez votre travail
 

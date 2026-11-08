@@ -5,7 +5,7 @@ description: "Livrez une User Story Salesforce avec une dépendance à vérifier
 level: 2
 lab: 9
 lang: fr
-source_rev: "25d8799591c0dc530bfa49eea1de3486e655a9b5"
+source_rev: "c4dced0dd78f3dcafbaf9d989067fb6013400335"
 screenshots:
   - annotated/web/github-star-megalinter
 depends_on:
@@ -13,7 +13,7 @@ depends_on:
   flags: []
   config: [commandsPostDeploy, autoCleanTypes]
   panels: [pipeline, deploymentAction, dataWorkbench]
-  docs: [salesforce-devops-work-on-user-story-deployment-actions]
+  docs: [salesforce-devops-work-on-user-story-deployment-actions, salesforce-devops-work-on-user-story-deployment-actions-data]
 ---
 
 # Lab 2.9 - Épreuve finale : livrer une User Story qui a tout

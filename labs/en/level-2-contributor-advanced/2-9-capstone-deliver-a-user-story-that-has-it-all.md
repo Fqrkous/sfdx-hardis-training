@@ -13,7 +13,7 @@ depends_on:
   flags: []
   config: [commandsPostDeploy, autoCleanTypes]
   panels: [pipeline, deploymentAction, dataWorkbench]
-  docs: [salesforce-devops-work-on-user-story-deployment-actions]
+  docs: [salesforce-devops-work-on-user-story-deployment-actions, salesforce-devops-work-on-user-story-deployment-actions-data]
 ---
 
 # Lab 2.9 - Capstone: deliver a User Story that has it all
