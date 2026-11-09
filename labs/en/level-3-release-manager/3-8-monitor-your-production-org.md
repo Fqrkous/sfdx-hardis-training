@@ -23,7 +23,7 @@ depends_on:
 
 **Level**: 3 Release Manager
 
-**Time**: ~15 min<!-- observed --> (observed: median 17 min, 12 learners, fastest 6 min)<!-- /observed -->
+**Time**: ~20 min<!-- observed --> (observed: median 21 min, 13 learners, fastest 6 min)<!-- /observed -->
 
 **You will**: set up nightly monitoring on production, read its first report, and decide what is
 worth being told about.
