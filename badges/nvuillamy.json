@@ -11,8 +11,8 @@
         "url": "https://cloudity.com",
         "course": "https://sfdx-hardis-training.cloudity.com"
       },
-      "issuedOn": "2026-09-24",
-      "issuedAt": "2026-09-24T23:32:32Z",
+      "issuedOn": "2026-11-09",
+      "issuedAt": "2026-11-09T01:06:18Z",
       "evidence": [
         {
           "type": "Repository",
@@ -20,7 +20,7 @@
         },
         {
           "type": "ClaimIssue",
-          "url": "https://github.com/hardisgroupcom/sfdx-hardis-training/issues/42"
+          "url": "https://github.com/hardisgroupcom/sfdx-hardis-training/issues/380"
         }
       ],
       "image": "https://sfdx-hardis-training.cloudity.com/badges/img/nvuillamy-level-1.svg",
