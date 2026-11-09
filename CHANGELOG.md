@@ -6,6 +6,7 @@ a day, newest first, and a change goes under the date of the day it is made.
 ## 2026-11-09
 
 - The screenshots of the windows opened over the DevOps Pipeline (branch windows, Pull Request windows, deployment action editors) are taken again, with the new view switch behind them.
+- Lab 1.2: the lab driver answers the question that a computer already signed in to GitHub gets first, *Fork the course into the GitHub account ...?*, which the lab describes, so the driver no longer stops on it.
 
 ## 2026-11-08
 
