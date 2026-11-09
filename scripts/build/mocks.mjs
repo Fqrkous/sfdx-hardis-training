@@ -114,7 +114,7 @@ writeJson(path.join(OUT, "universe.json"), {
   // Where the "integration" node lands in the diagram, for the click that opens
   // its window. Mermaid lays it out from the branches this universe carries, so
   // it moves whenever they change, and the click then hits empty canvas.
-  branchNode: "1063,539",
+  branchNode: "1063,580",
   // The promotion branches variant of the run (SFDX_HARDIS_DOC_SCREENSHOTS_PROMOTION)
   // shows Lab 3.10: the uat window with its checkbox column, five User Stories
   // waiting there, and the promotion carrying three of them drawn on the uat to
@@ -122,7 +122,7 @@ writeJson(path.join(OUT, "universe.json"), {
   // out differently from the one above, and the rows are the checkboxes of the
   // first, third and fourth stories from the top (US-061, US-059, US-057).
   promotionBranch: "promotion/uat/preprod/2026-09-24-0930",
-  promotionNode: "1073,389",
+  promotionNode: "1073,430",
   promotionRows: "531,353;531,513;531,593",
   // The file the conflict editor shot opens: the Panel Batch layout as
   // hardis:project:promotion:create committed it, markers included. The files
