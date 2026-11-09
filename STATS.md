@@ -49,9 +49,9 @@ The median time of the learners who went through, next to the estimate each lab 
 
 | Labs | First estimate | Median | Fastest | Learners |
 |---|---|---|---|---|
-| Lab 3.1 | 50 min | 1 h 14 | 19 min | 23 |
-| Lab 3.2 | 25 min | 23 min | 6 min | 23 |
-| Lab 3.3 | 45 min | 46 min | 18 min | 24 |
+| Lab 3.1 | 50 min | 1 h 06 | 17 min | 24 |
+| Lab 3.2 | 25 min | 23 min | 6 min | 24 |
+| Lab 3.3 | 45 min | 41 min | 18 min | 25 |
 | Lab 3.4 | 35 min | 17 min | 6 min | 11 |
 | Lab 3.5 | 35 min | 54 min | 19 min | 11 |
 | Lab 3.6 | 35 min | 59 min | 20 min | 18 |
