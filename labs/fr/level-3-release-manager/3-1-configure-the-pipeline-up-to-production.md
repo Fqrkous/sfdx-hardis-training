@@ -5,7 +5,7 @@ description: "Étendez une pipeline Salesforce à deux étages jusqu'à la produ
 level: 3
 lab: 1
 lang: fr
-source_rev: "cf5aa5d9d283050f6b04c69df56c668ae0a86715"
+source_rev: "ed7a3c108c03653b710e6c949a6293e68202a284"
 screenshots:
   - annotated/vscode/devops-pipeline-fresh--one-column
   - annotated/vscode/devops-pipeline-level3-split
@@ -41,7 +41,7 @@ depends_on:
 
 **Niveau** : 3 Release Manager
 
-**Durée** : ~2 h 05<!-- observed --> (observé : médiane 2 h 05, 10 participants, le plus rapide 41 min)<!-- /observed -->
+**Durée** : ~2 h<!-- observed --> (observé : médiane 2 h, 11 participants, le plus rapide 41 min)<!-- /observed -->
 
 **Vous allez** : transformer une pipeline à deux étages en une pipeline à quatre étages qui atteint la
 production, donner aux deux nouveaux étages leur org et un identifiant avec lequel un vrai projet peut
