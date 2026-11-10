@@ -8,7 +8,7 @@ lang: en
 
 # Level 3 - Salesforce DevOps release manager
 
-**Time**: about 9 h.<!-- observed --> Observed on Labs 3.1 to 3.11: median 10 h 11, 12 learners, fastest 2 h 56.<!-- /observed -->
+**Time**: about 8 h 45.<!-- observed --> Observed on Labs 3.1 to 3.11: median 9 h 52, 13 learners, fastest 2 h 56.<!-- /observed -->
 
 **Before you start**: [Level 1](../level-1-contributor-basics/index.md) **and** [Level 2](../level-2-contributor-advanced/index.md). Both
 are required, and the badge audit checks both before it looks at anything here.
@@ -72,16 +72,16 @@ Either route runs the same thing.
 
 | Lab                                                       | Title                                                        | Time   |
 |-----------------------------------------------------------|--------------------------------------------------------------|--------|
-| [3.1](3-1-configure-the-pipeline-up-to-production.md)     | Configure the CI/CD pipeline up to production                | 1 h 35 |
+| [3.1](3-1-configure-the-pipeline-up-to-production.md)     | Configure the CI/CD pipeline up to production                | 1 h 15 |
 | [3.2](3-2-review-a-contributor-pull-request.md)           | Review and merge a contributor Pull Request                  | 25 min |
-| [3.3](3-3-deploy-to-integration-and-read-the-log.md)      | Read the deployment log, and what .forceignore hides from it | 1 h 20 |
+| [3.3](3-3-deploy-to-integration-and-read-the-log.md)      | Read the deployment log, and what .forceignore hides from it | 1 h 15 |
 | [3.4](3-4-merge-colliding-pull-requests.md)               | Three Pull Requests in one release: review the merge order   | 15 min |
 | [3.5](3-5-promote-to-uat-and-write-release-notes.md)      | Promote to UAT and write the release notes                   | 50 min |
 | [3.6](3-6-release-to-production-and-read-dora-metrics.md) | Release to production and read your DORA metrics             | 1 h    |
-| [3.7](3-7-hotfix-and-retrofit.md)                         | Production is broken: hotfix and retrofit                    | 35 min |
-| [3.8](3-8-monitor-your-production-org.md)                 | Monitor your production org                                  | 20 min |
+| [3.7](3-7-hotfix-and-retrofit.md)                         | Production is broken: hotfix and retrofit                    | 30 min |
+| [3.8](3-8-monitor-your-production-org.md)                 | Monitor your production org                                  | 15 min |
 | [3.9](3-9-generate-the-project-documentation.md)          | Generate the Salesforce project documentation                | 5 min  |
-| [3.10](3-10-promote-a-subset-with-promotion-branches.md)  | Promote a subset with promotion branches (Beta)              | 1 h 35 |
+| [3.10](3-10-promote-a-subset-with-promotion-branches.md)  | Promote a subset with promotion branches (Beta)              | 1 h 40 |
 | [3.11](3-11-capstone-run-a-weekly-release-cycle.md)       | Capstone: run a weekly release cycle                         | 1 h    |
 
 ## One more org
