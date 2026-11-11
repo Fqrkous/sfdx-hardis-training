@@ -5,7 +5,7 @@ description: "Prenez votre premier ticket du backlog et créez sa branche Git et
 level: 1
 lab: 3
 lang: fr
-source_rev: "2aeeb3823944002c44462daf48d66d6c8b758558"
+source_rev: "48e44542f5debff3fe1c844f513cabd2eb683307"
 screenshots:
   - annotated/vscode/pipeline-cards-level1--new-user-story
   - annotated/vscode/work-new-story-type
@@ -25,7 +25,7 @@ depends_on:
 
 **Niveau** : 1 Contributeur, les bases
 
-**Durée** : ~10 min<!-- observed --> (observé : médiane 10 min, 37 participants, le plus rapide 6 min)<!-- /observed -->
+**Durée** : ~10 min<!-- observed --> (observé : médiane 10 min, 38 participants, le plus rapide 6 min)<!-- /observed -->
 
 **Vous allez** : prendre votre premier ticket et atterrir sur une branche propre, pointée vers votre
 org de dev.
