@@ -3,6 +3,10 @@
 What changed in the course, for learners and trainers. The course has no versions: each section is
 a day, newest first, and a change goes under the date of the day it is made.
 
+## 2026-11-10
+
+- Guinea Run: the first score of a player opens a window over the end card, with the score, a nickname box, the guinea pigs and a large **Join the Hall of Fame** button. **No thanks** or Escape closes it for good, and Enter in the nickname box joins.
+
 ## 2026-11-09
 
 - The screenshots of the windows opened over the DevOps Pipeline (branch windows, Pull Request windows, deployment action editors) are taken again, with the new view switch behind them.

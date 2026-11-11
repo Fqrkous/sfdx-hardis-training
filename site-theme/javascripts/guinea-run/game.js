@@ -227,6 +227,13 @@ function createGame(options) {
   }
 
   function onAction(action, element) {
+    // The join modal holds the keys: Escape is No thanks, the rest waits for its answer
+    if (hud.joinOpen() && action !== "mute" && action !== "retry-load") {
+      if (action === "quit") {
+        hud.skipJoin();
+      }
+      return;
+    }
     if (action === "quit") {
       stop();
       return;
@@ -606,7 +613,7 @@ function createGame(options) {
     track("easter_egg_bonus_over", { bonus: id, score: summary.score, level: summary.level, missions: summary.missions, admins: summary.admins, minutes: Math.round(summary.ms / 60000), trigger: options.trigger });
     sound.play(newBest ? "fanfare" : "happy");
     hud.bonusResult(Object.assign({ id, best: Math.max(before, summary.score), newBest }, summary));
-    afterWin(id);
+    afterWin(id, summary.score);
   }
 
   /** Builds the world from its module, fresh: every attempt of a world starts clean. */
@@ -923,7 +930,7 @@ function createGame(options) {
       } else {
         state = "done";
         hud.result(result);
-        afterWin("w" + info.id);
+        afterWin("w" + info.id, run.score);
       }
     };
     if (info.badge) {
@@ -1024,10 +1031,10 @@ function createGame(options) {
   }
 
   /**
-   * After a won world or a bonus game, once its result is signed: the join box
-   * the first time, otherwise the new best sent and a line that says so.
+   * After a won world or a bonus game, once its result is signed: the join
+   * modal the first time, otherwise the new best sent and a line that says so.
    */
-  async function afterWin(board) {
+  async function afterWin(board, score) {
     const ask = ++winAsk;
     const shown = state;
     await signing;
@@ -1037,7 +1044,7 @@ function createGame(options) {
     const profile = progress.online;
     if (!profile.id) {
       if (!profile.asked) {
-        hud.joinOffer(profileView({ onSkip: () => progress.setOnline({ asked: true }) }));
+        hud.joinOffer(profileView({ onSkip: () => progress.setOnline({ asked: true }) }), score);
         track("easter_egg_hof_offer", { world: board });
       }
       return;

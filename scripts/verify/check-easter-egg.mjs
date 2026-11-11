@@ -210,7 +210,13 @@ const waitState = (page, values) =>
 
 // Whether the Hall of Fame box of the end card shows, and says this
 const hofBoxSays = (page, pattern) =>
-  page.textContent(".guinea-run .gr-hof-invite:not([hidden])", { timeout: 500 }).then(
+  page.textContent(".guinea-run .gr-modal-body .gr-hof-invite:not([hidden])", { timeout: 500 }).then(
+    (text) => pattern.test(text || ""),
+    () => false
+  );
+// Whether the join modal of a first score shows, and says this
+const joinSays = (page, pattern) =>
+  page.textContent(".guinea-run .gr-join", { timeout: 500 }).then(
     (text) => pattern.test(text || ""),
     () => false
   );
@@ -404,9 +410,10 @@ try {
     await waitState(page, "playing");
     await page.evaluate(() => window.__guineaRun.finish());
     await waitState(page, "done");
-    expect(await settles(page, () => hofBoxSays(page, /Join the Hall of Fame/), true, 10000), "the end card of the first won world asks the player to join the Hall of Fame");
-    await page.click(".guinea-run .gr-hof-invite .gr-hof-skip");
-    expect(await page.evaluate(() => window.__guineaRun.online.profile().asked), "No thanks is remembered: the join box is asked once");
+    expect(await settles(page, () => joinSays(page, /Join the Hall of Fame/), true, 10000), "the first won world opens the join modal over its end card");
+    await page.keyboard.press("Escape");
+    expect((await page.locator(".guinea-run .gr-join").count()) === 0 && (await state(page)) === "done", "Escape on the join modal is No thanks: the end card stays");
+    expect(await page.evaluate(() => window.__guineaRun.online.profile().asked), "No thanks is remembered: the join modal is asked once");
     await page.click('.guinea-run [data-action="map"]');
     await waitState(page, "map");
     expect((await page.locator('.guinea-run [data-action="play"][data-world="1"]').count()) === 1, "finishing world 0 opens world 1");
@@ -425,7 +432,7 @@ try {
   // excuses run out, he installs VS Code himself and the world ends. A small
   // window, so the software renderer plays the fight at about its real speed
   // 4b. The Hall of Fame against the database in memory (guinea-online=fake):
-  // world 0 won, the join box on its end card, the nickname typed without
+  // world 0 won, the join modal over its end card, the nickname typed without
   // moving the guinea pig, a guinea pig picked, the score on the board with my
   // row marked, a nickname with an email refused, a new nickname saved, and
   // "Remove me". A test link never sends anything to the real database.
@@ -464,14 +471,21 @@ try {
       await waitState(page, "playing");
       await page.evaluate(() => window.__guineaRun.finish());
       await waitState(page, "done");
-      expect(await settles(page, () => hofBoxSays(page, /Join the Hall of Fame/), true, 10000), `the end card of the first won world asks the player to join the Hall of Fame (${viewport.mobile ? "phone" : "desktop"})`);
-      await page.click(".guinea-run .gr-hof-invite .gr-hof-field input");
+      expect(await settles(page, () => joinSays(page, /Join the Hall of Fame/), true, 10000), `the first won world opens the join modal over its end card (${viewport.mobile ? "phone" : "desktop"})`);
+      expect(await joinSays(page, /Your first score!/), "the join modal shows the first score");
+      const fits = await page.evaluate(() => {
+        const save = document.querySelector(".guinea-run .gr-join .gr-hof-save").getBoundingClientRect();
+        return save.width > 0 && save.bottom <= window.innerHeight && document.documentElement.scrollWidth <= window.innerWidth;
+      });
+      expect(fits, "the call to action of the join modal is on screen, and nothing scrolls sideways");
+      await page.click(".guinea-run .gr-join .gr-hof-field input");
       await page.keyboard.type("wasd-dev", { delay: 30 });
-      const typed = await page.inputValue(".guinea-run .gr-hof-invite .gr-hof-field input");
+      const typed = await page.inputValue(".guinea-run .gr-join .gr-hof-field input");
       expect(typed === "wasd-dev" && (await state(page)) === "done", `the nickname box takes W, A, S and D as letters (${typed})`);
-      await page.click('.guinea-run .gr-hof-invite [data-coat="ginger"]');
-      await page.click(".guinea-run .gr-hof-invite .gr-hof-save");
-      expect(await settles(page, () => hofBoxSays(page, /Welcome to the Hall of Fame/), true, 10000), "joining says the best scores are on their way");
+      await page.click('.guinea-run .gr-join [data-coat="ginger"]');
+      await page.click(".guinea-run .gr-join .gr-hof-save");
+      expect(await settles(page, () => hofBoxSays(page, /Welcome to the Hall of Fame/), true, 10000), "joining closes the modal and the end card says the best scores are on their way");
+      expect((await page.locator(".guinea-run .gr-join").count()) === 0, "the join modal is gone once the player joined");
       const db = await page.evaluate(() => window.__guineaRun.online.db());
       expect(
         db.names.some((n) => n.name === "wasd-dev" && n.coat === "ginger") && db.scores.some((s) => s.board === "w0" && s.score > 0) && (await page.evaluate(() => window.__guineaRun.online.profile().asked)),

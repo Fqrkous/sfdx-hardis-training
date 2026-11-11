@@ -340,6 +340,7 @@ export function createHud(t, options) {
 
   /** A Lightning modal: a header, a body, and the buttons in the footer. */
   function screen(state, title, build, wide) {
+    closeJoin();
     overlay.setAttribute("data-state", state);
     panel.replaceChildren();
     panel.hidden = false;
@@ -458,17 +459,22 @@ export function createHud(t, options) {
    * of Fame card, and the join box of an end card (compact). view: { profile,
    * online (the database answers), testLink (a test link: nothing is ever
    * sent), onSave(name, coat) -> Promise<"saved"|"later"|"refused">, onSkip?,
-   * onForget? -> Promise<boolean> }.
+   * onForget? -> Promise<boolean>, and for the join modal: joinTitle?,
+   * joinText?, joinLabel? (the words of the box), onDone?(outcome) (the box is
+   * answered: "skipped", "saved" or "later"; a refused nickname stays in the box) }.
    */
   function profileForm(box, view, compact) {
     const joined = Boolean(view.profile && view.profile.id);
     const draft = hofDraft || { name: joined ? view.profile.name : "", coat: (view.profile && view.profile.coat) || COATS[0] };
     hofDraft = draft;
-    element("p", compact ? "gr-hof-invite-title" : "gr-small-title", box, joined ? t("hofProfileTitle") : t("hofJoinTitle"));
+    // A form: Enter in the nickname box sends it, which the game's own keys never stop
+    const form = element("form", "gr-hof-form", box);
+    form.noValidate = true;
+    element("p", compact ? "gr-hof-invite-title" : "gr-small-title", form, joined ? t("hofProfileTitle") : view.joinTitle || t("hofJoinTitle"));
     if (!joined) {
-      element("p", "", box, t("hofJoinText"));
+      element("p", "gr-hof-join-text", form, view.joinText || t("hofJoinText"));
     }
-    const label = element("label", "gr-hof-field", box);
+    const label = element("label", "gr-hof-field", form);
     element("span", "", label, t("hofName"));
     const input = element("input", "", label);
     input.type = "text";
@@ -479,7 +485,7 @@ export function createHud(t, options) {
     input.spellcheck = false;
     input.setAttribute("autocapitalize", "none");
     input.setAttribute("autocorrect", "off");
-    const coats = element("div", "gr-coats", box);
+    const coats = element("div", "gr-coats", form);
     coats.setAttribute("role", "radiogroup");
     coats.setAttribute("aria-label", t("hofCoat"));
     element("span", "gr-coats-title", coats, t("hofCoat"));
@@ -503,27 +509,32 @@ export function createHud(t, options) {
         }
       });
     }
-    const actions = element("div", "gr-hof-actions", box);
-    const save = element("button", "gr-button gr-primary gr-small gr-hof-save", actions, joined ? t("hofSave") : t("hofJoin"));
-    save.type = "button";
+    const actions = element("div", "gr-hof-actions", form);
+    const save = element("button", "gr-button gr-primary gr-small gr-hof-save", actions, joined ? t("hofSave") : view.joinLabel || t("hofJoin"));
+    save.type = "submit";
     if (!joined && view.onSkip) {
       const skip = element("button", "gr-button gr-small gr-hof-skip", actions, t("hofNoThanks"));
       skip.type = "button";
       skip.addEventListener("click", () => {
         hofDraft = null;
         view.onSkip();
-        box.hidden = true;
+        if (view.onDone) {
+          view.onDone("skipped");
+        } else {
+          box.hidden = true;
+        }
       });
     }
-    const message = element("p", "gr-muted gr-hof-message", box);
+    const message = element("p", "gr-muted gr-hof-message", form);
     message.setAttribute("aria-live", "polite");
-    element("p", "gr-muted gr-hof-privacy", box, t("hofPrivacy"));
+    element("p", "gr-muted gr-hof-privacy", form, t("hofPrivacy"));
     input.addEventListener("input", () => {
       draft.name = input.value;
       message.textContent = "";
     });
     let busy = false;
-    save.addEventListener("click", async () => {
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
       const name = cleanName(input.value);
       const problem = nameProblem(name);
       if (problem) {
@@ -540,6 +551,10 @@ export function createHud(t, options) {
       busy = false;
       hofDraft = null;
       if (!box.isConnected) {
+        return;
+      }
+      if (view.onDone && outcome !== "refused") {
+        view.onDone(outcome);
         return;
       }
       message.textContent = outcome === "refused" ? t("hofNameRefused") : outcome === "later" ? t("hofLaterLine") : t(joined ? "hofSaved" : "hofJoined");
@@ -590,14 +605,42 @@ export function createHud(t, options) {
     profileForm(box, view, false);
   }
 
-  // The Hall of Fame box of the end card on screen: the join box, or a line once a score is sent
+  // The Hall of Fame box of the end card on screen: a line once the player joined or a score is sent
   let hofBox = null;
+  // The join modal over the end card, or null
+  let joinModal = null;
 
   /** An empty Hall of Fame box on an end card, filled by joinOffer() or hofStatus(). */
   function hofPlace(body) {
     hofBox = element("div", "gr-hof-invite", body);
     hofBox.hidden = true;
     hofBox.setAttribute("aria-live", "polite");
+  }
+
+  /** The join modal goes away, and the end card behind it takes the keys again. */
+  function closeJoin() {
+    if (!joinModal) {
+      return;
+    }
+    joinModal.remove();
+    joinModal = null;
+    const primary = panel.querySelector(".gr-modal-footer .gr-primary");
+    if (primary && !panel.hidden) {
+      primary.focus({ preventScroll: true });
+    }
+  }
+
+  /** The join modal is answered: the end card says what became of the score. */
+  function joinAnswered(outcome) {
+    closeJoin();
+    if (outcome === "skipped" || !hofBox || !hofBox.isConnected) {
+      return;
+    }
+    hofBox.textContent = "";
+    hofBox.hidden = false;
+    // Keeps hofStatus() from writing over the welcome
+    hofBox.classList.add("gr-hof-join");
+    element("span", "gr-hof-status", hofBox, t(outcome === "later" ? "hofLaterLine" : "hofJoined"));
   }
 
   /**
@@ -1060,17 +1103,59 @@ export function createHud(t, options) {
     },
 
     /**
-     * The join box on the end card on screen, once: a nickname and a guinea
-     * pig, Join or No thanks. view: as profileForm.
+     * The first score of a player who never answered: a modal over the end
+     * card, the score, a nickname and a guinea pig, then Join the Hall of Fame
+     * or No thanks. view: as profileForm. score: the score just made.
      */
-    joinOffer(view) {
+    joinOffer(view, score) {
       if (!hofBox || !hofBox.isConnected) {
         return;
       }
-      hofBox.textContent = "";
-      hofBox.hidden = false;
-      hofBox.classList.add("gr-hof-join");
-      profileForm(hofBox, view, true);
+      closeJoin();
+      const node = element("div", "gr-join", overlay);
+      node.setAttribute("role", "dialog");
+      node.setAttribute("aria-modal", "true");
+      node.setAttribute("aria-labelledby", "gr-join-title");
+      const card = element("div", "gr-join-card", node);
+      element("div", "gr-logo gr-logo--happy", card).innerHTML = GUINEA_ART;
+      element("h2", "gr-join-title", card, t("hofFirstScoreTitle")).id = "gr-join-title";
+      if (score > 0) {
+        const line = element("p", "gr-join-score", card);
+        element("span", "gr-join-score-label", line, t("score"));
+        element("strong", "", line, number(score));
+      }
+      const form = element("div", "gr-hof-invite gr-join-form", card);
+      profileForm(
+        form,
+        Object.assign({}, view, {
+          joinTitle: t("hofJoinCallTitle"),
+          joinText: t("hofJoinCallText"),
+          joinLabel: t("hofJoinCta"),
+          onDone: joinAnswered
+        }),
+        true
+      );
+      joinModal = node;
+      // A phone keeps its keyboard down until the player taps the box: it would hide the card
+      const first = touch ? form.querySelector(".gr-hof-save") : form.querySelector(".gr-hof-field input");
+      if (first) {
+        first.focus({ preventScroll: true });
+      }
+    },
+
+    /** True while the join modal is on screen. */
+    joinOpen() {
+      return Boolean(joinModal);
+    },
+
+    /** Escape on the join modal: No thanks. */
+    skipJoin() {
+      const skip = joinModal && joinModal.querySelector(".gr-hof-skip");
+      if (skip) {
+        skip.click();
+      } else {
+        closeJoin();
+      }
     },
 
     /** One line on the end card on screen: "sent" (the score is on the board) or "later" (it waits for the network). */
@@ -1503,6 +1588,7 @@ export function createHud(t, options) {
     },
 
     dispose() {
+      closeJoin();
       window.clearTimeout(toastTimer);
       if (celebration) {
         window.clearTimeout(celebration.timer);

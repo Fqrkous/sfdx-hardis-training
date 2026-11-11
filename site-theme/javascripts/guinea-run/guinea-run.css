@@ -1799,6 +1799,140 @@ html.guinea-run-open body {
   }
 }
 
+/* The join modal: the first score of a player, over the end card */
+.guinea-run .gr-join {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  background: rgba(3, 45, 96, 0.62);
+  touch-action: pan-y;
+  user-select: text;
+  -webkit-user-select: text;
+  animation: gr-fade-in 0.3s ease-out;
+}
+
+.guinea-run .gr-join-card {
+  width: min(430px, 100%);
+  max-height: calc(100dvh - 24px);
+  overflow-y: auto;
+  padding: 14px 20px 12px;
+  border-top: 6px solid #f2a900;
+  border-radius: 6px;
+  background: #ffffff;
+  box-shadow: 0 6px 40px rgba(3, 45, 96, 0.55);
+  text-align: center;
+  animation: gr-card-in 0.45s cubic-bezier(0.2, 1.4, 0.4, 1);
+}
+
+.guinea-run .gr-join-title {
+  margin: 4px 0 0;
+  color: var(--gr-navy);
+  font-size: 24px;
+  line-height: 1.2;
+}
+
+.guinea-run .gr-join-score {
+  display: flex;
+  flex-direction: column;
+  margin: 2px 0 6px;
+  line-height: 1.1;
+}
+
+.guinea-run .gr-join-score-label {
+  color: var(--gr-weak);
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.guinea-run .gr-join-score strong {
+  color: #8a5a00;
+  font-size: 40px;
+}
+
+.guinea-run .gr-join .gr-join-form {
+  align-items: stretch;
+  margin: 6px 0 0;
+  animation: none;
+}
+
+.guinea-run .gr-join .gr-hof-invite-title {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: none;
+  text-align: center;
+}
+
+.guinea-run .gr-join .gr-hof-join-text {
+  margin: 0 0 4px;
+  font-size: 14px;
+}
+
+.guinea-run .gr-join .gr-hof-field {
+  font-weight: 700;
+}
+
+.guinea-run .gr-join .gr-hof-field input {
+  flex-basis: 100%;
+  padding: 8px 12px;
+  border: 2px solid var(--gr-brand);
+}
+
+.guinea-run .gr-join .gr-coats {
+  justify-content: center;
+}
+
+.guinea-run .gr-join .gr-coats-title {
+  flex: 1 1 100%;
+  font-weight: 700;
+  text-align: left;
+}
+
+.guinea-run .gr-join .gr-hof-actions {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 4px;
+}
+
+/* The call to action: the whole width, larger than anything else on the card */
+.guinea-run .gr-join .gr-hof-save {
+  min-height: 50px;
+  font-size: 18px;
+}
+
+.guinea-run .gr-join .gr-hof-skip {
+  min-height: 34px;
+  border: 0;
+  background: none;
+  color: var(--gr-weak);
+  font-weight: 400;
+  text-decoration: underline;
+}
+
+.guinea-run .gr-join .gr-hof-message:not(:empty) {
+  color: #ba0517;
+  font-weight: 700;
+  text-align: center;
+}
+
+.guinea-run .gr-join .gr-hof-privacy {
+  margin: 0;
+  text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .guinea-run .gr-join,
+  .guinea-run .gr-join-card {
+    animation: none;
+  }
+}
+
 .guinea-run .gr-hof-tabs {
   display: flex;
   gap: 6px;
@@ -1886,6 +2020,11 @@ html.guinea-run-open body {
 .guinea-run .gr-hof-send {
   border-top: 1px solid var(--gr-border);
   padding-top: 8px;
+}
+
+/* The form of the profile and join boxes lays its fields out as if it were not there */
+.guinea-run .gr-hof-form {
+  display: contents;
 }
 
 .guinea-run .gr-hof-field {
