@@ -1024,7 +1024,8 @@ function createGame(options) {
     if (!profile.id || !(await net.forget(profile.id))) {
       return false;
     }
-    progress.setOnline({ id: "", name: "", asked: true });
+    // left: a merge with an older copy of the save never brings this id back
+    progress.setOnline({ id: "", name: "", asked: true, left: profile.id });
     boards.clear();
     track("easter_egg_hof_forget", {});
     return true;

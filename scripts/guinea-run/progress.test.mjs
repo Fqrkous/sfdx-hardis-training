@@ -125,11 +125,40 @@ test("mergeProgress: a profile chosen in this game wins, a profile without an id
   assert.equal(empty.online.asked, true);
 });
 
+test("Remove me sticks: the next save does not take the removed id back from the stored copy", () => {
+  const browser = fakeBrowser();
+  const id = "0b4f3c1e-1111-4a2b-8c3d-000000000001";
+  const progress = createProgress();
+  progress.setOnline({ id, name: "Nico", coat: "golden", asked: true });
+  progress.addOnlineSent("w0", 1500);
+  progress.setOnline({ id: "", name: "", asked: true, left: id });
+  assert.equal(progress.online.id, "", "the game forgets the id");
+  assert.equal(browser.stored().online.id, "", "the save forgets it too");
+  // Any later write merges with the stored copy again
+  progress.complete(0, 300, 1, 1, { test: true });
+  assert.equal(browser.stored().online.id, "");
+  assert.deepEqual(browser.stored().online.sent, {}, "nothing is sent for the removed player");
+});
+
+test("mergeProgress: an older copy of the save never brings a removed player back", () => {
+  const id = "0b4f3c1e-1111-4a2b-8c3d-000000000001";
+  const removed = { v: 1, online: { asked: true, left: id } };
+  const older = { v: 1, online: { id, name: "Nico", coat: "golden", asked: true, sent: { w0: 500 } } };
+  // The removal is this game's choice, the stored copy is older
+  assert.equal(mergeProgress(older, removed, new Set(["online"])).online.id, "");
+  // The removal is stored, an older game writes its profile
+  assert.equal(mergeProgress(removed, older, new Set(["online"])).online.id, "");
+  assert.equal(mergeProgress(removed, older, new Set()).online.id, "");
+  // Joining again with a new id works, and keeps the removed id away
+  const again = { v: 1, online: { id: "0b4f3c1e-2222-4a2b-8c3d-000000000002", name: "Nico", coat: "golden", asked: true, left: id } };
+  assert.equal(mergeProgress(older, again, new Set(["online"])).online.id, "0b4f3c1e-2222-4a2b-8c3d-000000000002");
+});
+
 test("the old GitHub handle and its sends are forgotten, a broken profile is repaired", () => {
   const browser = fakeBrowser();
   window.localStorage.setItem(KEY, JSON.stringify({ v: 1, unlocked: 1, worlds: {}, handle: "octocat", sent: { worlds: { 0: 5 } }, sentAt: 9, online: { id: "not-an-id", name: "  a   b  ", coat: "purple", sent: { w0: "x", w3: 40, nope: 9 } } }));
   const progress = createProgress();
-  assert.deepEqual(progress.online, { id: "", name: "a b", coat: "agouti", asked: false, named: "", refused: "", sent: { w3: 40 } });
+  assert.deepEqual(progress.online, { id: "", name: "a b", coat: "agouti", asked: false, named: "", refused: "", left: "", sent: { w3: 40 } });
   progress.setOnline({ id: "0b4f3c1e-1111-4a2b-8c3d-000000000001", name: "Nico", coat: "golden", asked: true });
   const stored = browser.stored();
   assert.equal(stored.handle, undefined);

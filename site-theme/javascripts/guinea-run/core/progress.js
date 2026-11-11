@@ -160,7 +160,8 @@ export function createProgress(options) {
      * id: the random player id, "" until the player joins. asked: the join
      * box was shown (it shows once). named: the "name|coat" the database
      * took last; refused: one it refused. sent: { board: score }, the best
-     * already sent or refused of each board.
+     * already sent or refused of each board. left: the id of a player who
+     * removed themself from the Hall of Fame, never taken back by a merge.
      */
     get online() {
       return onlineOf(state.online);
@@ -359,15 +360,21 @@ function mergeWorld(a, b) {
 
 /**
  * The profile of the save that wins (chosen), completed by the other one: a
- * profile without an id takes the other's; the same id keeps the higher
- * score sent of each board; once asked, never asked again.
+ * profile without an id takes the other's, unless it is the id the player
+ * removed from the Hall of Fame; the same id keeps the higher score sent of
+ * each board; once asked, never asked again.
  */
 function mergeOnline(chosen, other) {
   const a = onlineOf(chosen);
   const b = onlineOf(other);
-  if (!a.id && b.id) {
+  // "Remove me" sticks: an older copy of the save never brings the removed id back
+  if (a.id && a.id === b.left) {
     return Object.assign(b, { asked: a.asked || b.asked });
   }
+  if (!a.id && b.id && b.id !== a.left) {
+    return Object.assign(b, { asked: a.asked || b.asked, left: a.left || b.left });
+  }
+  a.left = a.left || b.left;
   if (a.id && a.id === b.id) {
     for (const [board, score] of Object.entries(b.sent)) {
       a.sent[board] = Math.max(a.sent[board] || 0, score);
@@ -395,6 +402,7 @@ function onlineOf(value) {
     asked: o.asked === true,
     named: typeof o.named === "string" ? o.named : "",
     refused: typeof o.refused === "string" ? o.refused : "",
+    left: typeof o.left === "string" && PLAYER_ID.test(o.left) ? o.left.toLowerCase() : "",
     sent
   };
 }

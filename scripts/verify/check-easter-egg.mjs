@@ -867,7 +867,9 @@ try {
       }
       expect(await waitState(page, "done"), "a game of Pipeline Pinball ends on its card");
       expect((await page.locator(".guinea-run .gr-score").count()) === 1, "the end card of the bonus table shows the score");
-      expect(await settles(page, () => hofBoxSays(page, /Join the Hall of Fame/), true, 10000), "the end card of the bonus table asks a player who never joined to join the Hall of Fame");
+      expect(await settles(page, () => joinSays(page, /Join the Hall of Fame/), true, 10000), "the end card of the bonus table opens the join modal for a player who never joined");
+      await page.click(".guinea-run .gr-join .gr-hof-skip");
+      expect((await page.locator(".guinea-run .gr-join").count()) === 0, "No thanks closes the join modal over the bonus table's end card");
       await page.click('.guinea-run [data-action="map"]');
       expect(await waitState(page, "map"), "the bonus table goes back to the map");
       expect(await page.evaluate(() => !document.getElementById("guinea-run-world-css")), "the bonus table takes its styles away with it");
@@ -921,7 +923,9 @@ try {
     await page.evaluate(() => window.__guineaRun.finish());
     expect(await waitState(page, "done"), "a game of Org-Man ends on its card");
     expect((await page.locator(".guinea-run .gr-score").count()) === 1, "the end card of Org-Man shows the score");
-    expect(await settles(page, () => hofBoxSays(page, /Join the Hall of Fame/), true, 10000), "the end card of Org-Man asks a player who never joined to join the Hall of Fame");
+    expect(await settles(page, () => joinSays(page, /Join the Hall of Fame/), true, 10000), "the end card of Org-Man opens the join modal for a player who never joined");
+    await page.keyboard.press("Escape");
+    expect((await page.locator(".guinea-run .gr-join").count()) === 0 && (await state(page)) === "done", "Escape closes the join modal over Org-Man's end card, which stays");
     await page.click('.guinea-run [data-action="map"]');
     expect(await waitState(page, "map"), "Org-Man goes back to the map");
     expect(await page.evaluate(() => !document.getElementById("guinea-run-world-css")), "Org-Man takes its styles away with it");
