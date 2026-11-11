@@ -5,7 +5,7 @@ description: "Une permission accordée sur un profil s'évapore après un déplo
 level: 2
 lab: 6
 lang: fr
-source_rev: "3107b09edb5ceb677424c995aa749b40c8d7963f"
+source_rev: "f1de18928b5fd327d784e4e2f6925e796c693e36"
 screenshots:
   - annotated/vscode/pipeline-cards--new-user-story
   - annotated/vscode/pipeline-packages-menu--package-xml
@@ -22,7 +22,7 @@ depends_on:
 
 **Niveau** : 2 Contributeur avancé
 
-**Durée** : ~30 min<!-- observed --> (observé : médiane 31 min, 16 participants, le plus rapide 10 min)<!-- /observed -->
+**Durée** : ~25 min<!-- observed --> (observé : médiane 29 min, 17 participants, le plus rapide 10 min)<!-- /observed -->
 
 **Vous allez** : courir après une permission qui s'évapore entre un déploiement vert et l'org cible,
 et découvrir qu'elle a été retirée exprès.

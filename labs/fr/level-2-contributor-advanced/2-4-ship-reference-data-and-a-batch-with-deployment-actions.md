@@ -5,7 +5,7 @@ description: "Un déploiement vert n'est pas une fonctionnalité qui marche. Liv
 level: 2
 lab: 4
 lang: fr
-source_rev: "fc36b90e639a23e2e028af5fa2ba96fdab2bca4f"
+source_rev: "732b2aba6858e0de45bba94f23b5f9bdf308a104"
 screenshots:
   - annotated/vscode/sidebar-commands-custom-menu-2--lab-records
   - annotated/salesforce/crew-capacity-records
@@ -28,7 +28,7 @@ depends_on:
 
 **Niveau** : 2 Contributeur avancé
 
-**Durée** : ~1 h 20<!-- observed --> (observé : médiane 1 h 20, 16 participants, le plus rapide 20 min)<!-- /observed -->
+**Durée** : ~1 h 10<!-- observed --> (observé : médiane 1 h 10, 17 participants, le plus rapide 20 min)<!-- /observed -->
 
 **Vous allez** : rencontrer la pire espèce d'échec, celle où rien n'échoue, et la corriger avec trois
 deployment actions de trois types différents.
