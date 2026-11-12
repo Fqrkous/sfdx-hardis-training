@@ -5,7 +5,7 @@ description: "Générez une documentation lisible d'une org Salesforce non docum
 level: 3
 lab: 9
 lang: fr
-source_rev: "84f750e4f3c22d95e9710f0bf9e74bb30c672194"
+source_rev: "85f8e2160c6e4b9e92853ed8100bb17e62568376"
 screenshots:
   - annotated/vscode/documentation-workbench--generate-and-deploy
 depends_on:
@@ -20,7 +20,7 @@ depends_on:
 
 **Niveau** : 3 Release Manager
 
-**Durée** : ~5 min<!-- observed --> (observé : médiane 7 min, 13 participants, le plus rapide 5 min)<!-- /observed -->
+**Durée** : ~5 min<!-- observed --> (observé : médiane 9 min, 14 participants, le plus rapide 5 min)<!-- /observed -->
 
 **Vous allez** : produire une documentation lisible d'une org que personne n'a documentée depuis deux
 ans, à partir des sources que vous avez déjà.
