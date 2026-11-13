@@ -11,7 +11,7 @@ A level is started when its first branch exists in the learner's repository, and
 
 | Level | Started | Share of learners | Completed | Share of started |
 |---|---|---|---|---|
-| Level 1 - Contributor basics | 111 | 98% | 75 | 68% |
+| Level 1 - Contributor basics | 111 | 98% | 76 | 68% |
 | Level 2 - Contributor advanced | 58 | 51% | 35 | 60% |
 | Level 3 - Release Manager | 38 | 34% | 20 | 53% |
 
