@@ -94,6 +94,10 @@ so a renamed documentation page fails CI here rather than surprising a learner.
 | salesforce-devops-work-on-user-story | https://sfdx-hardis.cloudity.com/salesforce-devops-work-on-user-story/ |
 | salesforce-devops-work-on-user-story-configuration | https://sfdx-hardis.cloudity.com/salesforce-devops-work-on-user-story-configuration/ |
 | salesforce-devops-work-on-user-story-deployment-actions | https://sfdx-hardis.cloudity.com/salesforce-devops-work-on-user-story-deployment-actions/ |
+| salesforce-devops-work-on-user-story-deployment-actions-apex | https://sfdx-hardis.cloudity.com/salesforce-devops-work-on-user-story-deployment-actions-apex/ |
+| salesforce-devops-work-on-user-story-deployment-actions-data | https://sfdx-hardis.cloudity.com/salesforce-devops-work-on-user-story-deployment-actions-data/ |
+| salesforce-devops-work-on-user-story-deployment-actions-manual | https://sfdx-hardis.cloudity.com/salesforce-devops-work-on-user-story-deployment-actions-manual/ |
+| salesforce-devops-work-on-user-story-deployment-actions-schedule-batch | https://sfdx-hardis.cloudity.com/salesforce-devops-work-on-user-story-deployment-actions-schedule-batch/ |
 | salesforce-devops-work-on-user-story-development | https://sfdx-hardis.cloudity.com/salesforce-devops-work-on-user-story-development/ |
 | salesforce-devops-work-on-user-story-profiles | https://sfdx-hardis.cloudity.com/salesforce-devops-work-on-user-story-profiles/ |
 | salesforce-monitoring-config-github | https://sfdx-hardis.cloudity.com/salesforce-monitoring-config-github/ |

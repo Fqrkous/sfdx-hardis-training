@@ -5,7 +5,7 @@ description: "Livrez une User Story Salesforce avec une dépendance à vérifier
 level: 2
 lab: 9
 lang: fr
-source_rev: "4160820f969a2cddb3c0d1a6c1635dab607b915d"
+source_rev: "5294067e942d380f9962d71505dea04a50b265f4"
 screenshots:
   - annotated/web/github-star-megalinter
 depends_on:
@@ -13,14 +13,14 @@ depends_on:
   flags: []
   config: [commandsPostDeploy, autoCleanTypes]
   panels: [pipeline, deploymentAction, dataWorkbench]
-  docs: [salesforce-devops-work-on-user-story-deployment-actions]
+  docs: [salesforce-devops-work-on-user-story-deployment-actions, salesforce-devops-work-on-user-story-deployment-actions-data]
 ---
 
 # Lab 2.9 - Épreuve finale : livrer une User Story qui a tout
 
 **Niveau** : 2 Contributeur avancé
 
-**Durée** : ~45 min<!-- observed --> (observé : médiane 48 min, 11 participants, le plus rapide 23 min)<!-- /observed -->
+**Durée** : ~45 min<!-- observed --> (observé : médiane 48 min, 17 participants, le plus rapide 19 min)<!-- /observed -->
 
 **Vous allez** : livrer une story qui contient une dépendance à vérifier, une deployment action de
 données et un collègue qui travaille sur le même permission set, sans pas-à-pas.

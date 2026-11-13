@@ -5,7 +5,7 @@ description: "Livrez via preprod vers votre org de production, vérifiez-la, pui
 level: 3
 lab: 6
 lang: fr
-source_rev: "fe6e167cabedfbb10a99b2099604bae165da04ed"
+source_rev: "6657200cf507a6bf79221865b6bec6b34f67d416"
 screenshots:
   - annotated/vscode/orgs-manager
   - annotated/vscode/pipeline-settings-menu-level3--dora
@@ -24,7 +24,7 @@ depends_on:
 
 **Niveau** : 3 Release Manager
 
-**Durée** : ~1 h<!-- observed --> (observé : médiane 1 h 01, 8 participants, le plus rapide 20 min)<!-- /observed -->
+**Durée** : ~1 h<!-- observed --> (observé : médiane 1 h 01, 15 participants, le plus rapide 20 min)<!-- /observed -->
 
 **Vous allez** : livrer en production, puis mesurer si votre pipeline vaut quelque chose.
 
@@ -85,7 +85,7 @@ Rappel : [Lab 3.5](3-5-promote-to-uat-and-write-release-notes.md), [Lab 3.1](3-1
 1. Cliquez sur la pastille **+ PR** de la flèche d'`uat` vers `preprod`, dans le diagramme DevOps
    Pipeline, de la même façon que vous avez créé la promotion au [Lab 3.5](3-5-promote-to-uat-and-write-release-notes.md). GitHub s'ouvre sur la
    Pull Request d'`uat` vers `preprod`
-2. Intitulez-la simplement :
+2. Intitulez-la simplement, puis cliquez sur **Create pull request** :
 
    > Promotion 2026-09 to preprod
 
@@ -126,7 +126,7 @@ Objectif : la Pull Request de production de `preprod` vers `main`, avec un contr
 #### À faire
 
 1. Cliquez sur la pastille **+ PR** de la flèche de `preprod` vers `main`, de `preprod` dans `main`
-2. Intitulez-la simplement :
+2. Intitulez-la simplement, puis cliquez sur **Create pull request** :
 
    > Release 2026-09 to production
 

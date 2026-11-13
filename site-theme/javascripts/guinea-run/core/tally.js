@@ -67,6 +67,11 @@ export async function sealCheckpoint(text) {
   return sign("c1|" + text);
 }
 
+/** The signature of the save shared by every project in VS Code (core/host-save.js), or "": the same key, its own prefix. */
+export async function sealSave(text) {
+  return sign("g1|" + text);
+}
+
 let current = null;
 
 async function sign(text) {

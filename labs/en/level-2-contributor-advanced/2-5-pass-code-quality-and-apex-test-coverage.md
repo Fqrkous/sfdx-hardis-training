@@ -21,7 +21,7 @@ depends_on:
 
 **Level**: 2 Contributor advanced
 
-**Time**: ~25 min<!-- observed --> (observed: median 26 min, 11 learners, fastest 9 min)<!-- /observed -->
+**Time**: ~25 min<!-- observed --> (observed: median 26 min, 17 learners, fastest 9 min)<!-- /observed -->
 
 **You will**: get blocked twice by robots, fix both properly rather than around them, and learn to
 run the checks before pushing.
@@ -309,7 +309,7 @@ appears on projects that set `enableDeploymentApexTestClasses`. Helios does not:
 
 1. Push, and read what they say on the Pull Request
 
-#### Why
+#### Why in CI
 
 Linters are the one check you cannot usefully run on your own machine, because they need
 a container image the CI already has. That is two

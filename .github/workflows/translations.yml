@@ -30,6 +30,9 @@ permissions: read-all
 jobs:
   translations:
     name: Staleness, alignment and shape
+    # It checks the course, not a learner's work: Set up my training environment
+    # switches on every workflow of a learner's fork, so it must not run there
+    if: github.repository == 'hardisgroupcom/sfdx-hardis-training'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1

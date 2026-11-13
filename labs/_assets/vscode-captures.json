@@ -27,7 +27,7 @@
       "file": "pipeline-branch-modal",
       "_env_comment": "The window of uat, which has no merge target before Level 3, so it shows its go-lives: the point is the uat box in devops-pipeline.png.",
       "env": {
-        "SFDX_HARDIS_DOC_SCREENSHOTS_BRANCH_NODE": "1343,477"
+        "SFDX_HARDIS_DOC_SCREENSHOTS_BRANCH_NODE": "1343,518"
       }
     },
     "pipeline-branch-modal-level3": {
@@ -36,7 +36,7 @@
       "state": "level3",
       "_env_comment": "The level3 diagram is laid out differently: the point is the integration box in devops-pipeline-level3.png, in window pixels.",
       "env": {
-        "SFDX_HARDIS_DOC_SCREENSHOTS_BRANCH_NODE": "880,432"
+        "SFDX_HARDIS_DOC_SCREENSHOTS_BRANCH_NODE": "880,473"
       }
     },
     "devops-pipeline-promotion": {

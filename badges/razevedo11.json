@@ -28,6 +28,34 @@
       "superbadge": false,
       "checksPassed": 6,
       "checksTotal": 6
+    },
+    {
+      "type": "Achievement",
+      "level": 2,
+      "name": "sfdx-hardis Contributor Advanced",
+      "description": "Solves deployment errors, declares deployment actions, resolves conflicts.",
+      "issuer": {
+        "name": "Cloudity",
+        "url": "https://cloudity.com",
+        "course": "https://sfdx-hardis-training.cloudity.com"
+      },
+      "issuedOn": "2026-10-28",
+      "issuedAt": "2026-10-28T02:16:07Z",
+      "evidence": [
+        {
+          "type": "Repository",
+          "url": "https://github.com/ronscloud/sfdx-hardis-training.git"
+        },
+        {
+          "type": "ClaimIssue",
+          "url": "https://github.com/hardisgroupcom/sfdx-hardis-training/issues/326"
+        }
+      ],
+      "image": "https://sfdx-hardis-training.cloudity.com/badges/img/razevedo11-level-2.svg",
+      "bannerImage": "https://sfdx-hardis-training.cloudity.com/badges/img/banner-level-2.svg",
+      "superbadge": false,
+      "checksPassed": 14,
+      "checksTotal": 14
     }
   ],
   "trailblazer": "razevedo11",

@@ -135,10 +135,12 @@
     "intro": [
       "Guinea Run est un jeu caché dans ce site. Trouvez le cochon d'Inde à la fin du pied de page de n'importe quelle page, et jouez.",
       "",
-      "Chaque monde garde le meilleur score envoyé par un joueur. Envoyez les vôtres depuis le Hall of Fame du jeu : il ouvre une issue GitHub avec vos scores déjà remplis, et un job les ajoute ici en quelques minutes."
+      "Chaque monde garde le meilleur score de chaque joueur. Choisissez une fois un pseudo et un cochon d'Inde dans le jeu, après votre premier monde : ensuite, vos meilleurs scores arrivent ici tout seuls."
     ],
-    "updated": "Dernière mise à jour : {date}.",
-    "empty": "Personne pour l'instant. Envoyez vos scores depuis le jeu, et soyez le premier.",
+    "privacy": "Visible par tous : le pseudo, le cochon d'Inde et les scores de chaque joueur. Rien d'autre n'est enregistré : ni compte, ni e-mail. Un joueur peut se retirer depuis le Hall of Fame du jeu.",
+    "loading": "Lecture du Hall of Fame...",
+    "offline": "Le Hall of Fame ne peut pas être lu pour l'instant. Réessayez dans un moment.",
+    "empty": "Personne pour l'instant. Jouez, choisissez un pseudo, et soyez le premier.",
     "general": {
       "heading": "Tous les mondes",
       "intro": "Le meilleur score de chaque monde, additionné. Les {count} premiers joueurs."
@@ -159,17 +161,16 @@
       "Temps du boss"
     ],
     "seconds": "{value} s",
-    "badgeAlt": "Badge de niveau {level}",
     "pinball": {
       "heading": "Pipeline Pinball",
       "intro": "La table bonus, ouverte à ceux qui ont terminé les dix mondes. La meilleure partie de chaque joueur, à part : elle ne compte pas dans le total. Les {count} premiers joueurs.",
-      "empty": "Personne n'a encore envoyé de partie de la table bonus.",
+      "empty": "Personne n'a encore de partie de la table bonus ici.",
       "columns": ["#", "Joueur", "Score", "Niveau", "Missions", "Minutes"]
     },
     "orgman": {
       "heading": "Org-Man",
       "intro": "Le labyrinthe, ouvert à ceux qui ont terminé les dix mondes. La meilleure partie de chaque joueur, à part : elle ne compte pas dans le total. Les {count} premiers joueurs.",
-      "empty": "Personne n'a encore envoyé de partie d'Org-Man.",
+      "empty": "Personne n'a encore de partie d'Org-Man ici.",
       "columns": [
         "#",
         "Joueur",
@@ -558,5 +559,5 @@
       }
     }
   },
-  "source_rev": "3f6cd5c0c8f6530c7486b2d3600f040365dfa7fa"
+  "source_rev": "4e3f39299efe1f5811884d255aa6e182e6e84aff"
 }

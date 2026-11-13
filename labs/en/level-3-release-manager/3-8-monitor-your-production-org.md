@@ -23,7 +23,7 @@ depends_on:
 
 **Level**: 3 Release Manager
 
-**Time**: ~15 min<!-- observed --> (observed: median 17 min, 8 learners, fastest 6 min)<!-- /observed -->
+**Time**: ~10 min<!-- observed --> (observed: median 13 min, 15 learners, fastest 6 min)<!-- /observed -->
 
 **You will**: set up nightly monitoring on production, read its first report, and decide what is
 worth being told about.
@@ -65,7 +65,7 @@ become curves over months. That is out of scope here.
 - [ ] `helios-prod` connected in **Orgs Manager**
 - [ ] An empty GitHub repository of your own, with `monitoring` in its name
 - [ ] An email address you can read, for the alerts
-- [ ] About 20 of those 35 minutes will be the first monitoring run
+- [ ] About 20 more minutes for the first monitoring run, on top of the lab itself
 
 ## Steps
 
@@ -81,9 +81,9 @@ from. Not usually, not by preference: always.
 #### Do
 
 1. Create an empty private repository called `sfdx-hardis-training-monitoring` on GitHub
-2. Clone it the way [Lab 1.2](../level-1-contributor-basics/1-2-create-your-dev-hub-scratch-orgs-and-pipeline.md) cloned this one: **File > Open Folder** on an empty folder
-3. In the **Source Control** panel, **Clone Repository**, and paste the address from the green
-   **Code** button of your new repository
+2. Clone it the way [Lab 1.2](../level-1-contributor-basics/1-2-create-your-dev-hub-scratch-orgs-and-pipeline.md) cloned this one: **File > New Window**, so that no folder is open
+3. In the **Source Control** panel, **Clone Repository**, and paste the HTTPS address that GitHub
+   shows under *Quick setup* on the page of your new, empty repository
 
 !!! warning "Careful"
     This is the part people get wrong, and it is the part that is expensive to undo once a year of
@@ -129,6 +129,14 @@ Refresher: [Lab 3.1](3-1-configure-the-pipeline-up-to-production.md)
 
 #### Do: start the command
 
+!!! warning "Careful"
+    The command pushes a GitHub workflow file, which GitHub accepts only from credentials that have
+    the `workflow` permission. If GitHub refuses a push on the way, the command says *GitHub refused this push* and names the
+    `workflow` scope: the first entry of **If it goes wrong** below is the way out. Do not get past it by
+    merging the monitoring branch into `main`, even through a Pull Request. `main` carries the workflow
+    and nothing else, each monitored org lives on its own branch, and such a merge brings the example
+    workflow of the branch to `main`, whose jobs fail on branches called `monitoring_myclient`.
+
 1. From the monitoring repository, open the **Org Monitoring Workbench** from the Welcome page
 2. Click **Install Org Monitoring**
 
@@ -147,9 +155,9 @@ Refresher: [Lab 3.1](3-1-configure-the-pipeline-up-to-production.md)
 
 It runs in a command panel and asks its questions one at a time, the way [Lab 3.1](3-1-configure-the-pipeline-up-to-production.md) did:
 
-1. **Did you configure the sfdx-hardis monitoring pre-requisites on your Git server ?** The second
-   answer, *ℹ️ No, bring me to the documentation!*, opens that page and ends the command, so read it
-   first if you have not
+1. **Did you configure the sfdx-hardis monitoring pre-requisites on your Git server ?** - Yes. The
+   prerequisites are the two secrets of answer 5, and the command gives you their names and values
+   on the way. *ℹ️ No, bring me to the documentation!* only opens that page and ends the command
 2. **Please select or connect to the org that you want to monitor** - `helios-prod`. The command makes it your default org. If it asks for the org a second time,
    pick `helios-prod` again
 3. **What is the address of the CI/CD repository that deploys to this org? (optional)** - the
@@ -162,13 +170,6 @@ It runs in a command panel and asks its questions one at a time, the way [Lab 3.
    the contact email and the profile of the app. The profile list is in the language of the org's
    user, as in [Lab 3.1](3-1-configure-the-pipeline-up-to-production.md)
 6. **Do you want to save the configuration on the remote server (auto-commit)?** - yes
-
-!!! warning "Careful"
-    If GitHub refuses a push on the way, the command says *GitHub refused this push* and names the
-    `workflow` scope: the first entry of **If it goes wrong** below is the way out. Do not get past it by
-    merging the monitoring branch into `main`, even through a Pull Request. `main` carries the workflow
-    and nothing else, each monitored org lives on its own branch, and such a merge brings the example
-    workflow of the branch to `main`, whose jobs fail on branches called `monitoring_myclient`.
 
 #### Why
 
@@ -224,7 +225,7 @@ address and a severity.
    **New repository secret**, the same form as [Lab 3.1](3-1-configure-the-pipeline-up-to-production.md) step 6
 2. Name it `NOTIF_EMAIL_ADDRESS` and give it your email address as its value. Several addresses go
    in the same secret, separated by commas
-3. Back in the panel, look at the **Email** column: most checks read **Disabled** or **Error** there
+3. Back in the panel, look at the **Email** column: most checks read **Disabled**, **Warning** or **Error** there
 4. On the row **Detect if org limits are close to be reached**, set **Email** to **All**
 5. In the **Source Control** panel, stage `.sfdx-hardis.yml` with the **+** on its row
 6. Type a message such as `Email me the org limits`, **Commit**, then **Sync Changes**
@@ -233,7 +234,7 @@ address and a severity.
 
 The workflow already reads that secret: it was written to.
 
-An address alone may bring you nothing. With **Disabled** or **Error** in the **Email** column, an
+An address alone may bring you nothing. With **Disabled**, **Warning** or **Error** in the **Email** column, an
 org with nothing wrong sends no email at all, which is the right setting for a team and the wrong
 one for a first run. With **All**, that check will now write to you every night, whatever it found.
 
@@ -285,15 +286,16 @@ Goal: the first report read, in your mailbox and in the panel.
 
 #### Do: start with your mailbox
 
-1. Open your mailbox: the run sent an email whose subject starts with `[sfdx-hardis]`, from your own
-   org. Look in the spam folder if it is not in the inbox
-2. Read it. It holds what a release manager needs before the first coffee: which org, what the check
+1. Open your mailbox: the run sent emails whose subject starts with `[sfdx-hardis]`, from your own
+   org, one per check that found something at the severity of its **Email** column. Look in the spam
+   folder if they are not in the inbox
+2. Read the org limits one. It holds what a release manager needs before the first coffee: which org, what the check
    found, the list of what is wrong when something is, the full report attached as a spreadsheet,
    and a link to the job that produced it
 
 #### Why the mailbox first
 
-That is where monitoring finds you from now on. That email is one indicator, on one day. Each check
+That is where monitoring finds you from now on. Each email is one indicator, on one day. Each check
 produces one like it, and the **Email** and **Messaging** columns of step 3 decide which of them are
 worth interrupting somebody for.
 
@@ -312,8 +314,11 @@ worth interrupting somebody for.
 2. Under the monitored org, the panel shows the **Deployment repository** you gave the command in
    step 2: click it to open your fork in a new VS Code window. Had you left that question empty, the
    panel would offer **Set deployment repository** instead. It is optional either way
-3. Each check is a card. Open the two worth opening first: **Detect calls to deprecated API versions**
-   **(2)** and **Detect unsecured Connected Apps in an org** **(3)**
+3. Each check is a card, and clicking one runs that check again from your computer against
+   `helios-prod`, in a command panel. Run the two worth running first: **Detect calls to deprecated
+   API versions** **(2)** and **Detect unsecured Connected Apps in an org** **(3)**. The second one
+   then asks whether to ignore some apps in future scans, and whether to delete OAuth tokens, one of
+   them the Salesforce CLI's: answer **No** to both. Deciding is step 6
 4. Read **Detect if org limits are close to be reached** too
 
 #### Why it is nearly clean
@@ -369,14 +374,15 @@ This is the step that decides whether monitoring survives six months.
 
 1. Go through every finding and put it in one of three buckets:
 
-   | Bucket                 | What you do                                                 | Example                                 |
-   |------------------------|-------------------------------------------------------------|-----------------------------------------|
-   | Act now                | Fix it this week                                            | The unsecured Connected App             |
-   | Track                  | Put it in the backlog as a story                            | The old API version                     |
-   | Silence, with a reason | Turn it off in the configuration, with a comment saying why | A check that does not apply to this org |
+   | Bucket                 | What you do                                                             | Example                                 |
+   |------------------------|-------------------------------------------------------------------------|-----------------------------------------|
+   | Act now                | Fix it this week                                                        | The unsecured Connected App             |
+   | Track                  | Put it in the backlog as a story                                        | The old API version                     |
+   | Silence, with a reason | Turn it off in the configuration, with the reason in the commit message | A check that does not apply to this org |
 
   !!! tip "Silencing a check?"
-      Write the reason in the configuration file.
+      Write the reason in the commit message that silences it: the **Monitoring Config Workbench**
+      rewrites `.sfdx-hardis.yml` and does not keep comments.
 
 2. On `helios-prod`, put `ActiveScratchOrgs` in Track
 
@@ -401,7 +407,7 @@ configuration file, the next person can disagree with you knowingly.
 
 Goal: the org limits check writing to you only when a limit is nearly reached.
 
-A report nobody opens is not monitoring, and you have just seen the other half: the email of
+A report nobody opens is not monitoring, and you have just seen the other half: the emails of
 step 5 reached you without you opening anything.
 
 #### Do
@@ -577,7 +583,7 @@ three things happened:
   in your fork instead of the **monitoring** repository. It is `NOTIF_EMAIL_ADDRESS`, exactly
 - *Sent email to ...*: it left. Look in the spam folder: the sender is your own Salesforce org
 
-The email is sent by the org itself, so it counts against the org's daily limit, which is 15 on a
+Each email is sent by the org itself, so it counts against the org's daily limit, which is 15 on a
 Developer Edition org. If the log says the org refused to send, in `helios-prod`: **Setup > Email >
 Deliverability**, **Access level** on **All email**.
 

@@ -20,7 +20,10 @@
  * of window.__guineaRun to a normal game. guinea-world=pinball and
  * guinea-world=orgman open the bonuses, Pipeline Pinball and Org-Man, which
  * every finished game unlocks (core/story.js BONUSES): each is loaded like a
- * world, keeps its own card and its own board.
+ * world, keeps its own card and its own board. guinea-online=fake plays the
+ * Hall of Fame against a database in memory (core/online-fake.js),
+ * guinea-online=live turns the real one on from a local copy of the site,
+ * guinea-online=0 turns it off.
  */
 import { translator } from "./texts.js";
 import { createHud } from "./hud.js";
@@ -39,7 +42,10 @@ import { createMusic } from "./core/music.js";
 import { THEMES } from "./core/themes.js";
 import { TALLY_SET, stamp, stampPinball, stampOrgman } from "./core/tally.js";
 import { hasCheckpoint, loadCheckpoint, saveCheckpoint, clearCheckpoint } from "./core/checkpoint.js";
-import { GAME_VERSION, WORLD_COUNT, bonusTarget, collectResults, isHandle, loadBoard, scoresOf, sendWait, submissionUrl, topInvites } from "./core/hof.js";
+import { GAME_ROWS, GAME_VERSION, boardId, bonusTarget, collectResults, loadList } from "./core/hof.js";
+import { boardOf as boardOfResult, createNet, createSync } from "./core/online.js";
+import { createFakeDb, fakeFetch, seedFakeDb } from "./core/online-fake.js";
+import { ONLINE_URL, ONLINE_KEY } from "./core/online-config.js";
 
 // scripts/build/vendor-three.mjs copies the add-ons of this same version
 const THREE_VERSION = "0.186.1";
@@ -58,7 +64,7 @@ const CLEAN_BONUS = 250;
 const MISTAKE_COST = 50;
 // Victor's note found in the world
 const NOTE_BONUS = 200;
-// How long the board read from GitHub is reused before it is read again
+// How long a board read from the Hall of Fame is reused before it is read again
 const BOARD_REUSE_MS = 60000;
 
 let active = null;
@@ -84,6 +90,13 @@ function createGame(options) {
   const startAt = Number(params.get("guinea-at")) || 0;
   // A run a check can steer is never signed, so it never reaches the Hall of Fame
   const testMode = testHooks || seedParam !== null || startAt > 0;
+  // The Hall of Fame database. A test run only ever sends to the fake one; a
+  // local copy of the site sends nothing unless asked (guinea-online=live)
+  const onlineParam = params.get("guinea-online");
+  const localCopy = /^(127\.0\.0\.1|localhost)$/.test(window.location.hostname);
+  const fakeDb = onlineParam === "fake" ? createFakeDb() : null;
+  const onlineOn = !fakeDb && onlineParam !== "0" && !testMode && (!localCopy || onlineParam === "live");
+  const net = createNet(fakeDb ? { url: "https://guinea-run.invalid", key: "fake", fetch: fakeFetch(fakeDb) } : onlineOn ? { url: ONLINE_URL, key: ONLINE_KEY } : {});
   // The home screen app is offered once a visit (installHint)
   let installOffered = false;
 
@@ -117,19 +130,21 @@ function createGame(options) {
   // The world being played, and the run of it
   let current = null;
   let run = null;
-  // The Hall of Fame as last read, and where its card was opened from
-  let board = null;
+  // The boards as last read (by board id), and where the Hall of Fame card was opened from
+  const boards = new Map();
   let hofFrom = null;
-  // The results of the last issue prepared, what the last invitation asked, a signature on its way
-  let prepared = null;
-  let inviteAsk = 0;
+  // What the last end card asked of the Hall of Fame, a signature on its way
+  let winAsk = 0;
   let signing = Promise.resolve();
-  // The score the open bonus must pass to enter the top 5 of its board (0: no flash), and the best games of a check
+  // The score the open bonus must pass to enter the top 5 of its board (0: no flash)
   let pinTarget = 0;
-  const testBonus = { pinball: 0, orgman: 0 };
+  // The bests of a test session, for the fake database only
+  const testResults = new Map();
+  // Once the player joined, every new best goes to the Hall of Fame on its own
+  const sync = createSync({ progress, net, results: syncResults, onStatus: (summary) => summary.sent.length && boards.clear() });
 
   loadStylesheet(options.base + "guinea-run.css");
-  const hud = createHud(shellT, { logoUrl, badgeUrl, labs, lang });
+  const hud = createHud(shellT, { logoUrl, badgeUrl, labs, lang, hostSave: Boolean(options.hostSave) });
   const overlay = hud.overlay;
   document.body.appendChild(overlay);
   document.documentElement.classList.add("guinea-run-open");
@@ -140,6 +155,11 @@ function createGame(options) {
     target.addEventListener(type, handler, opts);
     cleanups.push(() => target.removeEventListener(type, handler, opts));
   }
+
+  // What waited for the network goes as soon as it is back; the first sync waits for the game to settle
+  listen(window, "online", () => sync.run());
+  const firstSync = setTimeout(() => sync.run(), 1500);
+  cleanups.push(() => clearTimeout(firstSync), () => sync.stop());
 
   // No scrolling or zooming the page behind the game on a phone
   listen(
@@ -207,6 +227,13 @@ function createGame(options) {
   }
 
   function onAction(action, element) {
+    // The join modal holds the keys: Escape is No thanks, the rest waits for its answer
+    if (hud.joinOpen() && action !== "mute" && action !== "retry-load") {
+      if (action === "quit") {
+        hud.skipJoin();
+      }
+      return;
+    }
     if (action === "quit") {
       stop();
       return;
@@ -420,6 +447,11 @@ function createGame(options) {
       openWorld(directWorld);
     } else {
       showMap();
+      // The shared save of VS Code was edited by hand: play.html cleared it, the player hears why
+      if (options.saveRefused) {
+        track("easter_egg_save_refused", { trigger: options.trigger });
+        hud.saveRefused();
+      }
     }
   }
 
@@ -461,7 +493,6 @@ function createGame(options) {
       BONUSES.map((b) => ({ id: b.id, open: bonusOpen(), best: progress.bonusOf(b.id).best, hasSave: b.id === "pinball" && hasCheckpoint() })),
       installOffer()
     );
-    markMap();
   }
 
   async function openWorld(id) {
@@ -567,25 +598,22 @@ function createGame(options) {
     engine.setActive(false);
     const id = current.info.id;
     const before = progress.bonusOf(id).best;
-    let record = null;
-    if (!testMode) {
-      record =
-        id === "orgman"
-          ? { org: 1, sc: summary.score, ms: summary.ms, lv: summary.level, gh: summary.admins, at: Date.now(), v: GAME_VERSION, k: TALLY_SET }
-          : { pin: 1, sc: summary.score, ms: summary.ms, lv: summary.level, mi: summary.missions, nt: summary.notes, at: Date.now(), v: GAME_VERSION, k: TALLY_SET };
-    }
+    const record =
+      id === "orgman"
+        ? { org: 1, sc: summary.score, ms: summary.ms, lv: summary.level, gh: summary.admins, at: Date.now(), v: GAME_VERSION, k: TALLY_SET }
+        : { pin: 1, sc: summary.score, ms: summary.ms, lv: summary.level, mi: summary.missions, nt: summary.notes, at: Date.now(), v: GAME_VERSION, k: TALLY_SET };
     const newBest = testMode ? summary.score > before : progress.completeBonus(summary.score, record, id);
-    if (newBest && record) {
+    if (newBest && !testMode) {
       const stamper = id === "orgman" ? stampOrgman : stampPinball;
       signing = stamper(record).then((sg) => sg && progress.setBonusRecord(Object.assign({}, record, { sg }), id));
     }
-    if (testMode) {
-      testBonus[id] = Math.max(testBonus[id] || 0, summary.score);
+    if (testMode && fakeDb) {
+      keepTestResult(record);
     }
     track("easter_egg_bonus_over", { bonus: id, score: summary.score, level: summary.level, missions: summary.missions, admins: summary.admins, minutes: Math.round(summary.ms / 60000), trigger: options.trigger });
     sound.play(newBest ? "fanfare" : "happy");
     hud.bonusResult(Object.assign({ id, best: Math.max(before, summary.score), newBest }, summary));
-    inviteFor([id]);
+    afterWin(id, summary.score);
   }
 
   /** Builds the world from its module, fresh: every attempt of a world starts clean. */
@@ -879,11 +907,15 @@ function createGame(options) {
     }
     const before = progress.world(info.id).best;
     const last = info.id === WORLDS.length - 1;
-    const record = testMode ? { test: true } : { w: info.id, sc: run.score, st: stars, bm: bossMs, m: run.mode.id, at: Date.now(), v: GAME_VERSION, k: TALLY_SET };
+    const played = { w: info.id, sc: run.score, st: stars, bm: bossMs, m: run.mode.id, at: Date.now(), v: GAME_VERSION, k: TALLY_SET };
+    const record = testMode ? { test: true } : played;
     const newBest = progress.complete(info.id, run.score, stars, last ? info.id : info.id + 1, record);
     if (newBest && !testMode) {
       // A few milliseconds: the card does not wait for it
       signing = stamp(record).then((sg) => sg && progress.setRecord(info.id, Object.assign({}, record, { sg })));
+    }
+    if (testMode && fakeDb) {
+      keepTestResult(played);
     }
     track("easter_egg_world_done", { world: info.id, stars, score: run.score, mode: run.mode.id, trigger: options.trigger });
     engine.setActive(false);
@@ -894,10 +926,11 @@ function createGame(options) {
         track("easter_egg_finished", { score: run.score, trigger: options.trigger });
         state = "credits";
         hud.credits(progress.badges, result);
+        signing.then(() => progress.online.id && sync.run());
       } else {
         state = "done";
         hud.result(result);
-        inviteFor([info.id, "all"]);
+        afterWin("w" + info.id, run.score);
       }
     };
     if (info.badge) {
@@ -930,7 +963,7 @@ function createGame(options) {
 
   /* ---------- The Hall of Fame ---------- */
 
-  /** The card of the boards. tab: "all" or a world id. from: the world whose card opened it, or null for the map. */
+  /** The card of the boards. tab: "all", a world id, "pinball" or "orgman". from: the world whose card opened it, or null for the map. */
   async function showHallOfFame(tab, from) {
     closeWorld();
     state = "hof";
@@ -942,95 +975,106 @@ function createGame(options) {
     overlay.removeAttribute("data-world");
     hud.clearWorldUi();
     hud.setPads([]);
-    const view = { tab, from, handle: progress.handle, canSend: !testMode, prepare: prepareSubmission, onSent: sentScores };
-    if (!boardFresh()) {
+    const view = profileView({ tab, from, onForget: forgetPlayer });
+    const cached = boards.get(boardId(tab));
+    if (!cached || Date.now() - cached.at > BOARD_REUSE_MS) {
       hud.hallOfFame(Object.assign({ loading: true }, view));
-      const loaded = await currentBoard();
+      const read = await readBoard(tab);
       if (state !== "hof" || hofFrom !== from) {
         return;
       }
-      track("easter_egg_hof_open", { ok: loaded.ok });
+      track("easter_egg_hof_open", { ok: read.ok });
     }
-    hud.hallOfFame(Object.assign({ board: board.board, ok: board.ok }, view));
+    const read = boards.get(boardId(tab)) || { list: [], ok: false };
+    hud.hallOfFame(Object.assign({ list: read.list, ok: read.ok, rank: read.rank }, view));
   }
 
-  /** The issue address for a handle, or { error } with the text key that says why not. */
-  async function prepareSubmission(handle) {
-    if (testMode) {
-      return { error: "hofTestMode" };
-    }
-    if (!isHandle(handle)) {
-      return { error: "hofHandleBad" };
-    }
-    const results = collectResults(progress, Date.now());
-    if (!results.length) {
-      return { error: "hofNothing" };
-    }
-    const wait = sendWait(progress.sentAt, Date.now());
-    if (wait > 0) {
-      return { error: "hofWait", params: { n: Math.ceil(wait / 60000) } };
-    }
-    prepared = results;
-    return { url: await submissionUrl(handle, results, Date.now()), count: results.length };
+  /** A board and the player's rank on it, kept BOARD_REUSE_MS. Never throws. */
+  async function readBoard(tab) {
+    const id = boardId(tab);
+    const profile = progress.online;
+    const [read, ranks] = await Promise.all([loadList(net, tab, GAME_ROWS), profile.id ? net.ranks(profile.id) : Promise.resolve({})]);
+    const entry = { list: read.list, ok: read.ok, rank: (ranks && ranks[id]) || null, at: Date.now() };
+    boards.set(id, entry);
+    return entry;
   }
 
-  function sentScores(handle, count) {
-    progress.setHandle(handle);
-    if (prepared) {
-      progress.addSent(scoresOf(prepared), Date.now());
+  /** What the profile and join boxes need. */
+  function profileView(extra) {
+    return Object.assign({ profile: progress.online, online: net.enabled, testLink: testMode && !fakeDb, onSave: saveProfile }, extra);
+  }
+
+  /** The player joins, or changes their nickname or guinea pig: "saved", "later" or "refused". */
+  async function saveProfile(name, coat) {
+    const profile = progress.online;
+    if (!profile.id) {
+      progress.setOnline({ id: newPlayerId(), name, coat, asked: true });
+      track("easter_egg_hof_join", { coat });
+    } else {
+      progress.setOnline({ name, coat });
+      track("easter_egg_hof_rename", { coat });
     }
-    hud.markHof(false);
-    // The next look at the board reads it again: the new scores land within minutes
-    board = null;
-    track("easter_egg_hof_submit", { worlds: count });
+    const summary = await sync.run();
+    return summary.nameRefused ? "refused" : summary.later ? "later" : "saved";
   }
 
-  function boardFresh() {
-    return Boolean(board) && Date.now() - board.at <= BOARD_REUSE_MS;
-  }
-
-  /** The board, read again once it is older than BOARD_REUSE_MS. Never throws. */
-  async function currentBoard() {
-    if (!boardFresh()) {
-      const loaded = await loadBoard(siteRoot);
-      board = Object.assign(loaded, { at: Date.now() });
+  /** "Remove me from the Hall of Fame": every row of this player is deleted, and nothing is sent any more. */
+  async function forgetPlayer() {
+    const profile = progress.online;
+    if (!profile.id || !(await net.forget(profile.id))) {
+      return false;
     }
-    return board;
+    // left: a merge with an older copy of the save never brings this id back
+    progress.setOnline({ id: "", name: "", asked: true, left: profile.id });
+    boards.clear();
+    track("easter_egg_hof_forget", {});
+    return true;
   }
 
-  /** The scores the player can send now; in a check, the bests of this session. */
-  function mineScores() {
-    if (testMode) {
-      const worlds = {};
-      for (let w = 0; w < WORLD_COUNT; w++) {
-        worlds[w] = progress.world(w).best;
+  /**
+   * After a won world or a bonus game, once its result is signed: the join
+   * modal the first time, otherwise the new best sent and a line that says so.
+   */
+  async function afterWin(board, score) {
+    const ask = ++winAsk;
+    const shown = state;
+    await signing;
+    if (ask !== winAsk || state !== shown || !net.enabled || (testMode && !fakeDb)) {
+      return;
+    }
+    const profile = progress.online;
+    if (!profile.id) {
+      if (!profile.asked) {
+        hud.joinOffer(profileView({ onSkip: () => progress.setOnline({ asked: true }) }), score);
+        track("easter_egg_hof_offer", { world: board });
       }
-      return { worlds, pinball: testBonus.pinball, orgman: testBonus.orgman };
+      return;
     }
-    return scoresOf(collectResults(progress, Date.now()));
+    const summary = await sync.run();
+    if (ask !== winAsk || state !== shown) {
+      return;
+    }
+    if (summary.sent.includes(board)) {
+      hud.hofStatus("sent");
+    } else if (summary.later) {
+      hud.hofStatus("later");
+    }
   }
 
-  /**
-   * The boards where the scores not sent yet would enter the top 5. Nothing to
-   * send, or too soon after the last send: no need to read the board. The
-   * invitation comes back at the next end card or map once the pause is over.
-   */
-  async function invitesFor(boards) {
-    const empty = { players: {} };
-    if (!testMode && sendWait(progress.sentAt, Date.now()) > 0) {
-      return [];
-    }
-    if (!topInvites(empty, mineScores(), progress.sent, progress.handle, boards).length) {
-      return [];
-    }
-    const read = await currentBoard();
-    return read.ok ? topInvites(read.board, mineScores(), progress.sent, progress.handle, boards) : [];
+  /** What a sync sends: the signed results of this device; in a test with the fake database, the bests of this session. */
+  function syncResults() {
+    return fakeDb ? Array.from(testResults.values()) : collectResults(progress);
   }
 
-  /**
-   * The invitation on the end card, once the signature and the board are in:
-   * with a known handle a link straight to the issue, otherwise the Hall of Fame card.
-   */
+  /** A session result for the fake database, signed with a stand-in: never stored, never sent to the real one. */
+  function keepTestResult(record) {
+    const board = boardOfResult(record);
+    const held = testResults.get(board);
+    if (!held || record.sc > held.sc) {
+      testResults.set(board, Object.assign({}, record, { sg: "test" }));
+    }
+  }
+
   /**
    * On a phone, the end card of a won world offers the home screen app, which
    * plays offline (play.html, its manifest and sw.js). Once a visit. From a
@@ -1079,44 +1123,15 @@ function createGame(options) {
     return new URL("play.html?lang=" + lang, options.base).href;
   }
 
-  async function inviteFor(boards) {
-    const ask = ++inviteAsk;
-    const shown = state;
-    await signing;
-    const invites = await invitesFor(boards);
-    if (ask !== inviteAsk || state !== shown || !invites.length) {
-      return;
-    }
-    const view = { invites, canSend: !testMode, onSent: sentScores };
-    if (progress.handle && !testMode) {
-      const ready = await prepareSubmission(progress.handle);
-      if (ask !== inviteAsk || state !== shown) {
-        return;
-      }
-      if (ready.url) {
-        Object.assign(view, { handle: progress.handle, url: ready.url, count: ready.count });
-      }
-    }
-    hud.invite(view);
-    hud.markHof(true);
-    track("easter_egg_hof_invite", { boards: invites.map((i) => i.board).join(","), rank: Math.min(...invites.map((i) => i.rank)) });
-  }
-
-  /** The mark on the Hall of Fame button of the map, while a top 5 score waits to be sent. */
-  async function markMap() {
-    const boards = Array.from({ length: WORLD_COUNT }, (_, w) => w).concat(["all"], BONUSES.map((b) => b.id));
-    const invites = await invitesFor(boards);
-    if (state === "map") {
-      hud.markHof(invites.length > 0);
-    }
-  }
-
   /** What the open bonus must pass to flash TOP 5, read while its card shows. */
   async function readBonusTarget() {
     pinTarget = 0;
     const id = current && current.info.id;
-    const read = await currentBoard();
-    pinTarget = read.ok && bonusOf(id) ? bonusTarget(read.board, progress.sent, progress.handle, id) : 0;
+    if (!bonusOf(id)) {
+      return;
+    }
+    const read = await readBoard(id);
+    pinTarget = read.ok && current && current.info.id === id ? bonusTarget(read.list, read.rank ? read.rank.rank : 0, progress.bonusOf(id).best) : 0;
   }
 
   function updateHud() {
@@ -1287,12 +1302,20 @@ function createGame(options) {
       fail: () => current && current.world && failWorld(),
       action: (name) => onAction(name, null),
       bossClock: () => (run ? run.bossClock : null),
-      // A board to rank against, instead of the one on GitHub
-      board: (value) => {
-        board = { board: value, ok: true, at: Date.now() + 864e5 };
-        if (playingBonus()) {
-          readBonusTarget();
-        }
+      // The fake Hall of Fame database (guinea-online=fake): rival players to rank against, what it holds, the profile
+      online: {
+        seed: (players) => {
+          if (fakeDb) {
+            seedFakeDb(fakeDb, players);
+            boards.clear();
+            if (playingBonus()) {
+              readBonusTarget();
+            }
+          }
+        },
+        db: () => (fakeDb ? { names: fakeDb.names.map((r) => ({ name: r.name, coat: r.coat })), scores: fakeDb.scores.map((r) => ({ board: r.board, score: r.score })) } : null),
+        profile: () => progress.online,
+        sync: () => sync.run()
       },
       hofTarget: () => pinTarget,
       // The models stay loaded for the session: only what a world made itself counts
@@ -1391,4 +1414,16 @@ function webglAvailable() {
   } catch {
     return false;
   }
+}
+
+/** A random player id: the only thing that tells two players apart in the Hall of Fame. */
+function newPlayerId() {
+  if (globalThis.crypto && typeof crypto.randomUUID === "function") {
+    return crypto.randomUUID();
+  }
+  const b = crypto.getRandomValues(new Uint8Array(16));
+  b[6] = (b[6] & 15) | 64;
+  b[8] = (b[8] & 63) | 128;
+  const h = Array.from(b, (x) => x.toString(16).padStart(2, "0")).join("");
+  return h.slice(0, 8) + "-" + h.slice(8, 12) + "-" + h.slice(12, 16) + "-" + h.slice(16, 20) + "-" + h.slice(20);
 }

@@ -220,10 +220,6 @@ for (const locale of labLocales) {
     problems.push(`/${hall.replace(/\\/g, "/")} (the Hall of Fame page of ${locale} was not built)`);
   }
 }
-// The copy of the board the game falls back to when GitHub does not answer
-if (!fs.existsSync(path.join(SITE, "hall-of-fame", "hall-of-fame.json"))) {
-  problems.push("/hall-of-fame/hall-of-fame.json (the copy of the board the game reads was not published)");
-}
 
 console.log(
   `${pages.length} page(s), ${references} local asset reference(s), ${links_checked} internal link(s), ${cards} share card(s), ${badgeImages} badge image(s) in records.`

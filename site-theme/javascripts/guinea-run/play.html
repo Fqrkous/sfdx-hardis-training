@@ -11,6 +11,14 @@
   "openExternal", url } for each link: in a frame a lab link would otherwise
   replace the game. Opened on its own, the game plays the same.
 
+    play.html?lang=fr&from=vscode&save=host
+
+  With save=host, the page that holds the frame keeps the save every VS Code
+  project shares: the game asks for it ({ type: "loadSave" }, answered by {
+  source: "vscode-sfdx-hardis", type: "save", blob }) before it starts, then
+  sends { type: "storeSave", blob } after each change and { type: "clearSave"
+  } when the save was edited by hand. See core/host-save.js.
+
   Once opened online, it plays offline too: sw.js keeps a copy of the game.
   On a phone it can be added to the home screen (manifest.webmanifest), and
   opens from its icon (?from=app) without a network.
@@ -61,6 +69,7 @@
   <body>
     <script type="module">
       import { createInstallOffer } from "./core/install.js";
+      import { hostSaveWanted, restoreFromHost } from "./core/host-save.js";
 
       const params = new URLSearchParams(location.search);
       // The home screen app has no lang in its address: the phone's language then
@@ -110,13 +119,19 @@
       );
 
       const base = new URL("./", location.href).href;
-      const game = await import(base + "game.js");
+      // In VS Code, the save every project shares is put into this frame's storage before the game reads it
+      const [game, hostSave] = await Promise.all([
+        import(base + "game.js"),
+        hostSaveWanted(params, framed) ? restoreFromHost() : Promise.resolve({ enabled: false, refused: false })
+      ]);
       game.start({
         lang,
         trigger: params.get("from") === "vscode" ? "vscode" : app ? "app" : "embed",
         base,
         track: () => {},
         install: framed || app ? null : install,
+        hostSave: hostSave.enabled,
+        saveRefused: hostSave.refused,
         onExit: () => {
           tell({ type: "exit" });
           if (framed) {

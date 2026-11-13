@@ -7,7 +7,7 @@ lab: 1
 lang: en
 source_rev: ""
 screenshots:
-  - annotated/vscode/devops-pipeline--one-column
+  - annotated/vscode/devops-pipeline-fresh--one-column
   - annotated/vscode/devops-pipeline-level3-split
   - annotated/web/github-new-branch
   - annotated/web/github-branch-rules
@@ -41,7 +41,7 @@ depends_on:
 
 **Level**: 3 Release Manager
 
-**Time**: ~2 h 05<!-- observed --> (observed: median 2 h 05, 8 learners, fastest 2 h)<!-- /observed -->
+**Time**: ~1 h 35<!-- observed --> (observed: median 1 h 39, 14 learners, fastest 26 min)<!-- /observed -->
 
 **You will**: turn a two-stage pipeline into a four-stage one that reaches production, give the two
 new stages their org and a credential a real project can live with, and publish all of it the way
@@ -51,10 +51,9 @@ every change reaches a major branch: through a Pull Request.
 
 Open the **DevOps Pipeline** panel and look at what Victor left.
 
-![The DevOps Pipeline panel with integration and uat only](../../_assets/annotated/vscode/devops-pipeline--one-column.png)
+![The DevOps Pipeline panel with integration and uat only](../../_assets/annotated/vscode/devops-pipeline-fresh--one-column.png)
 
-`integration` **(1)** and `uat`, each with its org **(2)**, and the feature branches your teammates
-have in flight. Work reaches the business testers, and then it stops. There is no `preprod`, and
+`integration` **(1)** and `uat`, each with its org **(2)**. Work reaches the business testers, and then it stops. There is no `preprod`, and
 `main`, production, is a branch nothing deploys: every release so far reached production by hand,
 which is exactly the kind of release nobody can say anything about afterwards.
 
@@ -134,8 +133,8 @@ to it. So the branches come first, then their protection, then their orgs.
 
 #### You should now see
 
-- Four major branches, `integration`, `uat`, `preprod` and `main`, each merging into the next, with
-  `main` as production and hotfixes starting from `preprod`
+- The four answers, each said in a sentence of your own. Nothing in your fork changes yet: the next
+  steps build what they describe
 
 ### 2. Create the preprod branch
 
@@ -158,7 +157,8 @@ from `main`, because it holds what production holds.
 4. Tell VS Code: in the **Source Control** panel, **...** menu, **Pull, Push** > **Fetch**
 
 !!! warning "A course update merged with a squash comes back here"
-    `preprod` takes `main` as your fork has it. If you clicked **Sync fork** on GitHub, that `main`
+    `preprod` takes `main` as your fork has it. If you ever clicked **Sync fork**, the button GitHub
+    shows on the page of a fork to copy the course's newest `main` into yours, that `main`
     holds course changes newer than the ones your `integration` started from. That is fine as long
     as each course update reached `integration` through **Update my course**, which merges it with a
     merge commit. If you ever opened a course update Pull Request yourself and merged it with
@@ -344,7 +344,9 @@ It asks a dozen questions, in this order:
    step 6 is what it is waiting for. It is a **Yes** or **No** question
 10. Read the three questions that come once you have answered **Yes**, and answer them at the end of
     step 6 below: the name of the External Client App, a contact email, and the profile to
-    pre-authorise. Take **System Administrator**: it is already selected, so keep it. The list shows
+    pre-authorise. Keep the name it offers, `sfdxhardispreprod`. Take **System Administrator**:
+    recent versions of sfdx-hardis select it for you, and if nothing is selected in your list, select
+    it. The list shows
     the profile names in the language of the org's user, so an org set to French lists
     `Administrateur système` instead
 
@@ -444,7 +446,8 @@ you named at the last question. Look at it once, so you know where it is when it
 #### Do
 
 1. In `helios-preprod`, open **Setup > External Client App Manager**
-2. Open the app, whose name defaulted to `sfdxhardispreprod`
+2. Open the app by the name you gave it, `sfdxhardispreprod` unless you changed it. Any character
+   other than a letter or a digit was turned into `_`
 3. Above the tabs, check that **App Authorization** reads *Admin approved users are pre-authorized*
 4. On the **Policies** tab, under **App Policies**, check that **Selected Profiles** lists the
    profile
@@ -478,7 +481,9 @@ Same gear, **Add or Reconnect a Major Org**, once more, for production:
 2. One answer differs from `preprod`. At **What are the target git branches that main will be able
    to merge in?**, the list offers `integration`, `uat` and `preprod`: tick none of them and
    validate the empty answer
-3. Store both secrets, the ID and the key, as in step 6
+3. Store both secrets, the ID and the key, as in step 6. Then answer **Yes** to **Please confirm
+   when variables have been set**, and the last three questions as in step 6: keep the name
+   `sfdxhardismain`, give your email, and take **System Administrator**
 4. Look at the **DevOps Pipeline** panel now. It draws two separate pieces, `integration` → `uat`
    and `preprod` → `main`, with nothing between `uat` and `preprod`. That gap is expected, and the
    next tasks close it
@@ -520,7 +525,13 @@ Step 11 publishes it with the rest.
 
 Goal: `preprod` offered to contributors as a target branch, with its label.
 
-Contributors choose where a User Story goes from a list, and `preprod` is not in it yet.
+Contributors choose where a User Story goes from a list, and `preprod` is not in it yet. The two
+lines to have at the end:
+
+| Line | Branch      | Label                                                                 |
+|------|-------------|-----------------------------------------------------------------------|
+| 1    | integration | `The shared integration org, where every contributor merges`          |
+| 2    | preprod     | `Hotfixes on the production version, agreed with the release manager` |
 
 #### Do
 
@@ -537,13 +548,8 @@ Contributors choose where a User Story goes from a list, and `preprod` is not in
    ![The two target branch lists of the User Stories tab, unlocked for editing](../../_assets/annotated/vscode/pipeline-config-user-stories--target-branches.png)
 
 4. Today each holds a single line, the one a contributor has been choosing since Level 1. Add a
-   second line to each, in the same position, as in the table below
+   second line to each, in the same position, as in the table above
 5. **Save (3)**
-
-| Line | Branch      | Label                                                                 |
-|------|-------------|-----------------------------------------------------------------------|
-| 1    | integration | `The shared integration org, where every contributor merges`          |
-| 2    | preprod     | `Hotfixes on the production version, agreed with the release manager` |
 
 #### Why
 
@@ -813,8 +819,10 @@ fills up. Gear menu of the DevOps Pipeline, **Configure Org Initialization**. Se
 Replacement rules (Beta). Some metadata must differ from one org to the next: an endpoint URL, a
 password read from a CI secret, a permission production must not grant. A replacement rule changes
 the files just before each deployment, for the org it deploys to, and the repository keeps one
-version. Helios has a case: each org books its panel batches with its own warehouse system, and the
-`Helios_Warehouse` remote site holds one URL. Gear menu of the DevOps Pipeline, **Configure Replacement Rules**. See
+version. Helios could use one: each org books its panel batches with its own warehouse system, and
+the `Helios_Warehouse` remote site holds one URL in git, where a rule would set the URL of each org.
+Your fork has no rule, and its panel is empty: the picture shows what Helios would hold if it used
+them. Gear menu of the DevOps Pipeline, **Configure Replacement Rules**. See
 [Replacement rules](https://sfdx-hardis.cloudity.com/salesforce-devops-config-replacement-rules/).
 
 ![The Replacement Rules panel, with the warehouse URL of each Helios org](../../_assets/annotated/vscode/replacement-rules.png)
@@ -833,6 +841,13 @@ version. Helios has a case: each org books its panel batches with its own wareho
       nothing until [Lab 3.10](3-10-promote-a-subset-with-promotion-branches.md)
 
 ## If it goes wrong
+
+**Add or Reconnect a Major Org stops at once with `You need openssl to be locally installed to run this command.`**
+The command generates the certificate with openssl, and VS Code does not find it. On Windows it
+comes with Git, in its `usr\bin` folder, which is not always on the PATH. Type
+`environment variables` in the Windows search, open **Edit environment variables for your
+account**, and add `C:\Program Files\Git\usr\bin` to **Path**. Then close VS Code completely, open
+it again, and run the command again.
 
 **preprod is not in the branch list of Add or Reconnect a Major Org.**
 VS Code has not fetched it. **Source Control** panel, **...** menu, **Pull, Push** > **Fetch**, then

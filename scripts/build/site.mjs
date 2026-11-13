@@ -14,7 +14,7 @@
  *   training-universe.json stories -> site-src/[<locale>/]BACKLOG/US-nnn.md, and US-nnn.json once
  *   badges/<trailblazer>.json      -> site-src/[<locale>/]badges/<trailblazer>.md, built from the record
  *   badges/<trailblazer>.json      -> site-src/badges/<trailblazer>.json (read by other sites)
- *   hall-of-fame/hall-of-fame.json -> site-src/[<locale>/]hall-of-fame/index.md, and the JSON once (read by the game)
+ *   the Hall of Fame -> site-src/[<locale>/]hall-of-fame/index.md (the boards are read in the browser)
  *
  *   node scripts/build/site.mjs
  */
@@ -697,31 +697,11 @@ function statsPages() {
 const statsPageCount = statsPages();
 
 /**
- * The Guinea Run Hall of Fame, in every language, and the board itself.
- *
- * hall-of-fame/hall-of-fame.json is written by the hall-of-fame workflow. The
- * game reads it from GitHub first and from the copy published here second, so
- * the copy is written even when the board cannot be read: an empty one then.
+ * The Guinea Run Hall of Fame, in every language. The boards are read from the
+ * game's database in the reader's browser (site-theme/javascripts/hall-of-fame-page.js):
+ * the page holds their places only.
  */
 function hallOfFamePages() {
-  let board = { version: 1, updatedAt: null, banned: [], players: {} };
-  try {
-    board = JSON.parse(fs.readFileSync(path.join(ROOT, "hall-of-fame", "hall-of-fame.json"), "utf8"));
-  } catch (error) {
-    console.warn(`hall-of-fame/hall-of-fame.json could not be read, the Hall of Fame page is empty: ${error.message}`);
-  }
-  fs.mkdirSync(path.join(OUT, "hall-of-fame"), { recursive: true });
-  fs.writeFileSync(path.join(OUT, "hall-of-fame", "hall-of-fame.json"), JSON.stringify(board, null, 2) + "\n", "utf8");
-
-  // The badge page of a player: the record of their GitHub handle with the highest badge
-  const byHandle = new Map();
-  for (const holder of holders) {
-    const handle = String(holder.recipient || "").toLowerCase();
-    const level = holder.highest ? holder.highest.level : 0;
-    if (handle && level > 0 && (!byHandle.has(handle) || byHandle.get(handle).highest.level < level)) {
-      byHandle.set(handle, holder);
-    }
-  }
   for (const locale of locales) {
     const s = strings(locale);
     const dir = path.join(OUT, localePrefix(locale), "hall-of-fame");
@@ -730,24 +710,9 @@ function hallOfFamePages() {
     for (const other of locales) {
       alternates[other] = `${localePrefix(other)}hall-of-fame/`;
     }
-    // The badge images are published once, under the site language
-    const images = locale === SITE_LANG ? "../badges/img" : "../../badges/img";
-    const page = hallOfFamePage({
-      s,
-      board,
-      badgeHref: (handle) => {
-        const holder = byHandle.get(handle.toLowerCase());
-        return holder ? `../badges/${holder.key}.md` : null;
-      },
-      badgeImage: (handle, level) => {
-        const holder = byHandle.get(handle.toLowerCase());
-        const file = holder ? `${holder.key}-level-${level}.svg` : null;
-        return file && fs.existsSync(path.join(badgesDir, "img", file)) ? `${images}/${file}` : null;
-      }
-    });
     fs.writeFileSync(
       path.join(dir, "index.md"),
-      withAlternates(frontMatter({ title: s.hallOfFame.title, description: s.hallOfFame.description }) + page, alternates, locale),
+      withAlternates(frontMatter({ title: s.hallOfFame.title, description: s.hallOfFame.description }) + hallOfFamePage({ s }), alternates, locale),
       "utf8"
     );
   }

@@ -5,9 +5,9 @@ description: "Étendez une pipeline Salesforce à deux étages jusqu'à la produ
 level: 3
 lab: 1
 lang: fr
-source_rev: "08e4b4698dc4c87d12c6ee0765ed5f80565f3ea4"
+source_rev: "c881642c5ceca27f6db81b58573a95e3bf931ea7"
 screenshots:
-  - annotated/vscode/devops-pipeline--one-column
+  - annotated/vscode/devops-pipeline-fresh--one-column
   - annotated/vscode/devops-pipeline-level3-split
   - annotated/web/github-new-branch
   - annotated/web/github-branch-rules
@@ -41,7 +41,7 @@ depends_on:
 
 **Niveau** : 3 Release Manager
 
-**Durée** : ~2 h 05<!-- observed --> (observé : médiane 2 h 05, 8 participants, le plus rapide 2 h)<!-- /observed -->
+**Durée** : ~1 h 35<!-- observed --> (observé : médiane 1 h 39, 14 participants, le plus rapide 26 min)<!-- /observed -->
 
 **Vous allez** : transformer une pipeline à deux étages en une pipeline à quatre étages qui atteint la
 production, donner aux deux nouveaux étages leur org et un identifiant avec lequel un vrai projet peut
@@ -52,10 +52,9 @@ Pull Request.
 
 Ouvrez le panneau **DevOps Pipeline** et regardez ce que Victor a laissé.
 
-![Le panneau DevOps Pipeline avec integration et uat seulement](../../_assets/annotated/vscode/devops-pipeline--one-column.png)
+![Le panneau DevOps Pipeline avec integration et uat seulement](../../_assets/annotated/vscode/devops-pipeline-fresh--one-column.png)
 
-`integration` **(1)** et `uat`, chacune avec son org **(2)**, et les branches de feature que vos
-collègues ont en cours. Le travail atteint les testeurs métier, et là il s'arrête. Il n'y a pas de
+`integration` **(1)** et `uat`, chacune avec son org **(2)**. Le travail atteint les testeurs métier, et là il s'arrête. Il n'y a pas de
 `preprod`, et `main`, la production, est une branche où rien ne déploie : toutes les livraisons
 jusqu'ici ont atteint la production à la main, ce qui est exactement le genre de livraison dont
 personne ne peut rien dire après coup.
@@ -142,8 +141,8 @@ attachée. Les branches viennent donc d'abord, puis leur protection, puis leurs 
 
 #### Vous devriez voir
 
-- Quatre branches majeures, `integration`, `uat`, `preprod` et `main`, chacune mergeant dans la
-  suivante, avec `main` comme production et les hotfixes partant de `preprod`
+- Les quatre réponses, chacune dite dans une phrase à vous. Rien ne change encore dans votre fork :
+  les étapes suivantes construisent ce qu'elles décrivent
 
 ### 2. Créer la branche preprod
 
@@ -166,7 +165,8 @@ parce qu'elle contient ce que la production contient.
 4. Prévenez VS Code : dans le panneau **Source Control**, menu **...**, **Pull, Push** > **Fetch**
 
 !!! warning "Une mise à jour du cours mergée en squash revient ici"
-    `preprod` prend `main` tel que votre fork l'a. Si vous avez cliqué **Sync fork** sur GitHub, ce
+    `preprod` prend `main` tel que votre fork l'a. Si vous avez un jour cliqué **Sync fork**, le
+    bouton que GitHub affiche sur la page d'un fork pour y copier le `main` le plus récent du cours, ce
     `main` contient des changements du cours plus récents que ceux dont votre `integration` est
     partie. Aucun souci tant que chaque mise à jour du cours est arrivée dans `integration` par
     **Update my course**, qui la merge avec un merge commit. Si vous avez un jour ouvert vous-même
@@ -363,7 +363,9 @@ Elle pose une douzaine de questions, dans cet ordre :
    arrêt, et l'étape 6 est ce qu'elle attend. C'est une question **Yes** ou **No**
 10. Lisez les trois questions qui suivent une fois que vous avez répondu **Yes**, et répondez-y à la
     fin de l'étape 6 ci-dessous : le nom de l'External Client App, un e-mail de contact, et le
-    profil à pré-autoriser. Prenez **System Administrator** : il est déjà sélectionné, gardez-le. La
+    profil à pré-autoriser. Gardez le nom proposé, `sfdxhardispreprod`. Prenez **System
+    Administrator** : les versions récentes de sfdx-hardis le sélectionnent pour vous, et si rien
+    n'est sélectionné dans votre liste, sélectionnez-le. La
     liste affiche les noms de profils dans la langue de l'utilisateur de l'org : une org réglée en
     français liste donc `Administrateur système` à la place
 
@@ -467,7 +469,8 @@ Regardez-la une fois, pour savoir où elle est le jour où cela compte.
 #### À faire
 
 1. Dans `helios-preprod`, ouvrez **Setup > External Client App Manager**
-2. Ouvrez l'application, dont le nom par défaut était `sfdxhardispreprod`
+2. Ouvrez l'application sous le nom que vous lui avez donné, `sfdxhardispreprod` si vous ne l'avez
+   pas changé. Tout caractère autre qu'une lettre ou un chiffre a été remplacé par `_`
 3. Au-dessus des onglets, vérifiez que **App Authorization** affiche *Admin approved users are
    pre-authorized*
 4. Dans l'onglet **Policies**, sous **App Policies**, vérifiez que **Selected Profiles** liste le
@@ -504,7 +507,10 @@ Même engrenage, **Add or Reconnect a Major Org**, une fois de plus, pour la pro
 2. Une réponse diffère de celles de `preprod`. À **What are the target git branches that main will
    be able to merge in?**, la liste propose `integration`, `uat` et `preprod` : n'en cochez aucune
    et validez la réponse vide
-3. Stockez les deux secrets, l'ID et la clé, comme à l'étape 6
+3. Stockez les deux secrets, l'ID et la clé, comme à l'étape 6. Répondez ensuite **Yes** à
+   **Please confirm when variables have been set**, puis aux trois dernières questions comme à
+   l'étape 6 : gardez le nom `sfdxhardismain`, donnez votre e-mail, et prenez **System
+   Administrator**
 4. Regardez maintenant le panneau **DevOps Pipeline**. Il dessine deux morceaux séparés,
    `integration` → `uat` et `preprod` → `main`, sans rien entre `uat` et `preprod`. Ce trou est
    normal, et les tâches suivantes le comblent
@@ -540,13 +546,19 @@ diagramme ne dessine aucune flèche de `uat` vers `preprod`, et le [Lab 3.6](3-6
 
 - `SFDX_CLIENT_ID_MAIN` et `SFDX_CLIENT_KEY_MAIN` dans la liste des secrets de votre fork
 - Le diagramme qui dessine une seule ligne de quatre branches, `integration` → `uat` → `preprod` →
-  `main`, comme sur l'image de l'[étape 12](#12-regarder-le-diagramme-a-nouveau)
+  `main`, comme sur l'image de l'[étape 12](#12-regarder-le-diagramme-de-nouveau)
 
 ### 9. Laisser les contributeurs démarrer un hotfix
 
 Objectif : `preprod` proposée aux contributeurs comme branche cible, avec son libellé.
 
 Les contributeurs choisissent où va une User Story dans une liste, et `preprod` n'y est pas encore.
+Les deux lignes à avoir à la fin :
+
+| Ligne | Branche     | Libellé                                                               |
+|-------|-------------|-----------------------------------------------------------------------|
+| 1     | integration | `The shared integration org, where every contributor merges`          |
+| 2     | preprod     | `Hotfixes on the production version, agreed with the release manager` |
 
 #### À faire
 
@@ -564,13 +576,8 @@ Les contributeurs choisissent où va une User Story dans une liste, et `preprod`
    ![Les deux listes de branches cibles de l'onglet User Stories, déverrouillées pour édition](../../_assets/annotated/vscode/pipeline-config-user-stories--target-branches.png)
 
 4. Aujourd'hui chacune contient une seule ligne, celle qu'un contributeur choisit depuis le Niveau 1.
-   Ajoutez une deuxième ligne à chacune, à la même position, comme dans le tableau ci-dessous
+   Ajoutez une deuxième ligne à chacune, à la même position, comme dans le tableau ci-dessus
 5. **Save (3)**
-
-| Ligne | Branche     | Libellé                                                               |
-|-------|-------------|-----------------------------------------------------------------------|
-| 1     | integration | `The shared integration org, where every contributor merges`          |
-| 2     | preprod     | `Hotfixes on the production version, agreed with the release manager` |
 
 #### Pourquoi
 
@@ -803,7 +810,7 @@ Documentation des commandes : [hardis:project:create](https://sfdx-hardis.cloudi
 - Votre Pull Request de configuration mergée dans `integration`
 - Votre `integration` qui récupère la configuration, mergée
 
-### 12. Regarder le diagramme à nouveau
+### 12. Regarder le diagramme de nouveau
 
 Objectif : la pipeline à quatre étages que vous avez construite, sur le diagramme.
 
@@ -856,9 +863,10 @@ Initialization**. Voir
 Règles de remplacement (Beta). Certaines métadonnées doivent changer d'une org à l'autre : une URL
 d'endpoint, un mot de passe lu dans un secret de la CI, une permission que la production ne doit pas
 accorder. Une règle de remplacement modifie les fichiers juste avant chaque déploiement, pour l'org
-visée, et le repository garde une seule version. Helios a un cas : chaque org réserve ses lots de
-panneaux auprès de son propre système d'entrepôt, et le remote site `Helios_Warehouse` contient une
-seule URL. Menu engrenage du DevOps Pipeline, **Configure Replacement Rules**. Voir
+visée, et le repository garde une seule version. Helios pourrait s'en servir : chaque org réserve ses
+lots de panneaux auprès de son propre système d'entrepôt, et le remote site `Helios_Warehouse`
+contient une seule URL dans git, là où une règle mettrait l'URL de chaque org. Votre fork n'a aucune
+règle, et son panneau est vide : l'image montre ce qu'Helios aurait s'il s'en servait. Menu engrenage du DevOps Pipeline, **Configure Replacement Rules**. Voir
 [Règles de remplacement](https://sfdx-hardis.cloudity.com/salesforce-devops-config-replacement-rules/).
 
 ![Le panneau Replacement Rules, avec l'URL d'entrepôt de chaque org Helios](../../_assets/annotated/vscode/replacement-rules.png)
@@ -877,6 +885,13 @@ seule URL. Menu engrenage du DevOps Pipeline, **Configure Replacement Rules**. V
       font rien jusqu'au [Lab 3.10](3-10-promote-a-subset-with-promotion-branches.md)
 
 ## En cas de problème
+
+**Add or Reconnect a Major Org s'arrête tout de suite sur `You need openssl to be locally installed to run this command.`**
+La commande génère le certificat avec openssl, et VS Code ne le trouve pas. Sous Windows il est
+fourni avec Git, dans son dossier `usr\bin`, qui n'est pas toujours dans le PATH. Tapez
+`variables d'environnement` dans la recherche Windows, ouvrez **Modifier les variables
+d'environnement pour votre compte**, et ajoutez `C:\Program Files\Git\usr\bin` à **Path**. Fermez
+ensuite complètement VS Code, rouvrez-le, et relancez la commande.
 
 **preprod n'est pas dans la liste de branches d'Add or Reconnect a Major Org.**
 VS Code ne l'a pas récupérée. Panneau **Source Control**, menu **...**, **Pull, Push** > **Fetch**,

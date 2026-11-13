@@ -21,14 +21,14 @@ depends_on:
   flags: []
   config: [dataPackages, commandsPostDeploy, failValidationOnPendingManualActions]
   panels: [dataWorkbench, deploymentAction, pipeline]
-  docs: [salesforce-devops-agent-data-workspaces, salesforce-devops-work-on-user-story-deployment-actions]
+  docs: [salesforce-devops-agent-data-workspaces, salesforce-devops-work-on-user-story-deployment-actions, salesforce-devops-work-on-user-story-deployment-actions-data, salesforce-devops-work-on-user-story-deployment-actions-schedule-batch, salesforce-devops-work-on-user-story-deployment-actions-manual]
 ---
 
 # Lab 2.4 - Ship reference data and a batch with deployment actions
 
 **Level**: 2 Contributor advanced
 
-**Time**: ~50 min<!-- observed --> (observed: median 50 min, 11 learners, fastest 20 min)<!-- /observed -->
+**Time**: ~1 h 10<!-- observed --> (observed: median 1 h 10, 17 learners, fastest 20 min)<!-- /observed -->
 
 **You will**: meet the worst kind of failure, the one where nothing fails, and fix it with three
 deployment actions of three different kinds.
@@ -318,7 +318,7 @@ its path. **Target orgs** **(3)** on **All target orgs** means every org the pip
 | Scheduled Job Name (Optional) | `Helios crew capacity nightly`                     |
 | Run Only Once By Org          | yes                                                |
 
-#### Why
+#### Why the dialog changed
 
 **Schedule Batch** **(1)** replaces the script field with two of its own: **Apex Class Name**
 **(2)**, a dropdown of the classes Salesforce can run on a schedule, read from your default org and
@@ -356,7 +356,7 @@ the class is there before it runs.
 4. Check: the page reads **All email**. If it already did, there is nothing to do.
 ```
 
-#### Why
+#### Why a step by hand
 
 Some things have no API. Email deliverability is the best known one: whether an org may send
 email at all is a setting in Setup that no deployment can change. The batch emails the planner a
@@ -402,7 +402,7 @@ you meant, they will guess, and a wrong guess in production is worse than no ste
    click **Pull**
 3. Commit the action file, then **Save / Publish**
 
-#### Why
+#### Why update the Pull Request
 
 So far the actions are only on your machine. Each **Save** wrote the action into a file under
 `scripts/actions/`, named after the number of your Pull Request: `.sfdx-hardis.12.yml` for Pull
@@ -609,6 +609,11 @@ a commit your computer does not. In the **...** menu of **Source Control**, clic
 **Save / Publish** again: your push is what starts the checks again, with nothing to approve. The
 same robot commit is in the troubleshooting of [Lab 1.6](../level-1-contributor-basics/1-6-pull-request-deployment-check-and-merge.md).
 
+If you had already pushed everything when the robot's commit arrived, the Pull pushes nothing and
+the checks of that commit stay waiting for an approval. Open the Pull Request on GitHub: under
+**Workflow(s) awaiting approval**, click **Approve and run**, and the two checks start on the
+robot's commit.
+
 **The action file is called `.sfdx-hardis.draft.yml`, or the check stops on *Draft deployment actions file found*.**
 You added the action while the panel knew no Pull Request for your branch: the **My Pull Request**
 card read *Pull Request not created yet*, so the action was kept in a draft. The pipeline only reads
@@ -654,5 +659,8 @@ Welcome page > **Training: Level 2** > **Check my work**, then pick **Lab 2.4**.
 
 - [Data workspaces with SFDMU](https://sfdx-hardis.cloudity.com/salesforce-devops-agent-data-workspaces/)
 - [Deployment actions](https://sfdx-hardis.cloudity.com/salesforce-devops-work-on-user-story-deployment-actions/)
+- [Import data (SFDMU)](https://sfdx-hardis.cloudity.com/salesforce-devops-work-on-user-story-deployment-actions-data/)
+- [Schedule an Apex batch](https://sfdx-hardis.cloudity.com/salesforce-devops-work-on-user-story-deployment-actions-schedule-batch/)
+- [Manual step](https://sfdx-hardis.cloudity.com/salesforce-devops-work-on-user-story-deployment-actions-manual/)
 
 [Next: Lab 2.5 - Pass the code quality gate and Apex test coverage](2-5-pass-code-quality-and-apex-test-coverage.md){ .md-button .md-button--primary }

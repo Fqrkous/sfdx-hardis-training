@@ -25,7 +25,7 @@ depends_on:
 
 **Level**: 1 Contributor basics
 
-**Time**: ~10 min<!-- observed --> (observed: median 13 min, 30 learners, fastest 6 min)<!-- /observed -->
+**Time**: ~5 min<!-- observed --> (observed: median 9 min, 39 learners, fastest 6 min)<!-- /observed -->
 
 **You will**: pick up your first ticket and land on a clean branch, pointed at your dev org.
 
@@ -227,7 +227,7 @@ The panel ran:
 
     sf hardis:work:new
 
-which did six things, in order:
+which did seven things, in order:
 
 1. **Picked the target branch**. With a single entry in `availableTargetBranches` it takes that one
    without asking; with several it asks, and it remembers the answer for this branch
@@ -237,9 +237,14 @@ which did six things, in order:
 3. **Created the branch**, named from your answers:
    `git checkout -b features/US-014-panels-required`
 4. **Wrote your user configuration** in `config/user/.sfdx-hardis.<your-username>.yml`, recording
-   the org for this User Story. That file is git-ignored: it is yours, nobody else needs it
+   the branch this User Story targets, `integration`. That file is git-ignored: it is yours, nobody
+   else needs it
 5. **Selected the org** as the default target for the following commands
 6. **Opened the org** in your browser, since you are about to work in it
+7. **Registered the org** in the development orgs list of your repository, an issue named
+   **Development Orgs Dashboard**: `helios-dev` targets `integration`, and you own it. The
+   **Dev orgs** view of the DevOps Pipeline shows it, with the number of Pull Requests merged into
+   `integration` that it does not have yet
 
 The list of scratch orgs is the ones your default Dev Hub created, which [Lab 1.2](1-2-create-your-dev-hub-scratch-orgs-and-pipeline.md) set to `helios-prod`,
 minus the ones named in `config/branches/`. Nothing here brings what is on `integration` into your
@@ -320,6 +325,14 @@ as it is.
 **It fails with a message about the scratch org limit.**
 You took **Create new scratch org**. Nothing was created and nothing is broken: start the User Story
 again and take **Reuse scratch org helios-dev**.
+
+**It warns that `helios-dev` is not registered in the development orgs list, as issues are switched off.**
+Your fork was set up before the setup learned to switch issues on, and GitHub turns them off on
+every new fork. sfdx-hardis keeps the development orgs list in an issue, so the last thing the
+command does, registering the org (step 6, Under the hood), did not happen. Nothing else is
+affected: your branch and your org are ready. Click **Training: Level 1 > Set up my training
+environment** again, which switches issues on and leaves everything else as it is. The next
+**New User Story** registers `helios-dev`.
 
 ## Check your work
 

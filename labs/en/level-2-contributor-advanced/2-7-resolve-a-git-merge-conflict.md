@@ -30,7 +30,7 @@ depends_on:
 
 **Level**: 2 Contributor advanced
 
-**Time**: ~50 min<!-- observed --> (observed: median 50 min, 11 learners, fastest 25 min)<!-- /observed -->
+**Time**: ~40 min<!-- observed --> (observed: median 43 min, 17 learners, fastest 25 min)<!-- /observed -->
 
 **You will**: face a real merge conflict on two files that conflict very differently, and resolve
 both without losing anybody's work.

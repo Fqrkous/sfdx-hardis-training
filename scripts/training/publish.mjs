@@ -112,7 +112,7 @@ export default async function publish(args) {
     "",
     ...changed.map((line) => `- \`${line.replace(/^\S+\s+/, "")}\``),
     "",
-    "Merge it with **Merge pull request**, not with a squash: the configuration travels to uat, preprod and main with the promotions."
+    "Merge it with **Squash and merge**, as the How to merge line of its check comment says: it arrives on integration as one commit, and travels to uat, preprod and main with the promotions."
   ].join("\n");
   const prUrl = openPullRequest({ slug, base: BASE, branch, title: message, body });
   if (!prUrl) {
@@ -124,7 +124,7 @@ export default async function publish(args) {
   }
 
   title("Done");
-  info(`  Wait for the checks of the Pull Request, then merge it with ${c.bold("Merge pull request")}.`);
+  info(`  Wait for the checks of the Pull Request, then merge it with ${c.bold("Squash and merge")}, as its check comment says.`);
   info(`  Then Pull in the Source Control panel: your ${BASE} gets the configuration back, merged.`);
 }
 

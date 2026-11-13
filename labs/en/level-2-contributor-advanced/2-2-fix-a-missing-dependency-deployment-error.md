@@ -31,7 +31,7 @@ depends_on:
 
 **Level**: 2 Contributor advanced
 
-**Time**: ~25 min<!-- observed --> (observed: median 25 min, 11 learners, fastest 8 min)<!-- /observed -->
+**Time**: ~35 min<!-- observed --> (observed: median 35 min, 17 learners, fastest 17 min)<!-- /observed -->
 
 **You will**: update a flow that already runs in production, meet your first failing deployment
 check, read the error properly, and find what your package forgot.
@@ -156,7 +156,7 @@ The flow itself runs in system mode and needs no grant.
    needs.`
 10. **Activate**, the button that replaces **Deactivate** on the new version
 
-#### Why
+#### Why a new version
 
 The flow is active, so Flow Builder opens the running version: every change you make is saved as a
 new version, and the old one keeps running until you activate yours.
@@ -178,7 +178,7 @@ new element follows it.
    slow to show, click **Refresh** in the activity panel
 2. Save again
 
-#### Why
+#### Why you cannot see the checkbox
 
 That is the story working, in your org.
 The checkbox itself stays out of sight: no permission set grants it, because nobody but the flow

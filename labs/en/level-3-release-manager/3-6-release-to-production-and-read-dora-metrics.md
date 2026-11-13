@@ -24,7 +24,7 @@ depends_on:
 
 **Level**: 3 Release Manager
 
-**Time**: ~1 h<!-- observed --> (observed: median 1 h 01, 8 learners, fastest 20 min)<!-- /observed -->
+**Time**: ~1 h<!-- observed --> (observed: median 1 h 01, 15 learners, fastest 20 min)<!-- /observed -->
 
 **You will**: release to production, and then measure whether your pipeline is any good.
 
@@ -83,7 +83,7 @@ Refresher: [Lab 3.5](3-5-promote-to-uat-and-write-release-notes.md), [Lab 3.1](3
 1. Click the **+ PR** chip on the arrow from `uat` to `preprod`, in the DevOps Pipeline diagram, the
    same way you created the promotion in [Lab 3.5](3-5-promote-to-uat-and-write-release-notes.md). GitHub opens on the Pull Request from `uat` into
    `preprod`
-2. Title it plainly:
+2. Title it plainly, then click **Create pull request**:
 
    > Promotion 2026-09 to preprod
 
@@ -122,7 +122,7 @@ Goal: the production Pull Request from `preprod` into `main`, with a green check
 #### Do
 
 1. Click the **+ PR** chip on the arrow from `preprod` to `main`, from `preprod` into `main`
-2. Title it plainly:
+2. Title it plainly, then click **Create pull request**:
 
    > Release 2026-09 to production
 

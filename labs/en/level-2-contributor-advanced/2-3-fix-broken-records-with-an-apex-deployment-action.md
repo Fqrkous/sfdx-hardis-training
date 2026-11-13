@@ -17,14 +17,14 @@ depends_on:
   flags: []
   config: [commandsPostDeploy, apexScript, runOnlyOnceByOrg]
   panels: [pipeline, deploymentAction]
-  docs: [salesforce-devops-work-on-user-story-deployment-actions]
+  docs: [salesforce-devops-work-on-user-story-deployment-actions, salesforce-devops-work-on-user-story-deployment-actions-apex]
 ---
 
 # Lab 2.3 - Fix broken records with an Apex deployment action
 
 **Level**: 2 Contributor advanced
 
-**Time**: ~45 min<!-- observed --> (observed: median 49 min, 11 learners, fastest 15 min)<!-- /observed -->
+**Time**: ~40 min<!-- observed --> (observed: median 42 min, 17 learners, fastest 15 min)<!-- /observed -->
 
 **You will**: hit a failure that no amount of metadata fixing solves, and learn the tool that exists
 for it: a deployment action.
@@ -244,9 +244,8 @@ same place.
 
 #### Do: open your Pull Request
 
-1. In the diagram: turn on **Show feature branches** at the top right, which is off until you ask for
-   it, and your own branch appears beside the major ones. Your feature branch **(1)**, and on the arrow
-   leaving it the numbered badge **(2)**. Click the badge
+1. In the diagram, which opens on **Feature branches**, your own branch sits beside the major ones:
+   your feature branch **(1)**, and on the arrow leaving it the numbered badge **(2)**. Click the badge
 
    ![The DevOps Pipeline panel, with the feature branch and the badge of its Pull Request](../../_assets/annotated/vscode/pipeline-workflow-cards.png)
 
@@ -452,5 +451,6 @@ Welcome page > **Training: Level 2** > **Check my work**, then pick **Lab 2.3**.
 ## Go deeper
 
 - [Deployment actions](https://sfdx-hardis.cloudity.com/salesforce-devops-work-on-user-story-deployment-actions/)
+- [Run an Apex script](https://sfdx-hardis.cloudity.com/salesforce-devops-work-on-user-story-deployment-actions-apex/)
 
 [Next: Lab 2.4 - Ship reference data and a batch with deployment actions](2-4-ship-reference-data-and-a-batch-with-deployment-actions.md){ .md-button .md-button--primary }

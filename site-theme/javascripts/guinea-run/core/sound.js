@@ -11,6 +11,7 @@
  * click or a key press, so the browser allows it. M mutes, and the choice is
  * remembered in the browser.
  */
+import { savedLocally } from "./save-signal.js";
 
 const MUTE_KEY = "guinea-run-muted";
 // The wheeks of a jump, never the same twice in a row: one per file in sounds/
@@ -690,6 +691,7 @@ export function createSound() {
       muted = !muted;
       try {
         window.localStorage.setItem(MUTE_KEY, muted ? "1" : "0");
+        savedLocally();
       } catch {
         // Not remembered, still applied
       }

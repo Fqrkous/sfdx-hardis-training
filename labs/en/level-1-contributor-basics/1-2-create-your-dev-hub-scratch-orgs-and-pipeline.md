@@ -323,9 +323,7 @@ wired to them, all built by one command.
 
    ![VS Code asking how to allow the Training command, with Always allow](../../_assets/annotated/vscode/training-menu-authorization.png)
 
-4. It names the org it takes, `helios-prod`, and asks only for a yes before it changes anything.
-   Answer yes
-5. It stops on a line like `Your one-time code is 5989-F9D9` and opens
+4. It stops on a line like `Your one-time code is 5989-F9D9` and opens
    [github.com/login/device](https://github.com/login/device) in your browser. Type the code there,
    then accept everything github.com asks for: the authorisation screen and each permission it
    lists. If the browser did not open, the address is printed right under the code
@@ -333,12 +331,14 @@ wired to them, all built by one command.
   !!! tip "In Agentforce Vibes"
       The browser does not open on its own: click the printed link.
 
-6. Come back to VS Code: the command carries on by itself, and never asks again
-7. If this computer was already signed in to GitHub, items 5 and 6 do not happen. It asks instead
+5. Come back to VS Code: the command carries on by itself, and never asks you to sign in again
+6. If this computer was already signed in to GitHub, items 4 and 5 do not happen. It asks instead
    **Fork the course into the GitHub account your-handle?**, with the account it found. Read the
    name. If it is the account you want the fork in, pick **Yes, use your-handle**. If it is not,
    say the account of a former job, pick **Use ... instead** when your own account is in the list,
-   or **Sign in with another GitHub account**, which goes through the code of item 5
+   or **Sign in with another GitHub account**, which goes through the code of item 4
+7. Then it names the org it takes, `helios-prod`, and asks only for a yes before it changes
+   anything. Answer yes
 8. It then opens the **Actions** tab of your fork in your browser and waits. Click **I understand my
    workflows, go ahead and enable them**, and come back to VS Code: the command carries on by itself
 9. Let it work through its eight steps. It tells you as it goes:
@@ -348,6 +348,7 @@ wired to them, all built by one command.
 
    1 of 8  Your own copy of the repository
    OK  origin is now your-handle/sfdx-hardis-training, and the shared repository is upstream.
+   OK  Issues switched on in your-handle/sfdx-hardis-training: sfdx-hardis keeps the list of your development orgs in one.
 
    2 of 8  Actions turned on
    OK  Actions are on.
@@ -519,7 +520,9 @@ Eight things, each of them real work on a real project, and none of them yours t
 - Your own copy of the repository, its *fork*, under your GitHub account. Your clone pushes
   there now, and still pulls from the team's repository. The fork carries the two branches the
   pipeline uses today, `integration` and `uat`, and `main`. You add `preprod` yourself in
-  [Lab 3.1](../level-3-release-manager/3-1-configure-the-pipeline-up-to-production.md)
+  [Lab 3.1](../level-3-release-manager/3-1-configure-the-pipeline-up-to-production.md). GitHub
+  leaves issues off on a new fork, and the setup switches them on: sfdx-hardis keeps the list of
+  your development orgs in one, which [Lab 1.3](1-3-start-a-user-story-on-a-git-branch.md) fills
 - Actions turned on. GitHub disables workflows on every new fork until the owner says
   otherwise, and a fork with them off looks exactly like a broken course
 - `helios-prod` became a Dev Hub, which is one switch in Setup, and cannot be switched back
@@ -604,8 +607,9 @@ VS Code offers two answers:
 #### You should now see
 
 - The icon turned from grey to colour, and its tooltip **Connected to GitHub**
-- What the panel could not show before: the Pull Requests on your branches, and the **Show feature
-  branches** toggle
+- What the panel could not show before: the Pull Requests on your branches
+- Still in the top left corner of the diagram, as before you connected: the switch between
+  **Major branches**, **Feature branches** and **Dev orgs**
 
 ### 8. Look at the pipeline before touching anything
 
@@ -666,6 +670,13 @@ That is the whole of the plumbing, and the last of it you will see. From [Lab 1.
 job rather than preparing to do it: a ticket, a branch, a change, a Pull Request, a deployment.
 
 ## If it goes wrong
+
+**The Welcome page shows no CUSTOM MENUS, and the side menu has CI/CD (simple) right under Welcome.**
+VS Code is not open on the course clone, so the extension never read `config/.sfdx-hardis.yml`,
+the file that declares the Training menus. Waiting does not help. Open **File > Open Folder** and
+pick the `sfdx-hardis-training` folder made in step 3, the one that directly contains
+`sfdx-project.json`. The Training menus appear a few seconds later. If there is no such folder on
+your machine, step 3 did not run: do it again.
 
 **It says the GitHub CLI is not installed, and you just installed it.**
 VS Code was open during the install and does not see it yet. Close VS Code completely, open it

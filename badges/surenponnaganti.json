@@ -1,0 +1,92 @@
+{
+  "recipient": "surenponnaganti",
+  "badges": [
+    {
+      "type": "Achievement",
+      "level": 1,
+      "name": "sfdx-hardis Contributor Basics",
+      "description": "Delivers a User Story through a Pull Request, end to end.",
+      "issuer": {
+        "name": "Cloudity",
+        "url": "https://cloudity.com",
+        "course": "https://sfdx-hardis-training.cloudity.com"
+      },
+      "issuedOn": "2026-11-04",
+      "issuedAt": "2026-11-04T07:53:17Z",
+      "evidence": [
+        {
+          "type": "Repository",
+          "url": "https://github.com/surenponnaganti/sfdx-hardis-training.git"
+        },
+        {
+          "type": "ClaimIssue",
+          "url": "https://github.com/hardisgroupcom/sfdx-hardis-training/issues/364"
+        }
+      ],
+      "image": "https://sfdx-hardis-training.cloudity.com/badges/img/surenponnaganti-level-1.svg",
+      "bannerImage": "https://sfdx-hardis-training.cloudity.com/badges/img/banner-level-1.svg",
+      "superbadge": false,
+      "checksPassed": 6,
+      "checksTotal": 6
+    },
+    {
+      "type": "Achievement",
+      "level": 2,
+      "name": "sfdx-hardis Contributor Advanced",
+      "description": "Solves deployment errors, declares deployment actions, resolves conflicts.",
+      "issuer": {
+        "name": "Cloudity",
+        "url": "https://cloudity.com",
+        "course": "https://sfdx-hardis-training.cloudity.com"
+      },
+      "issuedOn": "2026-11-07",
+      "issuedAt": "2026-11-07T07:53:36Z",
+      "evidence": [
+        {
+          "type": "Repository",
+          "url": "https://github.com/surenponnaganti/sfdx-hardis-training.git"
+        },
+        {
+          "type": "ClaimIssue",
+          "url": "https://github.com/hardisgroupcom/sfdx-hardis-training/issues/374"
+        }
+      ],
+      "image": "https://sfdx-hardis-training.cloudity.com/badges/img/surenponnaganti-level-2.svg",
+      "bannerImage": "https://sfdx-hardis-training.cloudity.com/badges/img/banner-level-2.svg",
+      "superbadge": false,
+      "checksPassed": 14,
+      "checksTotal": 14
+    },
+    {
+      "type": "Achievement",
+      "level": 3,
+      "name": "sfdx-hardis Release Manager",
+      "description": "Owns the pipeline, the releases, the hotfixes and the monitoring.",
+      "issuer": {
+        "name": "Cloudity",
+        "url": "https://cloudity.com",
+        "course": "https://sfdx-hardis-training.cloudity.com"
+      },
+      "issuedOn": "2026-11-10",
+      "issuedAt": "2026-11-10T03:03:35Z",
+      "evidence": [
+        {
+          "type": "Repository",
+          "url": "https://github.com/surenponnaganti/sfdx-hardis-training.git"
+        },
+        {
+          "type": "ClaimIssue",
+          "url": "https://github.com/hardisgroupcom/sfdx-hardis-training/issues/386"
+        }
+      ],
+      "image": "https://sfdx-hardis-training.cloudity.com/badges/img/surenponnaganti-level-3.svg",
+      "bannerImage": "https://sfdx-hardis-training.cloudity.com/badges/img/banner-level-3.svg",
+      "superbadge": true,
+      "checksPassed": 24,
+      "checksTotal": 24
+    }
+  ],
+  "trailblazer": "surenponnaganti",
+  "name": "Surendranath Ponnaganti",
+  "trailblazerName": "Surendranath Ponnaganti"
+}

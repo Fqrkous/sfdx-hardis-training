@@ -5,7 +5,7 @@ description: "Modifiez un flow Salesforce existant, puis lisez correctement un c
 level: 2
 lab: 2
 lang: fr
-source_rev: "9e24ebb4d4a969d95d291221e55f757e1b2737bc"
+source_rev: "59a43fbde03c27fbe7bbbb6d3d62f520c716c652"
 screenshots:
   - annotated/vscode/package-xml-filtered
   - annotated/vscode/editor-field-file
@@ -31,7 +31,7 @@ depends_on:
 
 **Niveau** : 2 Contributeur avancé
 
-**Durée** : ~25 min<!-- observed --> (observé : médiane 25 min, 11 participants, le plus rapide 8 min)<!-- /observed -->
+**Durée** : ~35 min<!-- observed --> (observé : médiane 35 min, 17 participants, le plus rapide 17 min)<!-- /observed -->
 
 **Vous allez** : modifier un flow qui tourne déjà en production, rencontrer votre premier contrôle de
 déploiement en échec, lire l'erreur correctement, et trouver ce que votre package a oublié.
@@ -159,7 +159,7 @@ de Flow Builder ci-dessous. Le flow lui-même tourne en mode système et n'a bes
    the panels it needs.`
 10. **Activate**, le bouton qui remplace **Deactivate** sur la nouvelle version
 
-#### Pourquoi
+#### Pourquoi une nouvelle version
 
 Le flow est actif, Flow Builder ouvre donc la version qui tourne : chaque modification que vous faites
 est enregistrée comme une nouvelle version, et l'ancienne continue de tourner jusqu'à ce que vous
@@ -183,7 +183,7 @@ en avait déjà un, et votre nouvel élément le suit.
    tâche tarde à s'afficher, cliquez sur **Refresh** dans le panneau d'activités
 2. Enregistrez à nouveau
 
-#### Pourquoi
+#### Pourquoi vous ne voyez pas la case
 
 C'est la story qui fonctionne, dans votre org. La case à cocher elle-même reste invisible : aucun
 permission set ne l'accorde, parce que personne d'autre que le flow n'en a besoin, et la seule

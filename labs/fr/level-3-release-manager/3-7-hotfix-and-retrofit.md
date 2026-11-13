@@ -5,7 +5,7 @@ description: "Livrez un hotfix Salesforce de preprod vers la production quand la
 level: 3
 lab: 7
 lang: fr
-source_rev: "4779402130edb48941caabb1f1dc19b621dfde43"
+source_rev: "674f78389540fddc7a243f43c0ff08da45138ebb"
 screenshots:
   - annotated/salesforce/validation-rule
   - annotated/vscode/welcome-custom-menu-3
@@ -31,7 +31,7 @@ depends_on:
 
 **Niveau** : 3 Release Manager
 
-**Durée** : ~25 min<!-- observed --> (observé : médiane 28 min, 8 participants, le plus rapide 16 min)<!-- /observed -->
+**Durée** : ~35 min<!-- observed --> (observé : médiane 35 min, 15 participants, le plus rapide 16 min)<!-- /observed -->
 
 **Vous allez** : mener une formule cassée de la production jusqu'à un correctif en ligne, puis
 ramener ce correctif dans la pipeline pour que rien ne le défasse.
@@ -205,7 +205,7 @@ Pipeline.
 
    ![La pastille + PR sur la flèche de preprod vers main](../../_assets/annotated/vscode/devops-pipeline-level3--release-to-prod.png)
 
-2. Intitulez-la simplement, et employez le mot Hotfix plutôt que Release :
+2. Intitulez-la simplement, employez le mot Hotfix plutôt que Release, puis cliquez sur **Create pull request** :
 
    > Hotfix US-045 to production
 
@@ -270,12 +270,10 @@ l'incident reviendra un jour où personne ne l'attend.
 
    ![Les cartes de contribution du panneau DevOps Pipeline](../../_assets/annotated/vscode/pipeline-cards--new-user-story.png)
 
-2. Prenez le troisième type de branche, **Retrofit: merge production back down into the pipeline after
-   a hotfix (release manager)** **(1)**
+2. Répondez aux questions avec le tableau ci-dessous. À **Type of branch**, prenez le troisième,
+   **Retrofit: merge production back down into the pipeline after a hotfix (release manager)** **(1)**
 
    ![La question du type de branche, avec Retrofit](../../_assets/annotated/vscode/work-new-story-type--retrofit.png)
-
-3. Répondez aux questions avec le tableau ci-dessous
 
 | Question        | Votre réponse                                                              |
 |-----------------|----------------------------------------------------------------------------|
@@ -283,6 +281,10 @@ l'incident reviendra un jour où personne ne l'attend.
 | Type de branche | **Retrofit**                                                               |
 | Nom             | `US-045-retrofit`, la story dont vous ramenez le hotfix                    |
 | Org de travail  | `helios-dev` : rien n'est construit ici, l'org n'a donc guère d'importance |
+
+Pour l'org, prenez **Scratch org**, puis **Reuse scratch org helios-dev**, comme au
+[Lab 1.3](../level-1-contributor-basics/1-3-start-a-user-story-on-a-git-branch.md). Pas **Current org** : depuis le
+[Lab 3.1](3-1-configure-the-pipeline-up-to-production.md), votre org par défaut est `helios-prod`, la production.
 
 #### Pourquoi
 

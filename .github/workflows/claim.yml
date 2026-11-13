@@ -201,8 +201,7 @@ jobs:
               git checkout -- stats STATS.md labs 2>/dev/null || true
             fi
           }
-          node scripts/guinea-run/hall-of-fame.mjs refresh-badges || true
-          git add badges hall-of-fame
+          git add badges
           if git diff --cached --quiet; then
             echo "Nothing changed in badges/"
           else
@@ -223,8 +222,7 @@ jobs:
               git fetch origin "${GITHUB_REF_NAME}"
               git reset --hard "origin/${GITHUB_REF_NAME}"
               git checkout "$BADGE_COMMIT" -- badges
-              node scripts/guinea-run/hall-of-fame.mjs refresh-badges || true
-              git add badges hall-of-fame
+              git add badges
               recalculate_stats
               git commit -m "$BADGE_MESSAGE"
               sleep $((attempt * 5))

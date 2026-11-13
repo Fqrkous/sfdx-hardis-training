@@ -1,0 +1,92 @@
+{
+  "recipient": "wenzelliebsch",
+  "badges": [
+    {
+      "type": "Achievement",
+      "level": 1,
+      "name": "sfdx-hardis Contributor Basics",
+      "description": "Delivers a User Story through a Pull Request, end to end.",
+      "issuer": {
+        "name": "Cloudity",
+        "url": "https://cloudity.com",
+        "course": "https://sfdx-hardis-training.cloudity.com"
+      },
+      "issuedOn": "2026-10-28",
+      "issuedAt": "2026-10-28T21:14:03Z",
+      "evidence": [
+        {
+          "type": "Repository",
+          "url": "https://github.com/wenzelliebsch/sfdx-hardis-training.git"
+        },
+        {
+          "type": "ClaimIssue",
+          "url": "https://github.com/hardisgroupcom/sfdx-hardis-training/issues/332"
+        }
+      ],
+      "image": "https://sfdx-hardis-training.cloudity.com/badges/img/wliebsch-level-1.svg",
+      "bannerImage": "https://sfdx-hardis-training.cloudity.com/badges/img/banner-level-1.svg",
+      "superbadge": false,
+      "checksPassed": 6,
+      "checksTotal": 6
+    },
+    {
+      "type": "Achievement",
+      "level": 2,
+      "name": "sfdx-hardis Contributor Advanced",
+      "description": "Solves deployment errors, declares deployment actions, resolves conflicts.",
+      "issuer": {
+        "name": "Cloudity",
+        "url": "https://cloudity.com",
+        "course": "https://sfdx-hardis-training.cloudity.com"
+      },
+      "issuedOn": "2026-11-07",
+      "issuedAt": "2026-11-07T16:41:53Z",
+      "evidence": [
+        {
+          "type": "Repository",
+          "url": "https://github.com/wenzelliebsch/sfdx-hardis-training.git"
+        },
+        {
+          "type": "ClaimIssue",
+          "url": "https://github.com/hardisgroupcom/sfdx-hardis-training/issues/377"
+        }
+      ],
+      "image": "https://sfdx-hardis-training.cloudity.com/badges/img/wliebsch-level-2.svg",
+      "bannerImage": "https://sfdx-hardis-training.cloudity.com/badges/img/banner-level-2.svg",
+      "superbadge": false,
+      "checksPassed": 14,
+      "checksTotal": 14
+    },
+    {
+      "type": "Achievement",
+      "level": 3,
+      "name": "sfdx-hardis Release Manager",
+      "description": "Owns the pipeline, the releases, the hotfixes and the monitoring.",
+      "issuer": {
+        "name": "Cloudity",
+        "url": "https://cloudity.com",
+        "course": "https://sfdx-hardis-training.cloudity.com"
+      },
+      "issuedOn": "2026-11-11",
+      "issuedAt": "2026-11-11T13:20:07Z",
+      "evidence": [
+        {
+          "type": "Repository",
+          "url": "https://github.com/wenzelliebsch/sfdx-hardis-training.git"
+        },
+        {
+          "type": "ClaimIssue",
+          "url": "https://github.com/hardisgroupcom/sfdx-hardis-training/issues/393"
+        }
+      ],
+      "image": "https://sfdx-hardis-training.cloudity.com/badges/img/wliebsch-level-3.svg",
+      "bannerImage": "https://sfdx-hardis-training.cloudity.com/badges/img/banner-level-3.svg",
+      "superbadge": true,
+      "checksPassed": 24,
+      "checksTotal": 24
+    }
+  ],
+  "trailblazer": "wliebsch",
+  "name": "Wenzel Liebsch",
+  "trailblazerName": "Wenzel Liebsch"
+}

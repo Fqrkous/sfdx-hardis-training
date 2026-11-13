@@ -5,7 +5,7 @@ description: "Générez une documentation lisible d'une org Salesforce non docum
 level: 3
 lab: 9
 lang: fr
-source_rev: "4728dc342fe16ae848e8962a4d3ee77dc182a7d6"
+source_rev: "85f8e2160c6e4b9e92853ed8100bb17e62568376"
 screenshots:
   - annotated/vscode/documentation-workbench--generate-and-deploy
 depends_on:
@@ -20,7 +20,7 @@ depends_on:
 
 **Niveau** : 3 Release Manager
 
-**Durée** : ~5 min<!-- observed --> (observé : médiane 5 min, 7 participants, le plus rapide 5 min)<!-- /observed -->
+**Durée** : ~5 min<!-- observed --> (observé : médiane 9 min, 14 participants, le plus rapide 5 min)<!-- /observed -->
 
 **Vous allez** : produire une documentation lisible d'une org que personne n'a documentée depuis deux
 ans, à partir des sources que vous avez déjà.
@@ -149,23 +149,22 @@ au générateur. Décochez-la et la page n'est tout simplement pas écrite.
 
 ### 5. Combler les pires lacunes à la main
 
-Objectif : trois paragraphes que seule une personne peut écrire, sur des pages protégées de la
-génération suivante.
+Objectif : un paragraphe que seule une personne peut écrire, sur une page protégée de la génération
+suivante.
 
 Une documentation générée vous dit ce que l'org contient. Elle ne peut pas vous dire pourquoi.
 
 #### À faire
 
-Passez quinze minutes à ajouter ce que seule une personne peut ajouter :
-
-1. Un paragraphe en haut de la page Installation disant ce qu'est une installation dans le métier
-2. Une phrase sur le planificateur expliquant le délai de préparation, qui a l'air arbitraire dans le
-   code
-3. Une note sur le plafond de capacité d'équipe disant que c'est une règle de sécurité, pas une règle
-   de coût
-4. Protégez chaque page que vous modifiez. Chaque page générée commence par deux lignes de
-   commentaire, et la seconde dit `<!-- DO_NOT_OVERWRITE_DOC=FALSE -->`. Passez-la à `TRUE` sur les
-   pages où vous écrivez
+1. Sur la page Installation, juste sous son titre, écrivez un paragraphe disant ce qu'est une
+   installation dans le métier
+2. Ouvrez la page de `InstallationScheduler` et celle de `Installation_Assign_Crew`, et trouvez
+   pourquoi le délai de préparation existe et pourquoi le plafond de capacité d'équipe est là.
+   Personne n'a à l'ajouter : ceux qui ont écrit la classe et le flow ont mis la raison dans leur
+   commentaire et leur description, et le générateur l'a reprise
+3. Protégez la page où vous avez écrit. Chaque page générée commence par deux lignes de commentaire,
+   et la seconde dit `<!-- DO_NOT_OVERWRITE_DOC=FALSE -->`. Passez-la à `TRUE` sur la page
+   Installation
 
 !!! warning "Attention"
     La génération suivante laisse une page `TRUE` tranquille, et réécrit toutes les autres pages
@@ -173,15 +172,17 @@ Passez quinze minutes à ajouter ce que seule une personne peut ajouter :
 
 #### Pourquoi
 
-Ces trois paragraphes valent plus que les quarante autres pages, et ils sont la raison pour laquelle
-ce lab se trouve à la fin d'un niveau plutôt qu'au début.
+Ce paragraphe vaut plus que les quarante autres pages, et il est la raison pour laquelle ce lab se
+trouve à la fin d'un niveau plutôt qu'au début. Une raison écrite dans les métadonnées elles-mêmes,
+en commentaire dans le code ou en description, n'a pas besoin de protection : chaque génération la
+reprend.
 
 Sur un projet qui commite sa documentation, la ligne `DO_NOT_OVERWRITE_DOC=TRUE` est ce qui garde
 les mots d'une personne en vie d'une exécution nocturne à l'autre.
 
 #### Vous devriez voir
 
-- Trois paragraphes que vous avez écrits, sur des pages qui disent `<!-- DO_NOT_OVERWRITE_DOC=TRUE -->`
+- Un paragraphe que vous avez écrit, sur la page Installation, qui dit `<!-- DO_NOT_OVERWRITE_DOC=TRUE -->`
 
 ### 6. La publier
 
@@ -267,7 +268,7 @@ Deux commandes voisines à connaître :
   est une preuve d'existence raisonnable que la sortie est lisible
 
 Si le projet a un fournisseur d'IA configuré, le générateur peut aussi écrire les descriptions
-manquantes plutôt que de laisser des vides. Utile, et pas un substitut aux trois paragraphes de
+manquantes plutôt que de laisser des vides. Utile, et pas un substitut au paragraphe de
 l'étape 5 : un modèle peut décrire ce qu'est un champ, pas pourquoi le métier en a besoin.
 
 <!-- command-links:start -->
@@ -286,7 +287,7 @@ Documentation des commandes : [hardis:doc:project2markdown](https://sfdx-hardis.
 - [ ] Un dossier `docs/` avec des pages d'objets, de flows et d'Apex
 - [ ] `docs/objects/Installation__c.md` listant chaque champ des trois niveaux
 - [ ] Un diagramme lisible de `Installation_Assign_Crew`
-- [ ] Trois paragraphes que vous avez écrits vous-même, sur une page marquée
+- [ ] Un paragraphe que vous avez écrit vous-même, sur une page marquée
       `DO_NOT_OVERWRITE_DOC=TRUE`
 - [ ] Rien à commiter : **Source Control** ne montre aucune modification issue de la génération
 

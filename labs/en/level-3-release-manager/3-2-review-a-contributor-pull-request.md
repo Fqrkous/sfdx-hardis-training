@@ -23,7 +23,7 @@ depends_on:
 
 **Level**: 3 Release Manager
 
-**Time**: ~20 min<!-- observed --> (observed: median 24 min, 8 learners, fastest 13 min)<!-- /observed -->
+**Time**: ~25 min<!-- observed --> (observed: median 26 min, 15 learners, fastest 12 min)<!-- /observed -->
 
 **You will**: review somebody else's work, find the thing the robot did not, ask for a change, and
 merge.
@@ -106,8 +106,8 @@ cannot do for you, which is step 3.
 
 #### Do: open the list of components, without leaving VS Code
 
-1. Open the **DevOps Pipeline** panel and turn **Show feature branches** **(1)** on: Mariia's
-   branch appears, with the number of her Pull Request next to it **(2)**
+1. Open the **DevOps Pipeline** panel. It opens on **Feature branches** **(1)**: Mariia's branch is
+   there, with the number of her Pull Request next to it **(2)**
 2. Click the number
 
    ![The DevOps Pipeline panel, with Mariia's Pull Request next to its branch](../../_assets/annotated/vscode/pipeline-review-pr.png)

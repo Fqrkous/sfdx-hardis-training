@@ -206,8 +206,9 @@
  * Their cells are short (a rank, a handle, a number), so the phone rule above,
  * which gives every cell room for a phrase, sent them into a sideways scroll
  * that hid the player names. Here a board takes the width of the screen and
- * each cell only what it needs; the player cell keeps its avatar, handle and
- * badge on one line. */
+ * each cell only what it needs; the player cell keeps its guinea pig and
+ * nickname on one line. The tables are drawn in the browser by
+ * site-theme/javascripts/hall-of-fame-page.js. */
 .gr-hof .md-typeset__table,
 .gr-hof table:not([class]) {
   width: 100%;
@@ -221,11 +222,14 @@
   white-space: nowrap;
 }
 
-/* The theme's max-width: 100% gives a picture no width of its own in a table
- * cell, so the badge spilled over the next column */
-.gr-hof table:not([class]) img {
-  max-width: none;
+/* The guinea pig a player picked: the picture of the game, tinted per coat */
+.gr-hof .gr-hof-coat {
+  display: inline-block;
+  width: 28px;
+  height: 22px;
+  margin-right: 6px;
   vertical-align: middle;
+  background: center / contain no-repeat;
 }
 
 @media screen and (max-width: 76.1875em) {

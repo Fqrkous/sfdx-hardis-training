@@ -8,6 +8,7 @@
  * twice never shows the same face twice in a row. Without browser storage it
  * is a plain random draw.
  */
+import { savedLocally } from "./save-signal.js";
 
 export const ADMIN_FACES = 21;
 
@@ -56,6 +57,7 @@ function remember(world, picked) {
     const saved = readLast();
     saved[world] = picked;
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
+    savedLocally();
   } catch {
     // Only a nicety: without storage the next draw may repeat
   }

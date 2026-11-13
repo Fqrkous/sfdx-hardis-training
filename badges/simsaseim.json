@@ -56,6 +56,34 @@
       "superbadge": false,
       "checksPassed": 14,
       "checksTotal": 14
+    },
+    {
+      "type": "Achievement",
+      "level": 3,
+      "name": "sfdx-hardis Release Manager",
+      "description": "Owns the pipeline, the releases, the hotfixes and the monitoring.",
+      "issuer": {
+        "name": "Cloudity",
+        "url": "https://cloudity.com",
+        "course": "https://sfdx-hardis-training.cloudity.com"
+      },
+      "issuedOn": "2026-10-27",
+      "issuedAt": "2026-10-27T16:38:39Z",
+      "evidence": [
+        {
+          "type": "Repository",
+          "url": "https://github.com/SimsaSeim/sfdx-hardis-training.git"
+        },
+        {
+          "type": "ClaimIssue",
+          "url": "https://github.com/hardisgroupcom/sfdx-hardis-training/issues/322"
+        }
+      ],
+      "image": "https://sfdx-hardis-training.cloudity.com/badges/img/simsaseim-level-3.svg",
+      "bannerImage": "https://sfdx-hardis-training.cloudity.com/badges/img/banner-level-3.svg",
+      "superbadge": true,
+      "checksPassed": 24,
+      "checksTotal": 24
     }
   ],
   "trailblazer": "simsaseim",

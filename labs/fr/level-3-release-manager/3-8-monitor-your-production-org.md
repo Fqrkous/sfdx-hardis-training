@@ -5,7 +5,7 @@ description: "Mettez en place le monitoring nocturne sfdx-hardis sur votre org S
 level: 3
 lab: 8
 lang: fr
-source_rev: "c0c2c28332994ea4d2da701a24dd76b1037ca369"
+source_rev: "a29e848d2071aec4772b7ce9414fd8c5e25d6acd"
 screenshots:
   - annotated/vscode/org-monitoring--not-a-monitoring-repo
   - annotated/vscode/monitoring-config--what-it-watches
@@ -23,7 +23,7 @@ depends_on:
 
 **Niveau** : 3 Release Manager
 
-**Durée** : ~15 min<!-- observed --> (observé : médiane 17 min, 8 participants, le plus rapide 6 min)<!-- /observed -->
+**Durée** : ~10 min<!-- observed --> (observé : médiane 13 min, 15 participants, le plus rapide 6 min)<!-- /observed -->
 
 **Vous allez** : mettre en place un monitoring nocturne sur la production, lire son premier rapport,
 et décider de ce qui mérite qu'on vous en parle.
@@ -68,7 +68,7 @@ périmètre ici.
 - [ ] `helios-prod` connectée dans **Orgs Manager**
 - [ ] Un repository GitHub vide à vous, avec `monitoring` dans son nom
 - [ ] Une adresse e-mail que vous pouvez lire, pour les alertes
-- [ ] Environ 20 de ces 35 minutes seront la première exécution du monitoring
+- [ ] Environ 20 minutes de plus pour la première exécution du monitoring, en plus du lab lui-même
 
 ## Les étapes
 
@@ -84,9 +84,9 @@ pipeline déploie. Pas en général, pas par préférence : toujours.
 #### À faire
 
 1. Créez un repository privé vide appelé `sfdx-hardis-training-monitoring` sur GitHub
-2. Clonez-le comme le [Lab 1.2](../level-1-contributor-basics/1-2-create-your-dev-hub-scratch-orgs-and-pipeline.md) a cloné celui-ci : **File > Open Folder** sur un dossier vide
-3. Dans le panneau **Source Control**, **Clone Repository**, et collez l'adresse du bouton vert
-   **Code** de votre nouveau repository
+2. Clonez-le comme le [Lab 1.2](../level-1-contributor-basics/1-2-create-your-dev-hub-scratch-orgs-and-pipeline.md) a cloné celui-ci : **File > New Window**, pour qu'aucun dossier ne soit ouvert
+3. Dans le panneau **Source Control**, **Clone Repository**, et collez l'adresse HTTPS que GitHub
+   affiche sous *Quick setup* sur la page de votre nouveau repository vide
 
 !!! warning "Attention"
     C'est la partie que les gens ratent, et c'est celle qui coûte cher à défaire une fois qu'une
@@ -132,6 +132,15 @@ Rappel : [Lab 3.1](3-1-configure-the-pipeline-up-to-production.md)
 
 #### À faire : lancer la commande
 
+!!! warning "Attention"
+    La commande pousse un fichier de workflow GitHub, que GitHub n'accepte que d'identifiants qui ont
+    la permission `workflow`. Si GitHub refuse un push en route, la commande affiche *GitHub refused this push* et cite le scope
+    `workflow` : la première entrée de **En cas de problème** plus bas est la sortie. Ne passez pas
+    outre en mergeant la branche de monitoring dans `main`, même par une Pull Request. `main` ne porte
+    que le workflow, chaque org monitorée vit sur sa propre branche, et un tel merge amène sur `main` le
+    workflow d'exemple de la branche, dont les jobs échouent sur des branches appelées
+    `monitoring_myclient`.
+
 1. Depuis le repository de monitoring, ouvrez l'**Org Monitoring Workbench** depuis la Welcome page
 2. Cliquez sur **Install Org Monitoring**
 
@@ -150,9 +159,10 @@ Rappel : [Lab 3.1](3-1-configure-the-pipeline-up-to-production.md)
 
 La commande tourne dans un panneau et pose ses questions une à une, comme au [Lab 3.1](3-1-configure-the-pipeline-up-to-production.md) :
 
-1. **Did you configure the sfdx-hardis monitoring pre-requisites on your Git server ?** La deuxième
-   réponse, *ℹ️ No, bring me to the documentation!*, ouvre cette page et met fin à la commande :
-   lisez-la donc d'abord si ce n'est pas fait
+1. **Did you configure the sfdx-hardis monitoring pre-requisites on your Git server ?** - Yes. Les
+   prérequis sont les deux secrets de la réponse 5, et la commande vous donne leurs noms et leurs
+   valeurs en chemin. *ℹ️ No, bring me to the documentation!* ouvre seulement cette page et met fin
+   à la commande
 2. **Please select or connect to the org that you want to monitor** - `helios-prod`. La commande en fait votre org par défaut. Si elle vous redemande l'org,
    choisissez à nouveau `helios-prod`
 3. **What is the address of the CI/CD repository that deploys to this org? (optional)** - l'adresse
@@ -165,14 +175,6 @@ La commande tourne dans un panneau et pose ses questions une à une, comme au [L
    monitoring, puis le nom, l'e-mail de contact et le profil de l'application. La liste des
    profils est dans la langue de l'utilisateur de l'org, comme au [Lab 3.1](3-1-configure-the-pipeline-up-to-production.md)
 6. **Do you want to save the configuration on the remote server (auto-commit)?** - oui
-
-!!! warning "Attention"
-    Si GitHub refuse un push en route, la commande affiche *GitHub refused this push* et cite le scope
-    `workflow` : la première entrée de **En cas de problème** plus bas est la sortie. Ne passez pas
-    outre en mergeant la branche de monitoring dans `main`, même par une Pull Request. `main` ne porte
-    que le workflow, chaque org monitorée vit sur sa propre branche, et un tel merge amène sur `main` le
-    workflow d'exemple de la branche, dont les jobs échouent sur des branches appelées
-    `monitoring_myclient`.
 
 #### Pourquoi
 
@@ -233,7 +235,7 @@ choses, et il faut les deux : une adresse et une sévérité.
 2. Nommez-le `NOTIF_EMAIL_ADDRESS` et donnez-lui votre adresse e-mail comme valeur. Plusieurs
    adresses vont dans le même secret, séparées par des virgules
 3. De retour dans le panneau, regardez la colonne **Email** : la plupart des contrôles y affichent
-   **Disabled** ou **Error**
+   **Disabled**, **Warning** ou **Error**
 4. Sur la ligne **Detect if org limits are close to be reached**, mettez **Email** sur **All**
 5. Dans le panneau **Source Control**, stagez `.sfdx-hardis.yml` avec le **+** de sa ligne
 6. Tapez un message comme `Email me the org limits`, **Commit**, puis **Sync Changes**
@@ -242,7 +244,7 @@ choses, et il faut les deux : une adresse et une sévérité.
 
 Le workflow lit déjà ce secret : il a été écrit pour.
 
-Une adresse seule peut ne rien vous apporter. Avec **Disabled** ou **Error** dans la colonne
+Une adresse seule peut ne rien vous apporter. Avec **Disabled**, **Warning** ou **Error** dans la colonne
 **Email**, une org où rien ne va mal n'envoie aucun e-mail, ce qui est le bon réglage pour une
 équipe et le mauvais pour une première exécution. Avec **All**, ce contrôle vous écrira désormais
 chaque nuit, quoi qu'il ait trouvé.
@@ -297,16 +299,16 @@ Objectif : le premier rapport lu, dans votre boîte mail et dans le panneau.
 
 #### À faire : commencer par votre boîte mail
 
-1. Ouvrez votre boîte mail : l'exécution a envoyé un e-mail dont l'objet commence par
-   `[sfdx-hardis]`, depuis votre propre org. Regardez dans les indésirables s'il n'est pas dans la
-   boîte de réception
-2. Lisez-le. Il contient ce dont un release manager a besoin avant le premier café : quelle org, ce
+1. Ouvrez votre boîte mail : l'exécution a envoyé des e-mails dont l'objet commence par
+   `[sfdx-hardis]`, depuis votre propre org, un par contrôle qui a trouvé quelque chose au niveau de
+   sa colonne **Email**. Regardez dans les indésirables s'ils ne sont pas dans la boîte de réception
+2. Lisez celui des limites de l'org. Il contient ce dont un release manager a besoin avant le premier café : quelle org, ce
    que le contrôle a trouvé, la liste de ce qui ne va pas quand il y en a une, le rapport complet en
    pièce jointe sous forme de tableur, et un lien vers le job qui l'a produit
 
 #### Pourquoi la boîte mail d'abord
 
-C'est là que le monitoring vous trouve désormais. Cet e-mail est un indicateur, sur une journée.
+C'est là que le monitoring vous trouve désormais. Chaque e-mail est un indicateur, sur une journée.
 Chaque contrôle en produit un semblable, et les colonnes **Email** et **Messaging** de l'étape 3
 décident lesquels méritent de déranger quelqu'un.
 
@@ -327,8 +329,12 @@ décident lesquels méritent de déranger quelqu'un.
    l'étape 2 : cliquez dessus pour ouvrir votre fork dans une nouvelle fenêtre VS Code. Si vous aviez
    laissé cette question vide, le panneau proposerait **Set deployment repository** à la place. C'est
    optionnel dans les deux cas
-3. Chaque contrôle est une carte. Ouvrez les deux à ouvrir en premier : **Detect calls to deprecated
-   API versions** **(2)** et **Detect unsecured Connected Apps in an org** **(3)**
+3. Chaque contrôle est une carte, et un clic dessus relance ce contrôle depuis votre ordinateur sur
+   `helios-prod`, dans un panneau de commande. Lancez les deux à lancer en premier : **Detect calls
+   to deprecated API versions** **(2)** et **Detect unsecured Connected Apps in an org** **(3)**. Le
+   second demande ensuite s'il faut ignorer certaines apps aux prochains contrôles, et s'il faut
+   supprimer des jetons OAuth, dont celui de Salesforce CLI : répondez **No** aux deux. Décider,
+   c'est l'étape 6
 4. Lisez aussi **Detect if org limits are close to be reached**
 
 #### Pourquoi il est presque propre
@@ -387,14 +393,15 @@ C'est l'étape qui décide si le monitoring survit six mois.
 
 1. Passez chaque trouvaille en revue et mettez-la dans l'un de trois paniers :
 
-   | Panier                       | Ce que vous faites                                                       | Exemple                                       |
-   |------------------------------|--------------------------------------------------------------------------|-----------------------------------------------|
-   | Agir maintenant              | Corrigez-la cette semaine                                                | La Connected App non sécurisée                |
-   | Suivre                       | Mettez-la au backlog comme une story                                     | La vieille version d'API                      |
-   | Faire taire, avec une raison | Désactivez-la dans la configuration, avec un commentaire disant pourquoi | Un contrôle qui ne s'applique pas à cette org |
+   | Panier                       | Ce que vous faites                                                            | Exemple                                       |
+   |------------------------------|-------------------------------------------------------------------------------|-----------------------------------------------|
+   | Agir maintenant              | Corrigez-la cette semaine                                                     | La Connected App non sécurisée                |
+   | Suivre                       | Mettez-la au backlog comme une story                                          | La vieille version d'API                      |
+   | Faire taire, avec une raison | Désactivez-la dans la configuration, avec la raison dans le message du commit | Un contrôle qui ne s'applique pas à cette org |
 
   !!! tip "Vous faites taire un contrôle ?"
-      Écrivez la raison dans le fichier de configuration.
+      Écrivez la raison dans le message du commit qui le fait taire : le **Monitoring Config
+      Workbench** réécrit `.sfdx-hardis.yml` et ne garde pas les commentaires.
 
 2. Sur `helios-prod`, mettez `ActiveScratchOrgs` dans Suivre
 
@@ -422,7 +429,7 @@ Objectif : le contrôle des limites de l'org qui ne vous écrit que quand une li
 atteinte.
 
 Un rapport que personne n'ouvre n'est pas du monitoring, et vous venez de voir l'autre moitié :
-l'e-mail de l'étape 5 vous est parvenu sans que vous ouvriez quoi que ce soit.
+les e-mails de l'étape 5 vous sont parvenus sans que vous ouvriez quoi que ce soit.
 
 #### À faire
 
@@ -604,7 +611,7 @@ laquelle de trois choses s'est produite :
 - *Sent email to ...* : il est parti. Regardez dans les indésirables : l'expéditeur est votre
   propre org Salesforce
 
-L'e-mail est envoyé par l'org elle-même, donc il compte dans la limite quotidienne de l'org, qui
+Chaque e-mail est envoyé par l'org elle-même, donc il compte dans la limite quotidienne de l'org, qui
 est de 15 sur une org Developer Edition. Si le log dit que l'org a refusé l'envoi, dans
 `helios-prod` : **Setup > Email > Deliverability**, **Access level** sur **All email**.
 

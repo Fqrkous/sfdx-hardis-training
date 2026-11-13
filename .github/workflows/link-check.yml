@@ -28,8 +28,8 @@ jobs:
   links:
     name: Every documentation and Trailhead link
     # Set up my training environment switches on every workflow of a learner's
-    # fork, and a monthly run there would only mail them about the course's links
-    if: github.event_name != 'schedule' || github.repository == 'hardisgroupcom/sfdx-hardis-training'
+    # fork, and a run there would only mail them about the course's links
+    if: github.repository == 'hardisgroupcom/sfdx-hardis-training'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1

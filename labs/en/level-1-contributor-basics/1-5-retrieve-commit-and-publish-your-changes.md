@@ -29,7 +29,7 @@ depends_on:
 
 **Level**: 1 Contributor basics
 
-**Time**: ~15 min<!-- observed --> (observed: median 16 min, 31 learners, fastest 5 min)<!-- /observed -->
+**Time**: ~15 min<!-- observed --> (observed: median 16 min, 42 learners, fastest 5 min)<!-- /observed -->
 
 **You will**: bring your org changes into the repository, decide which of them belong to your story,
 and push a branch that is ready to be reviewed.
@@ -339,14 +339,16 @@ Goal: you know what the automated cleaning did to this story.
 1. Go back to the tab of the command, **hardis:work:save** **(1)**. It is still open next to the
    package viewer, waiting for your answer
 
-   ![The Save / Publish command tab, with the two cleaning lines above the question](../../_assets/annotated/vscode/work-save-package-xml--cleaning.png)
+   ![The Save / Publish command tab, with the cleaning lines above the question](../../_assets/annotated/vscode/work-save-package-xml--cleaning.png)
 
-2. Read the two lines about cleaning **(2)** it printed between your answers: references to deleted
-   components, and the pixel positions inside Flows
+2. Read the cleaning lines **(2)** it printed between your answers, one per cleaning rule of this
+   project: references to deleted components, local fields, ProductRequest, and Profiles. The
+   picture shows two of them. The rule for the pixel positions inside Flows only runs, and only
+   prints a line, when your story changed a Flow
 
 #### Why
 
-Save / Publish runs in a tab of its own. The two lines are the project's automated cleaning, and it
+Save / Publish runs in a tab of its own. Those lines are the project's automated cleaning, and it
 runs on every publish, on everybody's work, so that nobody has to remember the house rules.
 
 On this story it has almost nothing to do, because you changed a field, a layout and a permission
@@ -398,7 +400,7 @@ Command documentation: [hardis:work:save](https://sfdx-hardis.cloudity.com/hardi
 
 #### You should now see
 
-- The two cleaning lines above the question, and the question still waiting for your answer
+- The cleaning lines above the question, and the question still waiting for your answer
 
 ### 8. Push
 

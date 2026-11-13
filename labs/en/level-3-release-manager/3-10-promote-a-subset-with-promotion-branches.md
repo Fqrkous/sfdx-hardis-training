@@ -29,7 +29,7 @@ depends_on:
 
 **Level**: 3 Release Manager
 
-**Time**: ~55 min<!-- observed --> (observed: median 59 min, 8 learners, fastest 39 min)<!-- /observed -->
+**Time**: ~1 h 35<!-- observed --> (observed: median 1 h 37, 15 learners, fastest 39 min)<!-- /observed -->
 
 **You will**: ship three approved User Stories to preprod while two others stay behind in UAT, solve
 the conflict that one of them drags along, and put the pipeline back afterwards, using the one
@@ -274,7 +274,7 @@ top of US-058, and `preprod` has never seen US-058.
 
 #### Do: answer the conflict question
 
-1. The command asks what to do with US-059, and offers four answers **(1)**. Take the first one,
+1. The command asks what to do with US-059, and offers seven answers **(1)**. Take the first one,
    **Recommended: commit this User Story and every following conflict with their conflict markers,
    without asking again**
 
@@ -288,8 +288,18 @@ top of US-058, and `preprod` has never seen US-058.
 #### Why this answer
 
 The promotion is assembled whole, conflict included, and you solve it in one pass on the branch
-afterwards, in step 6. The other three answers are for other weeks: leave the story out, commit this
-one with its markers but ask again on the next conflict, or stop and undo everything.
+afterwards, in step 6. The other answers, in the order the question lists them, are for other weeks:
+commit this one with its markers but ask again on the next conflict, solve this conflict now in the
+editor while the command waits, leave the story out, the two risky ones below, or stop and undo
+everything.
+
+The two answers marked **(risky)** keep the `uat` side of every conflicting line, and nobody reads
+what they decided. Here they would keep the Warranty Years row and grant that step 6 deletes by
+hand, which belong to US-058, a story this promotion leaves behind. This week the validation would
+still catch it, because `preprod` has no `Warranty_Years__c` field and the deployment fails. With a
+field that already exists in `preprod`, nothing would: the files are only listed, under a warning
+in the Pull Request description and at the end of the commit message of the story, for somebody to
+read before merging.
 
 The log goes on to the end:
 
@@ -721,7 +731,7 @@ the one the promotion branches documentation prescribes after every promotion, a
 #### Do
 
 1. **New User Story**, as in [Lab 3.7](3-7-hotfix-and-retrofit.md) step 7: type **Retrofit**, name `US-059-retrofit`, target
-   `integration`, org `helios-dev`
+   `integration`, org `helios-dev` (**Scratch org**, then **Reuse scratch org helios-dev**)
 2. **Git: Fetch** then **Git: Merge...** from the Command Palette, as in [Lab 3.7](3-7-hotfix-and-retrofit.md) step 8, and
    pick **origin/preprod** this time, under **remote branches**
 3. The merge stops on the same two files, which appear under **Merge Changes** in the **Source

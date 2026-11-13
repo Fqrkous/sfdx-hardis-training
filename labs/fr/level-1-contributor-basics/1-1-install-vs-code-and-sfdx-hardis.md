@@ -5,7 +5,7 @@ description: "Installez Git, Node.js, VS Code et l'extension sfdx-hardis, puis l
 level: 1
 lab: 1
 lang: fr
-source_rev: "d07ab599ccbb8487897f5fd2c1b0e46a64ee6906"
+source_rev: "1ce6da585afd0a877f290f1baac04e4b5274b7be"
 screenshots:
   - annotated/web/git-download
   - annotated/web/vscode-download
@@ -254,6 +254,9 @@ Les dépendances qu'il faut connaître par leur nom :
 - **SFDMU** - charge et extrait des enregistrements, c'est ainsi que vos orgs reçoivent leurs données
 - **sfdx-git-delta** - calcule ce qui a changé entre deux versions du projet, c'est ce que les
   déploiements envoient
+- **sfdx-browserforce-plugin** (Browserforce) - modifie les paramètres de Setup qui ne se déploient
+  pas, en cliquant dans Setup depuis un navigateur que personne ne voit, quand un déploiement le
+  demande
 - **Salesforce Extension Pack** - l'outillage Salesforce officiel pour VS Code
 
 Les installations sont la partie la plus longue de ce lab, et la seule que vous ne referez jamais.
@@ -267,6 +270,7 @@ vous-même, par exemple :
     sf plugins install sfdx-hardis
     sf plugins install sfdmu
     sf plugins install sfdx-git-delta
+    sf plugins install sfdx-browserforce-plugin
 
 puis il a relancé `sf version` et `sf plugins` et comparé les réponses aux versions publiées sur le
 registre npm. Cette comparaison est toute la raison d'être du panneau : une pipeline casse de façon

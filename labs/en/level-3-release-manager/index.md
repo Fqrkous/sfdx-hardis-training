@@ -8,7 +8,7 @@ lang: en
 
 # Level 3 - Salesforce DevOps release manager
 
-**Time**: about 8 h.<!-- observed --> Observed on Labs 3.1 to 3.11: median 9 h 25, 8 learners, fastest 2 h 56.<!-- /observed -->
+**Time**: about 9 h.<!-- observed --> Observed on Labs 3.1 to 3.11: median 10 h 11, 14 learners, fastest 2 h 56.<!-- /observed -->
 
 **Before you start**: [Level 1](../level-1-contributor-basics/index.md) **and** [Level 2](../level-2-contributor-advanced/index.md). Both
 are required, and the badge audit checks both before it looks at anything here.
@@ -72,17 +72,17 @@ Either route runs the same thing.
 
 | Lab                                                       | Title                                                        | Time   |
 |-----------------------------------------------------------|--------------------------------------------------------------|--------|
-| [3.1](3-1-configure-the-pipeline-up-to-production.md)     | Configure the CI/CD pipeline up to production                | 2 h 05 |
-| [3.2](3-2-review-a-contributor-pull-request.md)           | Review and merge a contributor Pull Request                  | 20 min |
-| [3.3](3-3-deploy-to-integration-and-read-the-log.md)      | Read the deployment log, and what .forceignore hides from it | 55 min |
-| [3.4](3-4-merge-colliding-pull-requests.md)               | Three Pull Requests in one release: review the merge order   | 10 min |
+| [3.1](3-1-configure-the-pipeline-up-to-production.md)     | Configure the CI/CD pipeline up to production                | 1 h 35 |
+| [3.2](3-2-review-a-contributor-pull-request.md)           | Review and merge a contributor Pull Request                  | 25 min |
+| [3.3](3-3-deploy-to-integration-and-read-the-log.md)      | Read the deployment log, and what .forceignore hides from it | 1 h 15 |
+| [3.4](3-4-merge-colliding-pull-requests.md)               | Three Pull Requests in one release: review the merge order   | 15 min |
 | [3.5](3-5-promote-to-uat-and-write-release-notes.md)      | Promote to UAT and write the release notes                   | 50 min |
 | [3.6](3-6-release-to-production-and-read-dora-metrics.md) | Release to production and read your DORA metrics             | 1 h    |
-| [3.7](3-7-hotfix-and-retrofit.md)                         | Production is broken: hotfix and retrofit                    | 25 min |
-| [3.8](3-8-monitor-your-production-org.md)                 | Monitor your production org                                  | 15 min |
+| [3.7](3-7-hotfix-and-retrofit.md)                         | Production is broken: hotfix and retrofit                    | 35 min |
+| [3.8](3-8-monitor-your-production-org.md)                 | Monitor your production org                                  | 10 min |
 | [3.9](3-9-generate-the-project-documentation.md)          | Generate the Salesforce project documentation                | 5 min  |
-| [3.10](3-10-promote-a-subset-with-promotion-branches.md)  | Promote a subset with promotion branches (Beta)              | 55 min |
-| [3.11](3-11-capstone-run-a-weekly-release-cycle.md)       | Capstone: run a weekly release cycle                         | 45 min |
+| [3.10](3-10-promote-a-subset-with-promotion-branches.md)  | Promote a subset with promotion branches (Beta)              | 1 h 35 |
+| [3.11](3-11-capstone-run-a-weekly-release-cycle.md)       | Capstone: run a weekly release cycle                         | 1 h    |
 
 ## One more org
 
@@ -96,6 +96,15 @@ Manager** with the alias `helios-preprod`. Then seed both Developer Edition orgs
 **Training: Level 3 > Set up one of my training orgs**: `helios-preprod`, and `helios-prod`, which
 until now only created the others and held nothing. If it stops on `Profile Helios Crew`, the
 **If it goes wrong** section of [Lab 3.1](3-1-configure-the-pipeline-up-to-production.md) says why.
+
+Salesforce refuses a second Developer Edition org on an email address that already has one. Give
+the same address with a `+` and a word before the `@`, for example `myname+preprod@gmail.com`:
+the mail still reaches your inbox, and Salesforce sees a new address. Sign up from a private window,
+signed out of Trailhead, or the page shows a short form that only asks for a country.
+
+The setup takes a few minutes per org, and its counter (`49/64` for example) can stay on one number
+for several of them near the end. Leave VS Code alone until it says the app is deployed. If VS Code
+says the window appears to be stuck, pick **Wait**.
 
 `helios-prod` gets the same sources as the other orgs. Nothing seeds a deployment history, and the
 seeding itself is not a deployment of the pipeline, so the DORA metrics of Lab 3.6 hold only the

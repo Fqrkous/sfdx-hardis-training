@@ -31,7 +31,7 @@ depends_on:
 
 **Level**: 3 Release Manager
 
-**Time**: ~25 min<!-- observed --> (observed: median 28 min, 8 learners, fastest 16 min)<!-- /observed -->
+**Time**: ~35 min<!-- observed --> (observed: median 35 min, 15 learners, fastest 16 min)<!-- /observed -->
 
 **You will**: take one broken formula from production to a fix that is live, then bring that fix
 back down into the pipeline so nothing undoes it.
@@ -203,7 +203,7 @@ A **+ PR** chip sits on each arrow between major branches in the DevOps Pipeline
 
    ![The + PR chip on the arrow from preprod to main](../../_assets/annotated/vscode/devops-pipeline-level3--release-to-prod.png)
 
-2. Title it plainly, and use the word Hotfix rather than Release:
+2. Title it plainly, use the word Hotfix rather than Release, then click **Create pull request**:
 
    > Hotfix US-045 to production
 
@@ -268,12 +268,10 @@ comes back on a day nobody is expecting it.
 
    ![The contribution cards of the DevOps Pipeline panel](../../_assets/annotated/vscode/pipeline-cards--new-user-story.png)
 
-2. Take the third branch type, **Retrofit: merge production back down into the pipeline after a hotfix
-   (release manager)** **(1)**
+2. Answer the questions with the table below. At **Type of branch**, take the third one, **Retrofit:
+   merge production back down into the pipeline after a hotfix (release manager)** **(1)**
 
    ![The branch type question, with Retrofit](../../_assets/annotated/vscode/work-new-story-type--retrofit.png)
-
-3. Answer the questions with the table below
 
 | Question       | Your answer                                                     |
 |----------------|-----------------------------------------------------------------|
@@ -281,6 +279,10 @@ comes back on a day nobody is expecting it.
 | Type of branch | **Retrofit**                                                    |
 | Name           | `US-045-retrofit`, the story whose hotfix you are bringing back |
 | Org to work in | `helios-dev`: nothing is built here, so the org hardly matters  |
+
+For the org, pick **Scratch org**, then **Reuse scratch org helios-dev**, as in
+[Lab 1.3](../level-1-contributor-basics/1-3-start-a-user-story-on-a-git-branch.md). Not **Current org**: since
+[Lab 3.1](3-1-configure-the-pipeline-up-to-production.md) your default org is `helios-prod`, production.
 
 #### Why
 

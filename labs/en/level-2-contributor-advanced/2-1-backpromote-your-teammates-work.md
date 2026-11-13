@@ -27,7 +27,7 @@ depends_on:
 
 **Level**: 2 Contributor advanced
 
-**Time**: ~25 min<!-- observed --> (observed: median 26 min, 11 learners, fastest 10 min)<!-- /observed -->
+**Time**: ~35 min<!-- observed --> (observed: median 37 min, 17 learners, fastest 12 min)<!-- /observed -->
 
 **You will**: bring a teammate's merged story into your own dev org, decide what to keep when the
 tool asks, and learn what a backpromote will never do for you.
@@ -144,7 +144,7 @@ Only if you answered **No**, or if the panel could not merge.
     If a check fails here, run **Simulate my teammates** again: it recreates the branch and the
     Pull Request.
 
-#### Why
+#### Why read the files
 
 Reading the files is the review: you are checking that the Pull Request does what its title says,
 and nothing else.
@@ -162,7 +162,7 @@ check that fails here is not your fault and not something to fix.
       step 2: with `integration` checked out (its name is in the bottom left corner of VS Code),
       run **Training: Level 2** > **Set up one of my training orgs** on `helios-dev`.
 
-#### Why
+#### Why only Romain's work
 
 Romain's Pull Request is the newest merge into `integration` on GitHub. It is the only work your org
 does not have: the backpromote brings it, and nothing else.
@@ -351,8 +351,9 @@ Three things it deliberately does **not** do, and knowing them saves an afternoo
 And one thing it does that nobody expects the first time:
 
 !!! warning "It leaves you on the backpromote branch"
-    The deployment runs from a branch called `backpromote/integration/<your org>`, and **the
-    checkout stays there when the command finishes**. The panel says so, and offers the
+    The deployment runs from a branch called `backpromote/integration/` followed by the id of your
+    org in lower case, such as `backpromote/integration/00d8e00000100001eaa` in the picture of step
+    5, and **the checkout stays there when the command finishes**. The panel says so, and offers the
     **Back to `<your branch>`** button **(4)** to undo it: it restores the changes it stashed
     before the run, then proposes a merge of the parent branch.
 

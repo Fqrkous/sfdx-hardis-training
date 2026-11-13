@@ -11,8 +11,8 @@
         "url": "https://cloudity.com",
         "course": "https://sfdx-hardis-training.cloudity.com"
       },
-      "issuedOn": "2026-09-24",
-      "issuedAt": "2026-09-24T23:32:32Z",
+      "issuedOn": "2026-11-09",
+      "issuedAt": "2026-11-09T01:06:18Z",
       "evidence": [
         {
           "type": "Repository",
@@ -20,7 +20,7 @@
         },
         {
           "type": "ClaimIssue",
-          "url": "https://github.com/hardisgroupcom/sfdx-hardis-training/issues/42"
+          "url": "https://github.com/hardisgroupcom/sfdx-hardis-training/issues/380"
         }
       ],
       "image": "https://sfdx-hardis-training.cloudity.com/badges/img/nvuillamy-level-1.svg",
@@ -39,8 +39,8 @@
         "url": "https://cloudity.com",
         "course": "https://sfdx-hardis-training.cloudity.com"
       },
-      "issuedOn": "2026-09-25",
-      "issuedAt": "2026-09-25T03:05:07Z",
+      "issuedOn": "2026-11-09",
+      "issuedAt": "2026-11-09T04:33:05Z",
       "evidence": [
         {
           "type": "Repository",
@@ -48,7 +48,7 @@
         },
         {
           "type": "ClaimIssue",
-          "url": "https://github.com/hardisgroupcom/sfdx-hardis-training/issues/44"
+          "url": "https://github.com/hardisgroupcom/sfdx-hardis-training/issues/381"
         }
       ],
       "image": "https://sfdx-hardis-training.cloudity.com/badges/img/nvuillamy-level-2.svg",
@@ -67,8 +67,8 @@
         "url": "https://cloudity.com",
         "course": "https://sfdx-hardis-training.cloudity.com"
       },
-      "issuedOn": "2026-09-25",
-      "issuedAt": "2026-09-25T07:05:38Z",
+      "issuedOn": "2026-11-09",
+      "issuedAt": "2026-11-09T08:53:22Z",
       "evidence": [
         {
           "type": "Repository",
@@ -76,7 +76,7 @@
         },
         {
           "type": "ClaimIssue",
-          "url": "https://github.com/hardisgroupcom/sfdx-hardis-training/issues/45"
+          "url": "https://github.com/hardisgroupcom/sfdx-hardis-training/issues/382"
         }
       ],
       "image": "https://sfdx-hardis-training.cloudity.com/badges/img/nvuillamy-level-3.svg",

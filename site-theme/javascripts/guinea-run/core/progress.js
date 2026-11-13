@@ -1,8 +1,8 @@
 /*
  * What a player has done, kept in their browser: which worlds are open, the
  * best score and stars of each (with the result the Hall of Fame receives),
- * the badges, Victor's notes found, the GitHub handle of the player and the
- * scores they sent to the Hall of Fame, the deployment actions plan declared
+ * the badges, Victor's notes found, the Hall of Fame profile (a random id, the
+ * nickname, the guinea pig, what was sent already), the deployment actions plan declared
  * in world 3, which the runners read, and the best game of each bonus: Pipeline
  * Pinball (kept under "bonus", as before Org-Man existed) and Org-Man (under
  * "bonuses"). A pinball game in progress is saved apart, by core/checkpoint.js.
@@ -16,9 +16,15 @@
  * won in one is never erased by the other, and a save written elsewhere is
  * merged in as soon as the browser says so. The first world won of a visit
  * asks the browser to keep the save when it cleans up storage.
+ *
+ * In VS Code each project has its own browser storage: core/host-save.js
+ * shares the save between them through the extension (savedLocally).
  */
+import { savedLocally } from "./save-signal.js";
+import { BOARDS, COATS, NAME_MAX } from "./online.js";
 
 const KEY = "guinea-run-progress-v1";
+const PLAYER_ID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 function empty() {
   return { v: 1, unlocked: 0, worlds: {}, badges: [], notes: {}, plan: null, finished: false };
@@ -29,7 +35,7 @@ export function createProgress(options) {
   // Read even when volatile: a check can set a plan or a progress and play it,
   // without the game ever writing over it
   let state = readStored() || empty();
-  // The choices this game made (mode, handle, plan): they win over the stored ones
+  // The choices this game made (mode, online profile, plan): they win over the stored ones
   const touched = new Set();
   let keepAsked = false;
   if (options && options.unlockAll) {
@@ -149,32 +155,35 @@ export function createProgress(options) {
       touched.add("mode");
       save();
     },
-    /** The GitHub handle the player sends their scores as. */
-    get handle() {
-      return state.handle || "";
+    /**
+     * The Hall of Fame profile: { id, name, coat, asked, named, refused, sent }.
+     * id: the random player id, "" until the player joins. asked: the join
+     * box was shown (it shows once). named: the "name|coat" the database
+     * took last; refused: one it refused. sent: { board: score }, the best
+     * already sent or refused of each board. left: the id of a player who
+     * removed themself from the Hall of Fame, never taken back by a merge.
+     */
+    get online() {
+      return onlineOf(state.online);
     },
-    setHandle(handle) {
-      state.handle = handle;
-      touched.add("handle");
+    /** Changes some fields of the profile. A new id starts what was sent from zero. */
+    setOnline(patch) {
+      const current = onlineOf(state.online);
+      const next = onlineOf(Object.assign({}, current, patch));
+      if (patch.id !== undefined && patch.id !== current.id) {
+        next.sent = {};
+        next.named = "";
+        next.refused = "";
+      }
+      state.online = next;
+      touched.add("online");
       save();
     },
-    /** The scores sent to the Hall of Fame so far, { worlds: { w: score }, pinball, orgman }: the board may not show them yet. */
-    get sent() {
-      return Object.assign({ worlds: {}, pinball: 0, orgman: 0 }, state.sent || {});
-    },
-    /** When the player last sent their scores (ms), 0 if never. */
-    get sentAt() {
-      return Number(state.sentAt) || 0;
-    },
-    addSent(scores, now) {
-      const sent = this.sent;
-      for (const [w, score] of Object.entries(scores.worlds || {})) {
-        sent.worlds[w] = Math.max(sent.worlds[w] || 0, score);
-      }
-      sent.pinball = Math.max(sent.pinball || 0, scores.pinball || 0);
-      sent.orgman = Math.max(sent.orgman || 0, scores.orgman || 0);
-      state.sent = sent;
-      state.sentAt = now;
+    /** A score of a board was sent (or refused): it is never sent again. */
+    addOnlineSent(board, score) {
+      const current = onlineOf(state.online);
+      current.sent[board] = Math.max(current.sent[board] || 0, score);
+      state.online = current;
       save();
     },
     addBadge(level) {
@@ -233,14 +242,11 @@ export function createProgress(options) {
       store(id, Object.assign(this.bonusOf(id), { teaserSeen: true }));
     },
     reset() {
-      // The handle, the mode and what was sent are who the player is, not what they did: they stay
-      const { handle, mode, sent } = state;
+      // The Hall of Fame profile and the mode are who the player is, not what they did: they stay
+      const { online, mode } = state;
       state = empty();
-      if (sent) {
-        state.sent = sent;
-      }
-      if (handle) {
-        state.handle = handle;
+      if (online) {
+        state.online = online;
       }
       if (mode) {
         state.mode = mode;
@@ -256,11 +262,16 @@ export function createProgress(options) {
 /**
  * Two saves of the same player made one: the best of each world (with the
  * result of that best), every badge and note, the furthest world open, the
- * best game of each bonus. mode, handle and plan come from mine when this game chose
- * them (touched), from stored otherwise.
+ * best game of each bonus. mode, the online profile and plan come from mine when this
+ * game chose them (touched), from stored otherwise; the same player in both
+ * keeps the higher score sent of each board.
  */
 export function mergeProgress(stored, mine, touched) {
   const merged = Object.assign(empty(), stored, mine);
+  // Before the Hall of Fame moved to its database: the GitHub handle and what was sent through issues
+  delete merged.handle;
+  delete merged.sent;
+  delete merged.sentAt;
   merged.unlocked = Math.max(Number(stored.unlocked) || 0, Number(mine.unlocked) || 0);
   merged.worlds = {};
   for (const id of new Set(Object.keys(stored.worlds || {}).concat(Object.keys(mine.worlds || {})))) {
@@ -269,7 +280,7 @@ export function mergeProgress(stored, mine, touched) {
   merged.badges = Array.from(new Set((stored.badges || []).concat(mine.badges || []))).sort();
   merged.notes = Object.assign({}, stored.notes, mine.notes);
   merged.finished = Boolean(stored.finished || mine.finished);
-  for (const key of ["mode", "handle", "plan"]) {
+  for (const key of ["mode", "plan"]) {
     const value = touched && touched.has(key) ? mine[key] : stored[key];
     if (value === undefined) {
       delete merged[key];
@@ -277,9 +288,10 @@ export function mergeProgress(stored, mine, touched) {
       merged[key] = value;
     }
   }
-  if (stored.sent || mine.sent) {
-    merged.sent = mergeSent(stored.sent, mine.sent);
-    merged.sentAt = Math.max(Number(stored.sentAt) || 0, Number(mine.sentAt) || 0);
+  if (stored.online || mine.online) {
+    merged.online = mergeOnline(touched && touched.has("online") ? mine.online : stored.online, touched && touched.has("online") ? stored.online : mine.online);
+  } else {
+    delete merged.online;
   }
   if (stored.bonus || mine.bonus) {
     merged.bonus = mergeBonus(stored.bonus, mine.bonus);
@@ -305,7 +317,18 @@ function readStored() {
 function parse(raw) {
   try {
     const parsed = raw ? JSON.parse(raw) : null;
-    return parsed && parsed.v === 1 ? Object.assign(empty(), parsed) : null;
+    if (!parsed || parsed.v !== 1) {
+      return null;
+    }
+    const state = Object.assign(empty(), parsed);
+    // The GitHub handle and the issue sends of the old Hall of Fame are forgotten
+    delete state.handle;
+    delete state.sent;
+    delete state.sentAt;
+    if (state.online) {
+      state.online = onlineOf(state.online);
+    }
+    return state;
   } catch {
     return null;
   }
@@ -316,7 +339,9 @@ function write(state) {
     window.localStorage.setItem(KEY, JSON.stringify(state));
   } catch {
     // Storage refused: the game goes on without remembering
+    return;
   }
+  savedLocally();
 }
 
 function mergeWorld(a, b) {
@@ -333,19 +358,53 @@ function mergeWorld(a, b) {
   return world;
 }
 
-function mergeSent(a, b) {
-  const sent = { worlds: {}, pinball: 0, orgman: 0 };
-  for (const part of [a, b]) {
-    if (!part) {
-      continue;
-    }
-    for (const [w, score] of Object.entries(part.worlds || {})) {
-      sent.worlds[w] = Math.max(sent.worlds[w] || 0, score);
-    }
-    sent.pinball = Math.max(sent.pinball, part.pinball || 0);
-    sent.orgman = Math.max(sent.orgman, part.orgman || 0);
+/**
+ * The profile of the save that wins (chosen), completed by the other one: a
+ * profile without an id takes the other's, unless it is the id the player
+ * removed from the Hall of Fame; the same id keeps the higher score sent of
+ * each board; once asked, never asked again.
+ */
+function mergeOnline(chosen, other) {
+  const a = onlineOf(chosen);
+  const b = onlineOf(other);
+  // "Remove me" sticks: an older copy of the save never brings the removed id back
+  if (a.id && a.id === b.left) {
+    return Object.assign(b, { asked: a.asked || b.asked });
   }
-  return sent;
+  if (!a.id && b.id && b.id !== a.left) {
+    return Object.assign(b, { asked: a.asked || b.asked, left: a.left || b.left });
+  }
+  a.left = a.left || b.left;
+  if (a.id && a.id === b.id) {
+    for (const [board, score] of Object.entries(b.sent)) {
+      a.sent[board] = Math.max(a.sent[board] || 0, score);
+    }
+  }
+  a.asked = a.asked || b.asked;
+  return a;
+}
+
+/** A profile with every field in shape: anything missing or broken goes back to its default. */
+function onlineOf(value) {
+  const o = value && typeof value === "object" ? value : {};
+  const name = typeof o.name === "string" ? o.name.replace(/\s+/g, " ").trim().slice(0, NAME_MAX) : "";
+  const sent = {};
+  for (const board of BOARDS) {
+    const score = o.sent && Number(o.sent[board]);
+    if (Number.isFinite(score) && score > 0) {
+      sent[board] = score;
+    }
+  }
+  return {
+    id: typeof o.id === "string" && PLAYER_ID.test(o.id) ? o.id.toLowerCase() : "",
+    name,
+    coat: COATS.includes(o.coat) ? o.coat : COATS[0],
+    asked: o.asked === true,
+    named: typeof o.named === "string" ? o.named : "",
+    refused: typeof o.refused === "string" ? o.refused : "",
+    left: typeof o.left === "string" && PLAYER_ID.test(o.left) ? o.left.toLowerCase() : "",
+    sent
+  };
 }
 
 function mergeBonus(a, b) {

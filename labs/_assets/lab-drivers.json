@@ -42,6 +42,11 @@
           "$comment": "The lab says 15 to 20 minutes. A cold run that creates three scratch orgs, deploys the app into each and imports the data takes longer than that: 40 minutes was not enough on 2026-09-21.",
           "timeoutMs": 4200000,
           "answers": [
+            {
+              "q": "Fork the course into the GitHub account",
+              "choice": "^Yes, use",
+              "optional": true
+            },
             { "q": "Build your training environment from", "choice": "Yes" }
           ]
         }

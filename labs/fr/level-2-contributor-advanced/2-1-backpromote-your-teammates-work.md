@@ -5,7 +5,7 @@ description: "Votre org de développement est en retard sur integration. Faites-
 level: 2
 lab: 1
 lang: fr
-source_rev: "42ecaa3d11856095d75b2f26d3525baa18251df7"
+source_rev: "87368b7e85b3dd8cf90b33b28e998314c23dce63"
 screenshots:
   - annotated/vscode/sidebar-commands-custom-menu-2--training-menu
   - annotated/web/github-pr-files
@@ -27,7 +27,7 @@ depends_on:
 
 **Niveau** : 2 Contributeur avancé
 
-**Durée** : ~25 min<!-- observed --> (observé : médiane 26 min, 11 participants, le plus rapide 10 min)<!-- /observed -->
+**Durée** : ~35 min<!-- observed --> (observé : médiane 37 min, 17 participants, le plus rapide 12 min)<!-- /observed -->
 
 **Vous allez** : rapatrier dans votre propre org de dev la story mergée par un collègue, décider
 quoi garder quand l'outil vous le demande, et apprendre ce qu'un backpromote ne fera jamais pour
@@ -153,7 +153,7 @@ Seulement si vous avez répondu **No**, ou si le panneau n'a pas pu merger.
     Si un check échoue ici, relancez **Simulate my teammates** : elle recrée la branche et la Pull
     Request.
 
-#### Pourquoi
+#### Pourquoi lire les fichiers
 
 Lire les fichiers, c'est cela, la relecture : vérifier que la Pull Request fait ce que dit son
 titre, et rien d'autre.
@@ -172,7 +172,7 @@ check qui échoue ici n'est pas de votre faute et n'est pas à corriger.
       bas à gauche de VS Code), lancez **Training: Level 2** > **Set up one of my training orgs**
       sur `helios-dev`.
 
-#### Pourquoi
+#### Pourquoi seul le travail de Romain
 
 La Pull Request de Romain est le dernier merge dans `integration` sur GitHub. C'est le seul travail
 que votre org n'a pas : le backpromote l'apporte, et rien d'autre.
@@ -378,8 +378,9 @@ Trois choses qu'il ne fait délibérément **pas**, et les connaître économise
 Et une chose qu'il fait et que personne n'attend la première fois :
 
 !!! warning "Il vous laisse sur la branche de backpromote"
-    Le déploiement tourne depuis une branche appelée `backpromote/integration/<votre org>`, et **le
-    checkout y reste quand la commande se termine**. Le panneau le dit, et propose le bouton
+    Le déploiement tourne depuis une branche appelée `backpromote/integration/` suivie de l'id de
+    votre org en minuscules, comme `backpromote/integration/00d8e00000100001eaa` sur l'image de
+    l'étape 5, et **le checkout y reste quand la commande se termine**. Le panneau le dit, et propose le bouton
     **Back to `<votre branche>`** **(4)** pour le défaire : il restaure les modifications qu'il avait
     mises de côté avant l'exécution, puis propose un merge de la branche parente.
 

@@ -105,20 +105,84 @@ test("mergeProgress: a signed result wins a tie", () => {
   assert.equal(merged.worlds[0].stars, 3);
 });
 
-test("mergeProgress: what was sent keeps the higher score of each board", () => {
-  const stored = { v: 1, sent: { worlds: { 0: 500, 1: 900 }, pinball: 100 }, sentAt: 10 };
-  const mine = { v: 1, sent: { worlds: { 0: 700 }, pinball: 50 }, sentAt: 5 };
+test("mergeProgress: the same player keeps the higher score sent of each board", () => {
+  const stored = { v: 1, online: { id: "0b4f3c1e-1111-4a2b-8c3d-000000000001", name: "Nico", coat: "golden", asked: true, sent: { w0: 500, w1: 900, pinball: 100 } } };
+  const mine = { v: 1, online: { id: "0b4f3c1e-1111-4a2b-8c3d-000000000001", name: "Nico", coat: "golden", sent: { w0: 700, pinball: 50 } } };
   const merged = mergeProgress(stored, mine, new Set());
-  assert.deepEqual(merged.sent, { worlds: { 0: 700, 1: 900 }, pinball: 100, orgman: 0 });
-  assert.equal(merged.sentAt, 10);
+  assert.deepEqual(merged.online.sent, { w0: 700, w1: 900, pinball: 100 });
+  assert.equal(merged.online.asked, true);
 });
 
-test("mergeProgress: the best Org-Man game and what was sent of it are kept from both", () => {
-  const stored = { v: 1, bonuses: { orgman: { best: 900, record: { org: 1, sc: 900, sg: "a" }, teaserSeen: true } }, sent: { worlds: {}, pinball: 0, orgman: 300 } };
-  const mine = { v: 1, bonuses: { orgman: { best: 500, record: { org: 1, sc: 500, sg: "b" }, teaserSeen: false } }, sent: { worlds: {}, pinball: 0, orgman: 700 } };
+test("mergeProgress: a profile chosen in this game wins, a profile without an id takes the other's", () => {
+  const stored = { v: 1, online: { id: "0b4f3c1e-1111-4a2b-8c3d-000000000001", name: "Old", coat: "snow", sent: { w0: 500 } } };
+  const mine = { v: 1, online: { id: "0b4f3c1e-2222-4a2b-8c3d-000000000002", name: "New", coat: "slate", sent: {} } };
+  const chosen = mergeProgress(stored, mine, new Set(["online"]));
+  assert.equal(chosen.online.id, "0b4f3c1e-2222-4a2b-8c3d-000000000002");
+  assert.equal(chosen.online.name, "New");
+  assert.deepEqual(chosen.online.sent, {}, "another player: nothing of the first one's sends");
+  const empty = mergeProgress(stored, { v: 1, online: { asked: true } }, new Set(["online"]));
+  assert.equal(empty.online.id, "0b4f3c1e-1111-4a2b-8c3d-000000000001");
+  assert.equal(empty.online.asked, true);
+});
+
+test("Remove me sticks: the next save does not take the removed id back from the stored copy", () => {
+  const browser = fakeBrowser();
+  const id = "0b4f3c1e-1111-4a2b-8c3d-000000000001";
+  const progress = createProgress();
+  progress.setOnline({ id, name: "Nico", coat: "golden", asked: true });
+  progress.addOnlineSent("w0", 1500);
+  progress.setOnline({ id: "", name: "", asked: true, left: id });
+  assert.equal(progress.online.id, "", "the game forgets the id");
+  assert.equal(browser.stored().online.id, "", "the save forgets it too");
+  // Any later write merges with the stored copy again
+  progress.complete(0, 300, 1, 1, { test: true });
+  assert.equal(browser.stored().online.id, "");
+  assert.deepEqual(browser.stored().online.sent, {}, "nothing is sent for the removed player");
+});
+
+test("mergeProgress: an older copy of the save never brings a removed player back", () => {
+  const id = "0b4f3c1e-1111-4a2b-8c3d-000000000001";
+  const removed = { v: 1, online: { asked: true, left: id } };
+  const older = { v: 1, online: { id, name: "Nico", coat: "golden", asked: true, sent: { w0: 500 } } };
+  // The removal is this game's choice, the stored copy is older
+  assert.equal(mergeProgress(older, removed, new Set(["online"])).online.id, "");
+  // The removal is stored, an older game writes its profile
+  assert.equal(mergeProgress(removed, older, new Set(["online"])).online.id, "");
+  assert.equal(mergeProgress(removed, older, new Set()).online.id, "");
+  // Joining again with a new id works, and keeps the removed id away
+  const again = { v: 1, online: { id: "0b4f3c1e-2222-4a2b-8c3d-000000000002", name: "Nico", coat: "golden", asked: true, left: id } };
+  assert.equal(mergeProgress(older, again, new Set(["online"])).online.id, "0b4f3c1e-2222-4a2b-8c3d-000000000002");
+});
+
+test("the old GitHub handle and its sends are forgotten, a broken profile is repaired", () => {
+  const browser = fakeBrowser();
+  window.localStorage.setItem(KEY, JSON.stringify({ v: 1, unlocked: 1, worlds: {}, handle: "octocat", sent: { worlds: { 0: 5 } }, sentAt: 9, online: { id: "not-an-id", name: "  a   b  ", coat: "purple", sent: { w0: "x", w3: 40, nope: 9 } } }));
+  const progress = createProgress();
+  assert.deepEqual(progress.online, { id: "", name: "a b", coat: "agouti", asked: false, named: "", refused: "", left: "", sent: { w3: 40 } });
+  progress.setOnline({ id: "0b4f3c1e-1111-4a2b-8c3d-000000000001", name: "Nico", coat: "golden", asked: true });
+  const stored = browser.stored();
+  assert.equal(stored.handle, undefined);
+  assert.equal(stored.sent, undefined);
+  assert.equal(stored.sentAt, undefined);
+  assert.equal(stored.online.id, "0b4f3c1e-1111-4a2b-8c3d-000000000001");
+  assert.deepEqual(stored.online.sent, {}, "a new id starts what was sent from zero");
+});
+
+test("a reset keeps the Hall of Fame profile", () => {
+  fakeBrowser();
+  const progress = createProgress();
+  progress.setOnline({ id: "0b4f3c1e-1111-4a2b-8c3d-000000000001", name: "Nico", coat: "golden", asked: true });
+  progress.addOnlineSent("w0", 1500);
+  progress.reset();
+  assert.equal(progress.online.name, "Nico");
+  assert.equal(progress.online.sent.w0, 1500);
+});
+
+test("mergeProgress: the best Org-Man game is kept from both", () => {
+  const stored = { v: 1, bonuses: { orgman: { best: 900, record: { org: 1, sc: 900, sg: "a" }, teaserSeen: true } } };
+  const mine = { v: 1, bonuses: { orgman: { best: 500, record: { org: 1, sc: 500, sg: "b" }, teaserSeen: false } } };
   const merged = mergeProgress(stored, mine, new Set());
   assert.equal(merged.bonuses.orgman.best, 900);
   assert.equal(merged.bonuses.orgman.record.sg, "a", "the record of the best game");
   assert.equal(merged.bonuses.orgman.teaserSeen, true);
-  assert.equal(merged.sent.orgman, 700);
 });

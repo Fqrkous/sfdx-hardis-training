@@ -3,8 +3,81 @@
 What changed in the course, for learners and trainers. The course has no versions: each section is
 a day, newest first, and a change goes under the date of the day it is made.
 
+## 2026-11-11
+
+- Guinea Run: **Remove me from the Hall of Fame** sticks. The game used to take the player's id back from its own save at the next write, then kept sending their new best scores.
+
+## 2026-11-10
+
+- Guinea Run: the first score of a player opens a window over the end card, with the score, a nickname box, the guinea pigs and a large **Join the Hall of Fame** button. **No thanks** or Escape closes it for good, and Enter in the nickname box joins.
+
+## 2026-11-09
+
+- The screenshots of the windows opened over the DevOps Pipeline (branch windows, Pull Request windows, deployment action editors) are taken again, with the new view switch behind them.
+- Lab 1.2: the lab driver answers the question that a computer already signed in to GitHub gets first, *Fork the course into the GitHub account ...?*, which the lab describes, so the driver no longer stops on it.
+
+## 2026-11-08
+
+- Lab 1.1: the Browserforce dependency is named **sfdx-browserforce-plugin**, as its card in the Setup panel reads.
+- Lab 1.2: the setup output shows the line that switches issues on in your fork, and the switch between **Major branches**, **Feature branches** and **Dev orgs** is no longer described as appearing once GitHub is connected: it is always there.
+- Lab 1.3: a troubleshooting entry for the warning that `helios-dev` is not registered because issues are off in a fork set up before 2026-11-07, fixed by running **Set up my training environment** again.
+- Labs 2.3, 2.4 and 2.9 link the new sfdx-hardis page of each deployment action type they use (Apex, Data, Schedule batch, Manual), which show these labs in their Learn by doing section.
+- Lab 3.10: the conflict question screenshot lists the answers in the order the command asks them, and the lab says the risky answers leave the files they decided in the Pull Request and in the commit message of the story.
+- **Set up my training environment** waits for a fork it has just created before switching issues on, and says what to do when it still cannot.
+- DevOps Pipeline screenshots in Labs 1.2 to 3.10 show the **Major branches** / **Feature branches** / **Dev orgs** switch instead of the former toggle, on its own row above the diagram, and Lab 3.2 points at **Feature branches** on its picture.
+- Guinea Run: the end credits thank Haim Knokh (SFDMU), Matthias Rolke (Browserforce) and Dave Renald Saavedra (scratch org snapshots), as the sfdx-hardis Special Thanks now do.
+
+## 2026-11-07
+
+- DevOps Pipeline: the **Show feature branches** toggle became a switch on the diagram between **Major branches**, **Feature branches** and **Dev orgs**. Labs 1.2, 2.3 and 3.2 follow it.
+- Lab 1.3: New User Story also registers `helios-dev` in the development orgs list of your repository, and the setup of your training environment switches issues on in your fork, where that list lives.
+- Lab 1.1: the Setup panel installs Browserforce too, now one of the dependencies of sfdx-hardis, and its screenshots show it.
+
+## 2026-11-05
+
+- Lab 3.10: the conflict question of the promotion shows its seven answers, including the new "solve now" and the two risky "keep the source version" ones, and the lab explains what those would have done to this week's promotion.
+
+## 2026-11-02
+
+- Guinea Run: pick a nickname and a guinea pig once, after your first world, and every new best score goes to the Hall of Fame on its own, with no GitHub account and nothing else about you stored.
+
+## 2026-11-01
+
+- Lab 3.8: the first question of **Install Org Monitoring** says to answer Yes, and the warning about the `workflow` permission comes before you click the button.
+- Lab 3.8: the first run sends one email per check that found something, not a single one, and the panel lists **Warning** among the severities.
+- Lab 3.8: a check card runs the check again from your computer, and the unsecured Connected Apps one gets No to both of its questions.
+- Lab 3.8: the reason for silencing a check goes in the commit message, since the panel does not keep comments in the configuration file.
+- Lab 3.9: step 5 asks for one paragraph on the Installation page, and has you find the reasons of the preparation buffer and of the crew capacity cap in the generated pages.
+
+## 2026-10-31
+
+- Lab 1.2: **Set up my training environment** lists its questions in the order it asks them, the GitHub sign-in or account first and the yes for `helios-prod` after.
+- Lab 1.3: the user configuration file records the branch your User Story targets, not its org.
+- Lab 1.5: Save / Publish shows one line per cleaning rule, four on this story, and none for Flow positions when the story has no Flow.
+- Labs 1.6, 2.1, 2.2, 2.4 and 2.5: a step with several Why blocks gives each its own title, and French Lab 3.1 links to its step 12 again, so the MegaLinter comment of your Pull Requests no longer warns about 21 markdownlint errors in the course.
+- Lab 2.1: the backpromote branch is named after the id of your org, as the picture shows, not after its alias.
+- Lab 2.4: when MegaLinter's commit arrives after your last push, approve its workflows on the Pull Request, since there is nothing left to push.
+- Labs 3.5 and 3.8: **Publish my pipeline configuration** asks for **Squash and merge**, as the check comment of its Pull Request does, instead of a merge commit.
+- Labs 3.7 and 3.10: the retrofit story says how to reach `helios-dev`, **Scratch org** then **Reuse scratch org helios-dev**, since **Current org** is production by then.
+
+## 2026-10-30
+
+- Lab 3.4: the cleaning step names the **Auto-Cleaning types** setting as the panel shows it.
+- Labs 3.6 and 3.7: the promotion, release and hotfix steps say to click **Create pull request** after the title.
+- Lab 3.7: the retrofit branch is created in the order the questions come, target branch first.
+- Lab 3.8: the monitoring repository is cloned with no folder open, as in Lab 1.2, with the address GitHub shows on an empty repository.
+
+## 2026-10-28
+
+- Lab 1.2: a troubleshooting entry for a Welcome page with no Training menus, when VS Code is not open on the course folder.
+- Level 3: the page says how to sign up for a second Developer Edition org with the same email address, and that the org setup can pause on one number for minutes.
+- Lab 3.1: the first picture shows your fork as it is, with no feature branches, and the step texts match the questions the command asks: the app name to keep, **System Administrator** to pick, and the end of the questions for `main`.
+- Lab 3.1: a troubleshooting entry for `You need openssl to be locally installed`, and the Replacement rules paragraph says your fork has none.
+- Your fork no longer runs the Guinea Run, links, translations and Hall of Fame checks of the course, which took up to half an hour of your GitHub Actions minutes per course update.
+
 ## 2026-10-27
 
+- Guinea Run: in VS Code, your progress follows you in every project, and a save edited by hand sends the guinea pig back to the first world.
 - Lab 2.6: the `no Layout named ...` troubleshooting entry names `FlowRecord-Flow Layout` as a layout to delete from the Profile.
 - Lab 2.8: a troubleshooting entry says a red check on the Profile of the over-wide Pull Request is cleared by the reset, nothing to fix by hand.
 

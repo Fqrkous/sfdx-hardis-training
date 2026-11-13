@@ -7,6 +7,7 @@
  * Signing takes a few milliseconds and cannot finish while a page closes: the
  * table saves every few seconds of play, so a closed page loses at most those.
  */
+import { savedLocally } from "./save-signal.js";
 import { TALLY_SET, sealCheckpoint } from "./tally.js";
 
 const KEY = "guinea-run-pinball-v1";
@@ -29,6 +30,7 @@ export async function saveCheckpoint(state) {
       return false;
     }
     window.localStorage.setItem(KEY, JSON.stringify({ v: 1, k: TALLY_SET, text, sg }));
+    savedLocally();
     return true;
   } catch {
     return false;
@@ -66,5 +68,7 @@ export function clearCheckpoint() {
     window.localStorage.removeItem(KEY);
   } catch {
     // Nothing saved, nothing to clear
+    return;
   }
+  savedLocally();
 }

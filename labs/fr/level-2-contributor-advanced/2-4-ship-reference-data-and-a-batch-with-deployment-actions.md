@@ -5,7 +5,7 @@ description: "Un déploiement vert n'est pas une fonctionnalité qui marche. Liv
 level: 2
 lab: 4
 lang: fr
-source_rev: "01284af833e091e8a6965e7cd0a994f54be48fb3"
+source_rev: "732b2aba6858e0de45bba94f23b5f9bdf308a104"
 screenshots:
   - annotated/vscode/sidebar-commands-custom-menu-2--lab-records
   - annotated/salesforce/crew-capacity-records
@@ -21,14 +21,14 @@ depends_on:
   flags: []
   config: [dataPackages, commandsPostDeploy, failValidationOnPendingManualActions]
   panels: [dataWorkbench, deploymentAction, pipeline]
-  docs: [salesforce-devops-agent-data-workspaces, salesforce-devops-work-on-user-story-deployment-actions]
+  docs: [salesforce-devops-agent-data-workspaces, salesforce-devops-work-on-user-story-deployment-actions, salesforce-devops-work-on-user-story-deployment-actions-data, salesforce-devops-work-on-user-story-deployment-actions-schedule-batch, salesforce-devops-work-on-user-story-deployment-actions-manual]
 ---
 
 # Lab 2.4 - Livrer des données de référence et un batch avec des deployment actions
 
 **Niveau** : 2 Contributeur avancé
 
-**Durée** : ~50 min<!-- observed --> (observé : médiane 50 min, 11 participants, le plus rapide 20 min)<!-- /observed -->
+**Durée** : ~1 h 10<!-- observed --> (observé : médiane 1 h 10, 17 participants, le plus rapide 20 min)<!-- /observed -->
 
 **Vous allez** : rencontrer la pire espèce d'échec, celle où rien n'échoue, et la corriger avec trois
 deployment actions de trois types différents.
@@ -325,7 +325,7 @@ lesquelles la pipeline déploie.
 | Scheduled Job Name (Optional) | `Helios crew capacity nightly`                     |
 | Run Only Once By Org          | oui                                                |
 
-#### Pourquoi
+#### Pourquoi la boîte de dialogue change
 
 **Schedule Batch** **(1)** remplace le champ de script par deux champs à lui : **Apex Class Name**
 **(2)**, une liste déroulante des classes que Salesforce peut lancer selon une planification, lues
@@ -363,7 +363,7 @@ déploie, et la classe y est avant qu'elle ne tourne.
 4. Check: the page reads **All email**. If it already did, there is nothing to do.
 ```
 
-#### Pourquoi
+#### Pourquoi une étape à la main
 
 Certaines choses n'ont pas d'API. La délivrabilité des e-mails est la plus connue : le droit pour une
 org d'envoyer des e-mails tout court est un réglage de Setup qu'aucun déploiement ne peut changer. Le
@@ -412,7 +412,7 @@ production est pire que pas d'étape du tout.
    Control**, cliquez sur **Pull**
 3. Commitez le fichier d'actions, puis **Save / Publish**
 
-#### Pourquoi
+#### Pourquoi mettre à jour la Pull Request
 
 Pour l'instant, les actions ne sont que sur votre poste. Chaque **Save** a écrit l'action dans un
 fichier sous `scripts/actions/`, nommé d'après le numéro de votre Pull Request :
@@ -625,6 +625,11 @@ cliquez sur **Pull**, puis de nouveau **Save / Publish** : c'est votre push qui 
 contrôles, sans rien à approuver. Le même commit du robot figure dans le dépannage du
 [Lab 1.6](../level-1-contributor-basics/1-6-pull-request-deployment-check-and-merge.md).
 
+Si vous aviez déjà tout poussé quand le commit du robot est arrivé, le Pull ne pousse rien et les
+contrôles de ce commit restent en attente d'une approbation. Ouvrez la Pull Request sur GitHub : sous
+**Workflow(s) awaiting approval**, cliquez sur **Approve and run**, et les deux contrôles démarrent
+sur le commit du robot.
+
 **Le fichier d'actions s'appelle `.sfdx-hardis.draft.yml`, ou le check s'arrête sur *Draft deployment actions file found*.**
 Vous avez ajouté l'action alors que le panneau ne connaissait aucune Pull Request pour votre
 branche : la carte **My Pull Request** indiquait *Pull Request not created yet*, et l'action a été
@@ -673,5 +678,8 @@ Welcome page > **Training: Level 2** > **Check my work**, puis choisissez le **L
 
 - [Data workspaces avec SFDMU](https://sfdx-hardis.cloudity.com/salesforce-devops-agent-data-workspaces/)
 - [Deployment actions](https://sfdx-hardis.cloudity.com/salesforce-devops-work-on-user-story-deployment-actions/)
+- [Import data (SFDMU)](https://sfdx-hardis.cloudity.com/salesforce-devops-work-on-user-story-deployment-actions-data/)
+- [Schedule an Apex batch](https://sfdx-hardis.cloudity.com/salesforce-devops-work-on-user-story-deployment-actions-schedule-batch/)
+- [Manual step](https://sfdx-hardis.cloudity.com/salesforce-devops-work-on-user-story-deployment-actions-manual/)
 
 [Suite : Lab 2.5 - Passer la barrière de qualité de code et la couverture de tests Apex](2-5-pass-code-quality-and-apex-test-coverage.md){ .md-button .md-button--primary }

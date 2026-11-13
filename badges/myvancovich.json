@@ -1,0 +1,64 @@
+{
+  "recipient": "mkyv",
+  "badges": [
+    {
+      "type": "Achievement",
+      "level": 1,
+      "name": "sfdx-hardis Contributor Basics",
+      "description": "Delivers a User Story through a Pull Request, end to end.",
+      "issuer": {
+        "name": "Cloudity",
+        "url": "https://cloudity.com",
+        "course": "https://sfdx-hardis-training.cloudity.com"
+      },
+      "issuedOn": "2026-11-02",
+      "issuedAt": "2026-11-02T22:05:50Z",
+      "evidence": [
+        {
+          "type": "Repository",
+          "url": "https://github.com/mkyv/sfdx-hardis-training.git"
+        },
+        {
+          "type": "ClaimIssue",
+          "url": "https://github.com/hardisgroupcom/sfdx-hardis-training/issues/361"
+        }
+      ],
+      "image": "https://sfdx-hardis-training.cloudity.com/badges/img/myvancovich-level-1.svg",
+      "bannerImage": "https://sfdx-hardis-training.cloudity.com/badges/img/banner-level-1.svg",
+      "superbadge": false,
+      "checksPassed": 6,
+      "checksTotal": 6
+    },
+    {
+      "type": "Achievement",
+      "level": 2,
+      "name": "sfdx-hardis Contributor Advanced",
+      "description": "Solves deployment errors, declares deployment actions, resolves conflicts.",
+      "issuer": {
+        "name": "Cloudity",
+        "url": "https://cloudity.com",
+        "course": "https://sfdx-hardis-training.cloudity.com"
+      },
+      "issuedOn": "2026-11-07",
+      "issuedAt": "2026-11-07T10:01:50Z",
+      "evidence": [
+        {
+          "type": "Repository",
+          "url": "https://github.com/mkyv/sfdx-hardis-training.git"
+        },
+        {
+          "type": "ClaimIssue",
+          "url": "https://github.com/hardisgroupcom/sfdx-hardis-training/issues/375"
+        }
+      ],
+      "image": "https://sfdx-hardis-training.cloudity.com/badges/img/myvancovich-level-2.svg",
+      "bannerImage": "https://sfdx-hardis-training.cloudity.com/badges/img/banner-level-2.svg",
+      "superbadge": false,
+      "checksPassed": 14,
+      "checksTotal": 14
+    }
+  ],
+  "trailblazer": "myvancovich",
+  "name": "Mirko Yvancovich",
+  "trailblazerName": "Mirko Yvancovich"
+}

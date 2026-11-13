@@ -20,7 +20,7 @@ depends_on:
 
 **Level**: 3 Release Manager
 
-**Time**: ~5 min<!-- observed --> (observed: median 5 min, 7 learners, fastest 5 min)<!-- /observed -->
+**Time**: ~5 min<!-- observed --> (observed: median 9 min, 14 learners, fastest 5 min)<!-- /observed -->
 
 **You will**: produce readable documentation of an org nobody has documented in two years, from the
 sources you already have.
@@ -146,19 +146,20 @@ simply not written.
 
 ### 5. Fix the worst gaps by hand
 
-Goal: three paragraphs that only a person can write, on pages protected from the next generation.
+Goal: a paragraph that only a person can write, on a page protected from the next generation.
 
 Generated documentation tells you what the org contains. It cannot tell you why.
 
 #### Do
 
-Spend fifteen minutes adding what only a person can:
-
-1. A paragraph at the top of the Installation page saying what an installation is in the business
-2. One sentence on the scheduler explaining the preparation buffer, which looks arbitrary in code
-3. A note on the crew capacity cap saying it is a safety rule, not a cost rule
-4. Protect every page you edit. Each generated page starts with two comment lines, and the second
-   reads `<!-- DO_NOT_OVERWRITE_DOC=FALSE -->`. Change it to `TRUE` on the pages you write in
+1. On the Installation page, right under its title, write a paragraph saying what an installation
+   is in the business
+2. Open the page of `InstallationScheduler` and the page of `Installation_Assign_Crew`, and find why
+   the preparation buffer exists and why the crew capacity cap is there. Nobody has to add it: the
+   people who wrote the class and the flow put the reason in their comment and their description,
+   and the generator carried it
+3. Protect the page you wrote in. Each generated page starts with two comment lines, and the second
+   reads `<!-- DO_NOT_OVERWRITE_DOC=FALSE -->`. Change it to `TRUE` on the Installation page
 
 !!! warning "Careful"
     The next generation leaves a `TRUE` page alone, and rewrites every other page from the sources,
@@ -166,15 +167,16 @@ Spend fifteen minutes adding what only a person can:
 
 #### Why
 
-Those three paragraphs are worth more than the other forty pages, and they are the reason this lab
-exists at the end of a level rather than at the start.
+That paragraph is worth more than the other forty pages, and it is the reason this lab exists at
+the end of a level rather than at the start. A reason written in the metadata itself, as a comment
+in the code or a description, needs no protection: every generation carries it.
 
 On a project that commits its documentation, the `DO_NOT_OVERWRITE_DOC=TRUE` line is what keeps a
 person's words alive across nightly runs.
 
 #### You should now see
 
-- Three paragraphs you wrote, on pages that read `<!-- DO_NOT_OVERWRITE_DOC=TRUE -->`
+- A paragraph you wrote, on the Installation page, which reads `<!-- DO_NOT_OVERWRITE_DOC=TRUE -->`
 
 ### 6. Publish it
 
@@ -256,7 +258,7 @@ Two related commands worth knowing:
   reasonable existence proof that the output is readable
 
 If the project has an AI provider configured, the generator can also write the missing descriptions
-rather than leaving blanks. Useful, and not a substitute for the three paragraphs in step 5: a model
+rather than leaving blanks. Useful, and not a substitute for the paragraph in step 5: a model
 can describe what a field is, not why the business needs it.
 
 <!-- command-links:start -->
@@ -275,7 +277,7 @@ Command documentation: [hardis:doc:project2markdown](https://sfdx-hardis.cloudit
 - [ ] A `docs/` folder with object, flow and Apex pages
 - [ ] `docs/objects/Installation__c.md` listing every field from all three levels
 - [ ] A readable diagram of `Installation_Assign_Crew`
-- [ ] Three paragraphs you wrote yourself, on a page marked `DO_NOT_OVERWRITE_DOC=TRUE`
+- [ ] A paragraph you wrote yourself, on a page marked `DO_NOT_OVERWRITE_DOC=TRUE`
 - [ ] Nothing to commit: **Source Control** shows no change from the generation
 
 ## If it goes wrong

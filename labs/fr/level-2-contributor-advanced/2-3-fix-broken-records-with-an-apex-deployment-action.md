@@ -5,7 +5,7 @@ description: "Rendre un champ obligatoire se déploie au vert et casse les enreg
 level: 2
 lab: 3
 lang: fr
-source_rev: "90436a5041e1532425eb7e6c598ecd93874788ee"
+source_rev: "9de9ce94b7ca17001cebf9a2f0b9759a4f86b7ed"
 screenshots:
   - annotated/vscode/pipeline-cards--my-pull-request
   - annotated/vscode/pipeline-cards--new-user-story
@@ -17,14 +17,14 @@ depends_on:
   flags: []
   config: [commandsPostDeploy, apexScript, runOnlyOnceByOrg]
   panels: [pipeline, deploymentAction]
-  docs: [salesforce-devops-work-on-user-story-deployment-actions]
+  docs: [salesforce-devops-work-on-user-story-deployment-actions, salesforce-devops-work-on-user-story-deployment-actions-apex]
 ---
 
 # Lab 2.3 - Réparer des enregistrements cassés avec une deployment action Apex
 
 **Niveau** : 2 Contributeur avancé
 
-**Durée** : ~45 min<!-- observed --> (observé : médiane 49 min, 11 participants, le plus rapide 15 min)<!-- /observed -->
+**Durée** : ~40 min<!-- observed --> (observé : médiane 42 min, 17 participants, le plus rapide 15 min)<!-- /observed -->
 
 **Vous allez** : rencontrer un échec qu'aucune correction de métadonnée ne résout, et découvrir
 l'outil qui existe pour cela : une deployment action.
@@ -248,9 +248,9 @@ arrivent au même endroit.
 
 #### À faire : ouvrir votre Pull Request
 
-1. Dans le diagramme : activez **Show feature branches** en haut à droite, désactivé tant que vous ne
-   le demandez pas, et votre propre branche apparaît à côté des branches majeures. Votre branche de
-   feature **(1)**, et sur la flèche qui en part la pastille numérotée **(2)**. Cliquez sur la pastille
+1. Dans le diagramme, qui s'ouvre sur **Feature branches**, votre propre branche est à côté des
+   branches majeures : votre branche de feature **(1)**, et sur la flèche qui en part la pastille
+   numérotée **(2)**. Cliquez sur la pastille
 
    ![Le panneau DevOps Pipeline, avec la branche de feature et la pastille de sa Pull Request](../../_assets/annotated/vscode/pipeline-workflow-cards.png)
 
@@ -473,5 +473,6 @@ Welcome page > **Training: Level 2** > **Check my work**, puis choisissez le **L
 ## Pour aller plus loin
 
 - [Deployment actions](https://sfdx-hardis.cloudity.com/salesforce-devops-work-on-user-story-deployment-actions/)
+- [Run an Apex script](https://sfdx-hardis.cloudity.com/salesforce-devops-work-on-user-story-deployment-actions-apex/)
 
 [Suite : Lab 2.4 - Livrer des données de référence et un batch avec des deployment actions](2-4-ship-reference-data-and-a-batch-with-deployment-actions.md){ .md-button .md-button--primary }
